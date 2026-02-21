@@ -12,7 +12,7 @@ return new class extends Migration
 			$table->id();
 			$table->char("uuid", 36)->unique();
 			$table->foreignId("project_id")->constrained()->cascadeOnDelete();
-			$table->string("url", 2048);
+			$table->string("url", 500);
 			$table->string("name", 255)->nullable();
 			$table->foreignId("latest_scan_id")->nullable()->constrained("scans")->nullOnDelete();
 			$table->timestamps();
