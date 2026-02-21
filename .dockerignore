@@ -1,0 +1,12 @@
+node_modules
+vendor
+.env
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+.git
+tests
+v1
+*.md
+nixpacks.toml
