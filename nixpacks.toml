@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["php84", "php84Extensions.intl", "php84Extensions.bcmath", "php84Extensions.zip", "php84Extensions.pdo_mysql", "php84Extensions.gd", "php84Extensions.curl", "php84Extensions.mbstring", "php84Extensions.dom", "php84Extensions.xml", "php84Extensions.opcache", "php84Packages.composer", "python311Packages.supervisor"]
+nixPkgs = ["php84", "php84Extensions.intl", "php84Extensions.bcmath", "php84Extensions.zip", "php84Extensions.pdo_mysql", "php84Extensions.gd", "php84Extensions.curl", "php84Extensions.mbstring", "php84Extensions.dom", "php84Extensions.xml", "php84Extensions.opcache", "php84Packages.composer", "nodejs_22", "python311Packages.supervisor"]
 
 [phases.build]
 cmds = [
