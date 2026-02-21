@@ -127,6 +127,17 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 		return $this->cachedCurrentOrganization;
 	}
 
+	/**
+	 * Clear the in-memory organization cache so the next call to
+	 * currentOrganization() re-resolves from the database.
+	 */
+	public function resetOrganizationCache(): void
+	{
+		$this->currentOrganizationResolved = false;
+		$this->cachedCurrentOrganization = null;
+		$this->unsetRelation("organizations");
+	}
+
 	private function resolveCurrentOrganization(): ?Organization
 	{
 		$sessionOrgId = session("current_organization_id");

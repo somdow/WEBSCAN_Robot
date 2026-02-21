@@ -56,6 +56,12 @@ class ProfileController extends Controller
 		));
 
 		$user = $request->user();
+
+		if ($user->isSuperAdmin()) {
+			return back()->withErrors(array(
+				"userDeletion" => "Super admin accounts cannot be deleted.",
+			));
+		}
 		$organization = $user->currentOrganization();
 
 		$this->cancelStripeSubscription($organization);

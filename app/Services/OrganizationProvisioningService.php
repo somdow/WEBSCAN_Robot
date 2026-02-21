@@ -43,6 +43,10 @@ class OrganizationProvisioningService
 			$user->id => array("role" => OrganizationRole::Owner->value),
 		));
 
+		/* Bust the in-memory org cache so subsequent calls to currentOrganization()
+		   see the newly created org instead of returning stale null. */
+		$user->resetOrganizationCache();
+
 		return $organization;
 	}
 

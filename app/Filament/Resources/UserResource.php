@@ -139,7 +139,7 @@ class UserResource extends Resource
 						->color("danger")
 						->requiresConfirmation()
 						->action(fn (User $record) => $record->deactivate())
-						->hidden(fn (User $record): bool => !$record->isActive()),
+						->hidden(fn (User $record): bool => !$record->isActive() || $record->id === auth()->id()),
 					Action::make("reactivate")
 						->label("Reactivate")
 						->icon(Heroicon::OutlinedCheckCircle)
@@ -147,7 +147,8 @@ class UserResource extends Resource
 						->requiresConfirmation()
 						->action(fn (User $record) => $record->reactivate())
 						->hidden(fn (User $record): bool => $record->isActive()),
-					\Filament\Actions\DeleteAction::make(),
+					\Filament\Actions\DeleteAction::make()
+						->hidden(fn (User $record): bool => $record->id === auth()->id()),
 				))
 					->icon(Heroicon::OutlinedCog6Tooth)
 					->tooltip("Actions"),
