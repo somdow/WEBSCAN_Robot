@@ -110,7 +110,7 @@
 								Current Plan
 							</span>
 						@elseif($isFree)
-							<a href="{{ route("register") }}" class="block w-full rounded-md border border-border bg-surface py-2.5 text-center text-sm font-semibold text-text-primary shadow-sm transition hover:bg-gray-50">
+							<a href="{{ \App\Models\Setting::getValue("registration_enabled", "0") === "1" ? route("register") : route("login") }}" class="block w-full rounded-md border border-border bg-surface py-2.5 text-center text-sm font-semibold text-text-primary shadow-sm transition hover:bg-gray-50">
 								Get Started
 							</a>
 						@elseif(auth()->check())
@@ -123,7 +123,7 @@
 								</button>
 							</form>
 						@else
-							<a href="{{ route("register") }}" class="block w-full rounded-md {{ $isHighlighted ? 'bg-accent text-white hover:bg-accent-hover' : 'bg-text-primary text-white hover:bg-gray-800' }} py-2.5 text-center text-sm font-semibold shadow-sm transition">
+							<a href="{{ \App\Models\Setting::getValue("registration_enabled", "0") === "1" ? route("register") : route("login") }}" class="block w-full rounded-md {{ $isHighlighted ? 'bg-accent text-white hover:bg-accent-hover' : 'bg-text-primary text-white hover:bg-gray-800' }} py-2.5 text-center text-sm font-semibold shadow-sm transition">
 								Start {{ $trialDays }}-Day Trial
 							</a>
 						@endif

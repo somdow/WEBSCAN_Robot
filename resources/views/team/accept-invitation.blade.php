@@ -20,12 +20,14 @@
 			Log In to Accept
 		</a>
 
-		<a
-			href="{{ route("register") }}"
-			class="block w-full rounded-md border border-border bg-white px-4 py-2.5 text-center text-sm font-semibold text-text-primary shadow-sm transition hover:bg-gray-50"
-		>
-			Create an Account
-		</a>
+		@if (\App\Models\Setting::getValue("registration_enabled", "0") === "1")
+			<a
+				href="{{ route("register") }}"
+				class="block w-full rounded-md border border-border bg-white px-4 py-2.5 text-center text-sm font-semibold text-text-primary shadow-sm transition hover:bg-gray-50"
+			>
+				Create an Account
+			</a>
+		@endif
 	</div>
 
 	<p class="mt-5 text-center text-xs text-text-tertiary">
