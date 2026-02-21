@@ -82,12 +82,13 @@
 		.card-fail { border-left-color: #EF4444; }
 		.card-info { border-left-color: #6366F1; }
 		.card-header { margin-bottom: 6px; }
+		.card-header-table { width: 100%; border-collapse: collapse; }
 		.card-title { font-size: 14px; font-weight: bold; color: #111827; }
-		.card-badge { display: inline-block; padding: 2px 7px; font-size: 9px; font-weight: bold; text-transform: uppercase; border-radius: 3px; margin-left: 6px; background-color: #D1FAE5; color: #065F46; }
+		.card-badge { display: inline-block; padding: 2px 7px; font-size: 9px; font-weight: bold; text-transform: uppercase; border-radius: 3px; background-color: #D1FAE5; color: #065F46; }
 		.badge-warning { background-color: #FEF3C7; color: #92400E; }
 		.badge-fail { background-color: #FEE2E2; color: #991B1B; }
 		.badge-info { background-color: #E0E7FF; color: #3730A3; }
-		.card-findings { margin: 8px 0; }
+		.card-findings { margin-top: 12px; }
 		.card-finding { padding: 2px 0 2px 14px; font-size: 11px; color: #374151; position: relative; }
 		.card-finding::before { content: "\2022"; position: absolute; left: 4px; color: #9CA3AF; }
 
@@ -96,11 +97,11 @@
 		.card-insight-amber { background-color: #FFFBEB; }
 		.card-insight-red { background-color: #FEF2F2; }
 		.card-insight-title { font-size: 10px; font-weight: bold; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-		.card-insight-text { font-size: 11px; color: #6B7280; line-height: 1.6; }
-		.card-passing { font-size: 11px; color: #059669; margin-top: 4px; font-style: italic; }
+		.card-insight-text { font-size: 11px; color: #6B7280; line-height: 1.6; padding-left: 6px; }
+		.card-passing { font-size: 11px; color: #059669; margin-top: 4px; font-style: italic; padding-left: 6px; }
 
 		/* ── Recommendations ── */
-		.card-recs { margin-top: 8px; padding: 8px 10px; background-color: #FFFDF5; border-radius: 4px; }
+		.card-recs { margin-top: 12px; padding: 8px 10px; background-color: #FFFDF5; border-radius: 4px; }
 		.card-recs-title { font-size: 10px; font-weight: bold; color: #92400E; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
 		.card-rec { padding: 2px 0 2px 14px; font-size: 11px; color: #78350F; position: relative; }
 		.card-rec::before { content: "\25B8"; position: absolute; left: 4px; color: #D97706; }
@@ -110,7 +111,7 @@
 		.card-recs-red .card-recs-title { color: #991B1B; }
 
 		/* ── AI Suggestion Box ── */
-		.card-ai { margin-top: 8px; padding: 8px 10px; background-color: #E0E0F0; border-radius: 4px; border-left: 3px solid #5555AA; }
+		.card-ai { margin-top: 12px; padding: 8px 10px; background-color: #E0E0F0; border-radius: 4px; border-left: 3px solid #5555AA; }
 		.card-ai-title { font-size: 10px; font-weight: bold; color: #5555AA; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
 		.card-ai-text { font-size: 11px; color: #374151; line-height: 1.5; }
 		.card-ai-text p { margin-bottom: 4px; }
@@ -124,6 +125,21 @@
 		.card-ai-text pre { background-color: #D5D5E5; padding: 6px 8px; border-radius: 3px; font-size: 10px; margin-bottom: 4px; overflow: hidden; }
 		.card-ai-text pre code { background: transparent; padding: 0; }
 		.ai-page-type-badge { display: inline-block; padding: 2px 8px; background-color: {{ $accentColor }}; color: #FFFFFF; font-size: 9px; font-weight: bold; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+		/* ── Category Sub-Headers ── */
+		.category-subheader { font-size: 14px; font-weight: bold; color: #374151; margin-top: 18px; margin-bottom: 4px; padding-bottom: 6px; border-bottom: 1px solid #E5E7EB; }
+		.category-subheader-desc { font-size: 10px; color: #9CA3AF; margin-bottom: 10px; }
+		.category-subheader-count { font-size: 11px; font-weight: normal; color: #9CA3AF; }
+
+		/* ── Results Summary ── */
+		.summary-grid { width: 100%; border-collapse: separate; border-spacing: 10px 0; margin-bottom: 24px; }
+		.summary-box { text-align: center; padding: 16px 10px; border: 2px solid #E5E7EB; border-radius: 8px; }
+		.summary-count { font-size: 36px; font-weight: bold; line-height: 1; }
+		.summary-label { font-size: 10px; color: #4B5563; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+		.summary-critical { color: #DC2626; border-color: #EF4444; background-color: #FEF2F2; }
+		.summary-warning { color: #D97706; border-color: #F59E0B; background-color: #FFFBEB; }
+		.summary-info { color: #6366F1; border-color: #A5B4FC; background-color: #EEF2FF; }
+		.summary-passed { color: #059669; border-color: #10B981; background-color: #F0FDF4; }
 
 		/* ── Crawled Pages Table ── */
 		.pages-table { width: 100%; border-collapse: collapse; font-size: 11px; }
@@ -312,20 +328,16 @@
 			</tr>
 			<tr>
 				<td class="meta-label">Scan Type</td>
-				<td class="meta-value">{{ $scan->isCrawlScan() ? "Multi-Page Crawl" : "Homepage Analysis" }}</td>
+				<td class="meta-value">
+					@if($scan->isCrawlScan())
+						Multi-Page Crawl ({{ $scan->pages_crawled }} {{ Str::plural("page", $scan->pages_crawled) }})
+					@elseif($additionalPages->isNotEmpty())
+						Homepage + {{ $additionalPages->count() }} Additional {{ Str::plural("Page", $additionalPages->count()) }}
+					@else
+						Homepage Analysis
+					@endif
+				</td>
 			</tr>
-			@if($scan->isCrawlScan())
-			<tr>
-				<td class="meta-label">Pages Crawled</td>
-				<td class="meta-value">{{ $scan->pages_crawled }} {{ Str::plural("page", $scan->pages_crawled) }}</td>
-			</tr>
-			@endif
-			@if($scan->scan_duration_ms)
-			<tr>
-				<td class="meta-label">Duration</td>
-				<td class="meta-value">{{ $scan->formattedDuration() }}</td>
-			</tr>
-			@endif
 			<tr>
 				<td class="meta-label">Checks Run</td>
 				<td class="meta-value">{{ $totalModules }} analyzers across SEO, content, security, and performance</td>
@@ -351,13 +363,169 @@
 		<div class="divider"></div>
 
 		{{-- Score breakdown explanation --}}
-		<div style="font-size: 11px; color: #4B5563; line-height: 1.8; margin-bottom: 16px;">
+		<div style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 8px;">Score Breakdown</div>
+		<div style="font-size: 11px; color: #4B5563; line-height: 1.8;">
 			<strong>Overall Score</strong> &mdash; A weighted aggregate of all {{ $totalModules }} checks across every category.<br/>
 			<strong>SEO Score</strong> &mdash; On-page optimization, technical SEO, content quality, and search visibility.<br/>
 			<strong>Site Health</strong> &mdash; Performance, security, analytics, and technology stack.
 		</div>
+	</div>
 
-		@include("reports.partials.pdf-contact-info", array("author" => $reportAuthor, "variant" => "cover"))
+	{{-- ══════════════════════════════════════════════════════════════════════
+		 Data Preparation: deduplicate, classify, and sub-group by category
+	     ══════════════════════════════════════════════════════════════════════ --}}
+	@php
+		$allResults = collect();
+		foreach ($groupedResults as $category => $results) {
+			foreach ($results as $result) {
+				$allResults->push($result);
+			}
+		}
+		$uniqueResults = $allResults->groupBy("module_key")->map(function ($group) {
+			return $group->sortBy("scan_page_id")->first();
+		});
+
+		$wpModuleKeys = array("wpDetection", "wpPlugins", "wpTheme");
+		$hasWordPress = $uniqueResults->contains(fn($r) => in_array($r->module_key, array("wpPlugins", "wpTheme")));
+
+		$allWordPressModules = $hasWordPress
+			? $uniqueResults->filter(fn($r) => in_array($r->module_key, $wpModuleKeys))->values()
+			: collect();
+		$wordPressModules = $allWordPressModules->filter(fn($r) => $r->status->value !== "ok")->values();
+		$passedWordPressModules = $allWordPressModules->filter(fn($r) => $r->status->value === "ok")->values();
+
+		$nonWpResults = $uniqueResults->reject(fn($r) => in_array($r->module_key, $wpModuleKeys));
+
+		$failedModules = $nonWpResults->filter(fn($r) => $r->status->value === "bad")->values();
+		$warningModules = $nonWpResults->filter(fn($r) => $r->status->value === "warning")->values();
+		$infoModules = $nonWpResults->filter(fn($r) => $r->status->value === "info")->values();
+		$passedModules = $nonWpResults->filter(fn($r) => $r->status->value === "ok")
+			->merge($passedWordPressModules)
+			->values();
+
+		$resolveCategory = fn($result) => $moduleCategoryMap[$result->module_key] ?? "Other";
+		$failedByCategory = $failedModules->groupBy($resolveCategory);
+		$warningByCategory = $warningModules->groupBy($resolveCategory);
+		$infoByCategory = $infoModules->groupBy($resolveCategory);
+		$passedByCategory = $passedModules->groupBy($resolveCategory);
+
+		$moduleDescriptions = config("module-descriptions");
+
+		/* ── Aggregate counts across homepage + additional pages ── */
+		$additionalPageResults = $additionalPages->flatMap(fn($p) => $p->moduleResults);
+		$aggregateCritical = $failedModules->count() + $additionalPageResults->where("status.value", "bad")->count();
+		$aggregateWarnings = $warningModules->count() + $additionalPageResults->where("status.value", "warning")->count();
+		$aggregateInfo = $infoModules->count() + $additionalPageResults->where("status.value", "info")->count();
+		$aggregatePassed = $passedModules->count() + $additionalPageResults->where("status.value", "ok")->count();
+
+		/* ── Combined pages list (homepage + crawl pages + additional pages) ── */
+		$combinedPages = collect();
+
+		if ($scanPages->count() > 1) {
+			foreach ($scanPages as $crawledPage) {
+				$combinedPages->push((object) array(
+					"url" => $crawledPage->truncatedUrl(70),
+					"score" => $crawledPage->page_score,
+					"ok" => $crawledPage->moduleResults->where("status.value", "ok")->count(),
+					"warn" => $crawledPage->moduleResults->where("status.value", "warning")->count(),
+					"bad" => $crawledPage->moduleResults->where("status.value", "bad")->count(),
+				));
+			}
+		} else {
+			$combinedPages->push((object) array(
+				"url" => $project->url,
+				"score" => $scan->overall_score,
+				"ok" => $passedModules->count(),
+				"warn" => $warningModules->count(),
+				"bad" => $failedModules->count(),
+			));
+		}
+
+		foreach ($additionalPages as $addedPage) {
+			$combinedPages->push((object) array(
+				"url" => $addedPage->truncatedUrl(70),
+				"score" => $addedPage->page_score,
+				"ok" => $addedPage->moduleResults->where("status.value", "ok")->count(),
+				"warn" => $addedPage->moduleResults->where("status.value", "warning")->count(),
+				"bad" => $addedPage->moduleResults->where("status.value", "bad")->count(),
+			));
+		}
+
+		$totalPagesAnalyzed = $combinedPages->count();
+		$topPages = $combinedPages->sortBy("score")->take(10);
+	@endphp
+
+	{{-- ── Page 3: Results Summary ── --}}
+	<div class="page-break"></div>
+	<div class="section">
+		<div class="section-header" style="border-bottom-color: {{ $accentColor }};">
+			<div class="section-title" style="color: {{ $accentColor }};">Results Summary</div>
+			<div class="section-subtitle">
+				{{ $totalModules }} checks across {{ $totalPagesAnalyzed }} {{ Str::plural("page", $totalPagesAnalyzed) }}.
+			</div>
+		</div>
+
+		<table class="summary-grid">
+			<tr>
+				<td style="width: 25%;"><div class="summary-box summary-critical"><div class="summary-count">{{ $aggregateCritical }}</div><div class="summary-label">Critical</div></div></td>
+				<td style="width: 25%;"><div class="summary-box summary-warning"><div class="summary-count">{{ $aggregateWarnings }}</div><div class="summary-label">Warnings</div></div></td>
+				<td style="width: 25%;"><div class="summary-box summary-info"><div class="summary-count">{{ $aggregateInfo }}</div><div class="summary-label">Info</div></div></td>
+				<td style="width: 25%;"><div class="summary-box summary-passed"><div class="summary-count">{{ $aggregatePassed }}</div><div class="summary-label">Passed</div></div></td>
+			</tr>
+		</table>
+
+		@if($aggregateCritical > 0 || $aggregateWarnings > 0)
+		<div style="font-size: 12px; color: #6B7280; line-height: 1.7; margin-top: 16px;">
+			@if($aggregateCritical > 0)
+				<span style="color: #DC2626; font-weight: bold;">{{ $aggregateCritical }} critical {{ Str::plural("issue", $aggregateCritical) }}</span> {{ $aggregateCritical === 1 ? "requires" : "require" }} immediate attention.
+			@endif
+			@if($aggregateWarnings > 0)
+				<span style="color: #D97706; font-weight: bold;">{{ $aggregateWarnings }} {{ Str::plural("warning", $aggregateWarnings) }}</span> may be impacting your search performance.
+			@endif
+			The following pages break down each finding with actionable recommendations.
+		</div>
+		@endif
+
+		{{-- Top pages table (worst-scoring first) --}}
+		@if($totalPagesAnalyzed > 0)
+		<div style="margin-top: 24px;">
+			<div style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 10px;">
+				Pages Analyzed
+				<span style="font-size: 11px; font-weight: normal; color: #9CA3AF;">({{ $totalPagesAnalyzed }} {{ Str::plural("page", $totalPagesAnalyzed) }}{{ $totalPagesAnalyzed > 10 ? ", showing lowest-scoring 10" : "" }})</span>
+			</div>
+
+			<table class="pages-table">
+				<thead>
+					<tr>
+						<th style="width: 55%;">Page URL</th>
+						<th style="width: 12%; text-align: center;">Score</th>
+						<th style="width: 33%;">Status Breakdown</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach($topPages as $pageEntry)
+					@php
+						$entryScoreClass = match(true) {
+							$pageEntry->score === null => "page-score-gray",
+							$pageEntry->score >= 80 => "page-score-green",
+							$pageEntry->score >= 50 => "page-score-amber",
+							default => "page-score-red",
+						};
+					@endphp
+					<tr>
+						<td class="page-url">{{ Str::limit($pageEntry->url, 70) }}</td>
+						<td style="text-align: center;"><span class="page-score {{ $entryScoreClass }}">{{ $pageEntry->score ?? "N/A" }}</span></td>
+						<td>
+							@if($pageEntry->ok > 0)<span class="page-status-count page-status-ok">{{ $pageEntry->ok }} passed</span>@endif
+							@if($pageEntry->warn > 0)<span class="page-status-count page-status-warn">{{ $pageEntry->warn }} warning</span>@endif
+							@if($pageEntry->bad > 0)<span class="page-status-count page-status-bad">{{ $pageEntry->bad }} failed</span>@endif
+						</td>
+					</tr>
+					@endforeach
+				</tbody>
+			</table>
+		</div>
+		@endif
 	</div>
 
 	{{-- ── AI Executive Summary ── --}}
@@ -366,7 +534,7 @@
 	<div class="section section-indigo">
 		<div class="section-header">
 			<div class="section-title"><span class="section-icon">&#9733;</span>Executive Summary</div>
-			<div class="section-subtitle">AI-generated overview of your site's SEO health.</div>
+			<div class="section-subtitle">AI-generated overview of your site's health.</div>
 		</div>
 
 		<div class="card card-info avoid-break">
@@ -419,76 +587,49 @@
 	</div>
 	@endif
 
-	{{-- Deduplicate: one result per module_key, prefer homepage/site-wide --}}
-	@php
-		$allResults = collect();
-		foreach ($groupedResults as $category => $results) {
-			foreach ($results as $result) {
-				$allResults->push($result);
-			}
-		}
-		$uniqueResults = $allResults->groupBy("module_key")->map(function ($group) {
-			return $group->sortBy("scan_page_id")->first();
-		});
-
-		$wpModuleKeys = array("wpDetection", "wpPlugins", "wpTheme");
-		$securityModuleKeys = array("sslCertificate", "securityHeaders", "mixedContent", "exposedSensitiveFiles", "blacklistCheck");
-		$hasWordPress = $uniqueResults->contains(fn($r) => in_array($r->module_key, array("wpPlugins", "wpTheme")));
-
-		$allWordPressModules = $hasWordPress
-			? $uniqueResults->filter(fn($r) => in_array($r->module_key, $wpModuleKeys))->values()
-			: collect();
-		$wordPressModules = $allWordPressModules->filter(fn($r) => $r->status->value !== "ok")->values();
-		$passedWordPressModules = $allWordPressModules->filter(fn($r) => $r->status->value === "ok")->values();
-
-		$allSecurityModules = $uniqueResults->filter(fn($r) => in_array($r->module_key, $securityModuleKeys))->values();
-		$securityModules = $allSecurityModules->filter(fn($r) => $r->status->value !== "ok")->values();
-		$passedSecurityModules = $allSecurityModules->filter(fn($r) => $r->status->value === "ok")->values();
-
-		$excludedKeys = array_merge($wpModuleKeys, $securityModuleKeys);
-		$nonSpecialResults = $uniqueResults->reject(fn($r) => in_array($r->module_key, $excludedKeys));
-
-		$passedModules = $nonSpecialResults->filter(fn($r) => $r->status->value === "ok")
-			->merge($passedWordPressModules)
-			->merge($passedSecurityModules)
-			->values();
-		$warningModules = $nonSpecialResults->filter(fn($r) => $r->status->value === "warning")->values();
-		$failedModules = $nonSpecialResults->filter(fn($r) => $r->status->value === "bad")->values();
-		$infoModules = $nonSpecialResults->filter(fn($r) => $r->status->value === "info")->values();
-		$moduleDescriptions = config("module-descriptions");
-	@endphp
-
-	{{-- ── Needs Attention (Warnings) ── --}}
-	@if($warningModules->isNotEmpty())
-	<div class="page-break"></div>
-	<div class="section section-amber">
-		<div class="section-header">
-			<div class="section-title"><span class="section-icon">&#9888;</span>Needs Attention</div>
-			<div class="section-subtitle">{{ $warningModules->count() }} {{ Str::plural("check", $warningModules->count()) }} flagged — these issues may be impacting your search performance.</div>
-		</div>
-
-		@foreach($warningModules as $result)
-			@include("reports.partials.pdf-module-result", array("result" => $result, "findingsLimit" => 4, "showAi" => false))
-		@endforeach
-	</div>
-	@endif
-
-	{{-- ── Critical Issues (Failed) ── --}}
+	{{-- ── Critical Issues (Failed) — grouped by category ── --}}
 	@if($failedModules->isNotEmpty())
 	<div class="page-break"></div>
 	<div class="section section-red">
 		<div class="section-header">
 			<div class="section-title"><span class="section-icon">&#10008;</span>Critical Issues</div>
-			<div class="section-subtitle">{{ $failedModules->count() }} {{ Str::plural("check", $failedModules->count()) }} failed — these should be your top priority to fix.</div>
+			<div class="section-subtitle">{{ $failedModules->count() }} {{ Str::plural("check", $failedModules->count()) }} failed &mdash; these should be your top priority to fix.</div>
 		</div>
 
-		@foreach($failedModules as $result)
-			@include("reports.partials.pdf-module-result", array("result" => $result, "findingsLimit" => 5, "showAi" => false))
+		@foreach($failedByCategory as $categoryName => $categoryResults)
+			<div class="category-subheader">{{ $categoryName }} <span class="category-subheader-count">({{ $categoryResults->count() }})</span></div>
+			@if(!empty($categoryDescriptions[$categoryName]))
+				<div class="category-subheader-desc">{{ $categoryDescriptions[$categoryName] }}</div>
+			@endif
+			@foreach($categoryResults as $result)
+				@include("reports.partials.pdf-module-result", array("result" => $result, "findingsLimit" => 5, "showAi" => true))
+			@endforeach
 		@endforeach
 	</div>
 	@endif
 
-	{{-- ── WordPress (only when WordPress detected) ── --}}
+	{{-- ── Needs Attention (Warnings) — grouped by category ── --}}
+	@if($warningModules->isNotEmpty())
+	<div class="page-break"></div>
+	<div class="section section-amber">
+		<div class="section-header">
+			<div class="section-title"><span class="section-icon">&#9888;</span>Needs Attention</div>
+			<div class="section-subtitle">{{ $warningModules->count() }} {{ Str::plural("check", $warningModules->count()) }} flagged &mdash; these issues may be impacting your search performance.</div>
+		</div>
+
+		@foreach($warningByCategory as $categoryName => $categoryResults)
+			<div class="category-subheader">{{ $categoryName }} <span class="category-subheader-count">({{ $categoryResults->count() }})</span></div>
+			@if(!empty($categoryDescriptions[$categoryName]))
+				<div class="category-subheader-desc">{{ $categoryDescriptions[$categoryName] }}</div>
+			@endif
+			@foreach($categoryResults as $result)
+				@include("reports.partials.pdf-module-result", array("result" => $result, "findingsLimit" => 4, "showAi" => true))
+			@endforeach
+		@endforeach
+	</div>
+	@endif
+
+	{{-- ── WordPress Analysis (only when WordPress detected, non-passing) ── --}}
 	@if($wordPressModules->isNotEmpty())
 	<div class="page-break"></div>
 	<div class="section section-indigo">
@@ -498,217 +639,90 @@
 		</div>
 
 		@foreach($wordPressModules as $result)
-			@include("reports.partials.pdf-module-result", array("result" => $result, "findingsLimit" => 6, "showAi" => false))
+			@include("reports.partials.pdf-module-result", array("result" => $result, "findingsLimit" => 6, "showAi" => true))
 			@include("reports.partials.pdf-wordpress-details", array("result" => $result))
 		@endforeach
 	</div>
 	@endif
 
-	{{-- ── Additional Information (Info) ── --}}
+	{{-- ── Additional Information (Info) — grouped by category ── --}}
 	@if($infoModules->isNotEmpty())
 	<div class="page-break"></div>
 	<div class="section section-blue">
 		<div class="section-header">
 			<div class="section-title"><span class="section-icon">&#8505;</span>Additional Information</div>
-			<div class="section-subtitle">{{ $infoModules->count() }} informational {{ Str::plural("check", $infoModules->count()) }} — no action required, provided for reference.</div>
+			<div class="section-subtitle">{{ $infoModules->count() }} informational {{ Str::plural("check", $infoModules->count()) }} &mdash; no action required, provided for reference.</div>
 		</div>
 
-		@foreach($infoModules as $result)
-			@include("reports.partials.pdf-module-result", array("result" => $result, "findingsLimit" => 4, "showRecs" => false, "showAi" => false))
+		@foreach($infoByCategory as $categoryName => $categoryResults)
+			<div class="category-subheader">{{ $categoryName }} <span class="category-subheader-count">({{ $categoryResults->count() }})</span></div>
+			@foreach($categoryResults as $result)
+				@include("reports.partials.pdf-module-result", array("result" => $result, "findingsLimit" => 4, "showRecs" => false, "showAi" => false))
+			@endforeach
 		@endforeach
 	</div>
 	@endif
 
-	{{-- ── Security (always shows when security modules have results) ── --}}
-	@if($securityModules->isNotEmpty())
-	<div class="page-break"></div>
-	<div class="section section-indigo">
-		<div class="section-header">
-			<div class="section-title"><span class="section-icon">&#128274;</span>Security &amp; Protection</div>
-			<div class="section-subtitle">{{ $securityModules->count() }} security {{ Str::plural("check", $securityModules->count()) }} — SSL, headers, mixed content, exposed files, and threat detection.</div>
-		</div>
-
-		@foreach($securityModules as $result)
-			@include("reports.partials.pdf-module-result", array("result" => $result, "findingsLimit" => 6, "showAi" => false))
-		@endforeach
-	</div>
-	@endif
-
-	{{-- ── Passed Checks (compact summary — no full cards) ── --}}
+	{{-- ── Passing Checks — grouped by category ── --}}
 	@if($passedModules->isNotEmpty())
 	<div class="page-break"></div>
 	<div class="section section-green">
 		<div class="section-header">
 			<div class="section-title"><span class="section-icon">&#10004;</span>Passing Checks</div>
-			<div class="section-subtitle">{{ $passedModules->count() }} {{ Str::plural("check", $passedModules->count()) }} passed — no action required.</div>
+			<div class="section-subtitle">{{ $passedModules->count() }} {{ Str::plural("check", $passedModules->count()) }} passed &mdash; no action required.</div>
 		</div>
 
-		<table class="pages-table">
-			<thead>
-				<tr>
-					<th style="width: 50%;">Module</th>
-					<th style="width: 50%;">Status</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach($passedModules as $result)
-				<tr>
-					<td>{{ $moduleLabels[$result->module_key] ?? $result->module_key }}</td>
-					<td><span class="page-status-count page-status-ok">Passed</span></td>
-				</tr>
-				@endforeach
-			</tbody>
-		</table>
-	</div>
-	@endif
-
-	{{-- ── AI Optimizations ── --}}
-	@if($aiResults->isNotEmpty())
-	@php
-		$pageMap = $scanPages->keyBy("id");
-		$homepageAiResults = $aiResults->filter(fn ($r) => $r->scan_page_id === null)->values();
-		$perPageAiResults = $aiResults->filter(fn ($r) => $r->scan_page_id !== null)->values();
-		$aiByPage = $perPageAiResults->groupBy("scan_page_id");
-	@endphp
-	<div class="page-break"></div>
-	<div class="section section-indigo">
-		<div class="section-header">
-			<div class="section-title"><span class="section-icon">&#9733;</span>AI-Powered Optimizations</div>
-			<div class="section-subtitle">See how AI can help you craft the perfect titles, descriptions, and content &mdash; tailored to your site for maximum search visibility and click-through rates.</div>
-		</div>
-
-		@if($homepageAiResults->isNotEmpty())
-		<div style="margin-bottom: 16px;">
-			<div class="page-ai-label">&#128196; {{ $project->url }}</div>
-			@foreach($homepageAiResults as $result)
-				@include("reports.partials.pdf-module-result", array(
-					"result" => $result,
-					"findingsLimit" => 3,
-					"showRecs" => false,
-					"showAi" => true,
-				))
-			@endforeach
-		</div>
-		@endif
-
-		@foreach($aiByPage as $pageId => $pageResults)
-		@php
-			$page = $pageMap->get($pageId);
-			$pageUrl = $page ? $page->truncatedUrl(80) : "Page #" . $pageId;
-		@endphp
-		<div style="margin-bottom: 16px;">
-			<div class="page-ai-label">&#128196; {{ $pageUrl }}</div>
-			@foreach($pageResults as $result)
-				@include("reports.partials.pdf-module-result", array(
-					"result" => $result,
-					"findingsLimit" => 3,
-					"showRecs" => false,
-					"showAi" => true,
-				))
-			@endforeach
-		</div>
+		@foreach($passedByCategory as $categoryName => $categoryResults)
+			<div class="category-subheader">{{ $categoryName }} <span class="category-subheader-count">({{ $categoryResults->count() }})</span></div>
+			<table class="pages-table" style="margin-bottom: 12px;">
+				<tbody>
+					@foreach($categoryResults as $result)
+					<tr>
+						<td style="width: 70%;">{{ $moduleLabels[$result->module_key] ?? $result->module_key }}</td>
+						<td style="width: 30%;"><span class="page-status-count page-status-ok">Passed</span></td>
+					</tr>
+					@endforeach
+				</tbody>
+			</table>
 		@endforeach
 	</div>
 	@endif
 
-	{{-- ── Crawled Pages Summary (only for multi-page crawl scans) ── --}}
-	@if($scanPages->count() > 1)
-	<div class="page-break"></div>
-	<div class="section section-blue">
-		<div class="section-header">
-			<div class="section-title"><span class="section-icon">&#128196;</span>Pages Analyzed</div>
-			<div class="section-subtitle">{{ $scanPages->count() }} {{ Str::plural("page", $scanPages->count()) }} crawled and scored individually.</div>
-		</div>
-
-		<table class="pages-table">
-			<thead>
-				<tr>
-					<th style="width: 55%;">Page URL</th>
-					<th style="width: 12%; text-align: center;">Score</th>
-					<th style="width: 33%;">Status Breakdown</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach($scanPages->sortByDesc("page_score") as $scanPage)
-				@php
-					$pageScoreClass = match(true) {
-						$scanPage->page_score === null => "page-score-gray",
-						$scanPage->page_score >= 80 => "page-score-green",
-						$scanPage->page_score >= 50 => "page-score-amber",
-						default => "page-score-red",
-					};
-					$pageOk = $scanPage->moduleResults->where("status.value", "ok")->count();
-					$pageWarn = $scanPage->moduleResults->where("status.value", "warning")->count();
-					$pageBad = $scanPage->moduleResults->where("status.value", "bad")->count();
-				@endphp
-				<tr>
-					<td class="page-url">{{ $scanPage->truncatedUrl(70) }}</td>
-					<td style="text-align: center;"><span class="page-score {{ $pageScoreClass }}">{{ $scanPage->page_score ?? "N/A" }}</span></td>
-					<td>
-						@if($pageOk > 0)<span class="page-status-count page-status-ok">{{ $pageOk }} passed</span>@endif
-						@if($pageWarn > 0)<span class="page-status-count page-status-warn">{{ $pageWarn }} warning</span>@endif
-						@if($pageBad > 0)<span class="page-status-count page-status-bad">{{ $pageBad }} failed</span>@endif
-					</td>
-				</tr>
-				@endforeach
-			</tbody>
-		</table>
-	</div>
-	@endif
-
-	{{-- ── Additional Pages (project-level, manually added or discovered) ── --}}
-	@if($additionalPages->isNotEmpty())
-	<div class="page-break"></div>
-	<div class="section section-blue">
-		<div class="section-header">
-			<div class="section-title"><span class="section-icon">&#128196;</span>Additional Pages Analyzed</div>
-			<div class="section-subtitle">{{ $additionalPages->count() }} additional {{ Str::plural("page", $additionalPages->count()) }} analyzed individually beyond the homepage.</div>
-		</div>
-
-		<table class="pages-table">
-			<thead>
-				<tr>
-					<th style="width: 55%;">Page URL</th>
-					<th style="width: 12%; text-align: center;">Score</th>
-					<th style="width: 33%;">Status Breakdown</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach($additionalPages as $additionalPage)
-				@php
-					$pageScoreClass = match(true) {
-						$additionalPage->page_score === null => "page-score-gray",
-						$additionalPage->page_score >= 80 => "page-score-green",
-						$additionalPage->page_score >= 50 => "page-score-amber",
-						default => "page-score-red",
-					};
-					$pageOk = $additionalPage->moduleResults->where("status.value", "ok")->count();
-					$pageWarn = $additionalPage->moduleResults->where("status.value", "warning")->count();
-					$pageBad = $additionalPage->moduleResults->where("status.value", "bad")->count();
-				@endphp
-				<tr>
-					<td class="page-url">{{ $additionalPage->truncatedUrl(70) }}</td>
-					<td style="text-align: center;"><span class="page-score {{ $pageScoreClass }}">{{ $additionalPage->page_score ?? "N/A" }}</span></td>
-					<td>
-						@if($pageOk > 0)<span class="page-status-count page-status-ok">{{ $pageOk }} passed</span>@endif
-						@if($pageWarn > 0)<span class="page-status-count page-status-warn">{{ $pageWarn }} warning</span>@endif
-						@if($pageBad > 0)<span class="page-status-count page-status-bad">{{ $pageBad }} failed</span>@endif
-					</td>
-				</tr>
-				@endforeach
-			</tbody>
-		</table>
-	</div>
-	@endif
+	{{-- Pages Analyzed and Additional Pages are consolidated into the Results Summary page above --}}
 
 	{{-- ── Closing Page ── --}}
 	<div class="page-break"></div>
 	<div class="outro">
+		{{-- Brand logo bookend --}}
+		@if($logoPath)
+			<img src="{{ $logoPath }}" style="max-width: 180px; max-height: 56px; margin-bottom: 20px;" alt="{{ $pdfBrandName }}">
+		@else
+			<div class="outro-brand" style="margin-bottom: 20px;">{{ $pdfBrandName }}</div>
+		@endif
+
 		<div class="outro-bar"></div>
-		<div class="outro-title">What's Next?</div>
+
+		{{-- Dynamic recap --}}
+		@php
+			$outroScoreClass = match(true) {
+				$scan->overall_score === null => "#9CA3AF",
+				$scan->overall_score >= 80 => "#059669",
+				$scan->overall_score >= 50 => "#D97706",
+				default => "#DC2626",
+			};
+		@endphp
+		<div class="outro-title">Your Site Scored <span style="color: {{ $outroScoreClass }};">{{ $scan->overall_score ?? 0 }}/100</span></div>
 		<div class="outro-text">
-			This report identified the highest-impact opportunities to improve your website's visibility, performance, and security. Here's how to turn these insights into results:
+			@if($aggregateCritical > 0)
+				Fixing the <strong style="color: #DC2626;">{{ $aggregateCritical }} critical {{ Str::plural("issue", $aggregateCritical) }}</strong> identified in this report could significantly improve your search ranking, security posture, and user experience.
+			@elseif($aggregateWarnings > 0)
+				Addressing the <strong style="color: #D97706;">{{ $aggregateWarnings }} {{ Str::plural("warning", $aggregateWarnings) }}</strong> identified in this report will help fine-tune your site's performance and visibility.
+			@else
+				Your site is in great shape. Keep monitoring regularly to maintain your competitive edge.
+			@endif
 		</div>
+
+		<div class="outro-title" style="font-size: 18px; margin-top: 30px;">What's Next?</div>
 
 		<table class="outro-steps">
 			<tr>
@@ -725,12 +739,31 @@
 			</tr>
 		</table>
 
-		@include("reports.partials.pdf-contact-info", array("author" => $reportAuthor, "variant" => "outro"))
+		{{-- CTA + Contact --}}
+		@if($reportAuthor)
+		<div style="margin-top: 28px; padding: 16px 20px; background-color: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px; text-align: center;">
+			<div style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 6px;">Need Help Fixing These Issues?</div>
+			<div style="font-size: 11px; color: #6B7280; line-height: 1.7; margin-bottom: 10px;">
+				Let us turn this report into results. Reach out to discuss a tailored optimization plan for your site.
+			</div>
+			<div class="outro-contact-name">{{ $reportAuthor->name }}</div>
+			@if($reportAuthor->email)
+				<div class="outro-contact-detail">{{ $reportAuthor->email }}</div>
+			@endif
+			@if($reportAuthor->phone)
+				<div class="outro-contact-detail">{{ $reportAuthor->phone }}</div>
+			@endif
+		</div>
+		@endif
 
 		<div class="outro-divider"></div>
 
-		<div class="outro-brand">{{ $pdfBrandName }}</div>
-		<div class="outro-tagline">Your partner in website performance</div>
+		@if($logoPath)
+			<img src="{{ $logoPath }}" style="max-width: 120px; max-height: 40px; margin-bottom: 6px;" alt="{{ $pdfBrandName }}">
+		@else
+			<div class="outro-brand">{{ $pdfBrandName }}</div>
+		@endif
+		<div class="outro-tagline">Data-driven insights for a faster, safer, more visible web</div>
 	</div>
 </body>
 </html>

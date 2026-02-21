@@ -82,6 +82,8 @@ class PdfReportService
 			"groupedResults" => $groupedResults,
 			"statusCounts" => $statusCounts,
 			"moduleLabels" => $moduleLabels,
+			"moduleCategoryMap" => $this->moduleRegistry->categoryMap(),
+			"categoryDescriptions" => config("scan-ui.category_descriptions"),
 			"scanPages" => $scanPages,
 			"additionalPages" => $additionalPages,
 			"aiResults" => $aiResults,

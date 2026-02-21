@@ -141,6 +141,22 @@ class ModuleRegistry
 	}
 
 	/**
+	 * Build a moduleKey => category map for all registered analyzers.
+	 *
+	 * @return array<string, string>
+	 */
+	public function categoryMap(): array
+	{
+		$categories = array();
+
+		foreach ($this->analyzers as $key => $analyzer) {
+			$categories[$key] = $analyzer->category();
+		}
+
+		return $categories;
+	}
+
+	/**
 	 * Resolve the display category for a module key.
 	 */
 	public function resolveCategory(string $moduleKey): string

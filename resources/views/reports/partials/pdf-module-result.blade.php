@@ -32,36 +32,46 @@
 		default => "Info",
 	};
 	$insightClass = match($statusValue) {
-		"warning" => "card-insight-amber",
-		"bad" => "card-insight-red",
-		default => "",
+		"bad" => "card-recs-red",
+		default => "card-recs",
 	};
-	$insightTitle = $statusValue === "bad" ? "&#128161; Why This Matters" : "&#128161; Insight";
+	$insightTitle = "&#128161; Why This Matters";
 	$recsClass = $statusValue === "bad" ? "card-recs-red" : "";
 	$recItemClass = $statusValue === "bad" ? "card-rec-red" : "";
+	$findingsTitle = match($statusValue) {
+		"ok" => "&#10004; What We Found",
+		"bad" => "&#9888; Issues Detected",
+		"warning" => "&#9888; Needs Improvement",
+		default => "&#8505; Details",
+	};
 @endphp
 
 <div class="card {{ $cardClass }} avoid-break">
 	<div class="card-header">
-		<span class="card-title">{{ $moduleLabels[$result->module_key] ?? $result->module_key }}</span>
-		<span class="card-badge {{ $badgeClass }}">{{ $badgeLabel }}</span>
+		<table class="card-header-table">
+			<tr>
+				<td><span class="card-title">{{ $moduleLabels[$result->module_key] ?? $result->module_key }}</span></td>
+				<td style="text-align: right;"><span class="card-badge {{ $badgeClass }}">{{ $badgeLabel }}</span></td>
+			</tr>
+		</table>
 	</div>
-
-	@if($findings->isNotEmpty())
-	<div class="card-findings">
-		@foreach($findings->take($findingsLimit) as $finding)
-			<div class="card-finding">{{ is_array($finding) ? ($finding["message"] ?? ($finding["text"] ?? "")) : $finding }}</div>
-		@endforeach
-	</div>
-	@endif
 
 	@if($desc)
-	<div class="card-insight {{ $insightClass }}">
-		<div class="card-insight-title">{!! $insightTitle !!}</div>
+	<div class="{{ $insightClass }}">
+		<div class="card-recs-title">{!! $insightTitle !!}</div>
 		<div class="card-insight-text">{{ $desc["description"] }}</div>
 		@if($statusValue === "ok" && !empty($desc["passing"]))
 			<div class="card-passing">&#10004; {{ $desc["passing"] }}</div>
 		@endif
+	</div>
+	@endif
+
+	@if($findings->isNotEmpty())
+	<div class="card-findings">
+		<div class="card-recs-title" style="margin-bottom: 6px;">{!! $findingsTitle !!}</div>
+		@foreach($findings->take($findingsLimit) as $finding)
+			<div class="card-finding">{{ is_array($finding) ? ($finding["message"] ?? ($finding["text"] ?? "")) : $finding }}</div>
+		@endforeach
 	</div>
 	@endif
 
