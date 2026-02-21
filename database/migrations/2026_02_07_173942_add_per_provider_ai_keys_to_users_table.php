@@ -9,9 +9,9 @@ return new class extends Migration
 	public function up(): void
 	{
 		Schema::table("users", function (Blueprint $table) {
-			$table->text("ai_gemini_key")->nullable()->after("ai_provider");
-			$table->text("ai_openai_key")->nullable()->after("ai_gemini_key");
-			$table->text("ai_anthropic_key")->nullable()->after("ai_openai_key");
+			$table->text("ai_gemini_key")->nullable();
+			$table->text("ai_openai_key")->nullable();
+			$table->text("ai_anthropic_key")->nullable();
 		});
 	}
 
