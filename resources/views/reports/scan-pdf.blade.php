@@ -9,28 +9,39 @@
 
 		/* ── Cover Page ── */
 		.cover { margin-bottom: 20px; }
-		.cover-top { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+		.cover-top { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
 		.cover-top td { vertical-align: top; }
-		.brand { font-size: 24px; font-weight: bold; color: #111827; }
-		.brand-sub { font-size: 10px; color: #9CA3AF; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-		.brand-bar { height: 3px; background-color: {{ $accentColor }}; margin-bottom: 30px; width: 60px; }
+		.brand { font-size: 22px; font-weight: bold; color: #111827; }
+		.brand-sub { font-size: 9px; color: #9CA3AF; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
 
-		.score-row { width: 100%; border-collapse: separate; border-spacing: 10px 0; margin-bottom: 24px; }
-		.score-box { text-align: center; padding: 20px; border: 4px solid #E5E7EB; border-radius: 12px; width: 160px; }
-		.score-box-sm { width: 50%; padding: 16px 10px; }
-		.score-value { font-size: 72px; font-weight: bold; line-height: 1; }
-		.score-value-sm { font-size: 52px; }
-		.score-label { font-size: 13px; color: #4B5563; margin-top: 6px; }
-		.score-label-sub { font-size: 11px; }
+		/* ── Score Boxes ── */
+		.score-box { text-align: center; padding: 20px; border: 4px solid #E5E7EB; border-radius: 12px; }
+		.score-box-lg { padding: 24px 30px; }
+		.score-box-sm { padding: 14px 10px; }
+		.score-box-xs { padding: 8px 6px; border-width: 3px; }
+		.score-value { font-weight: bold; line-height: 1; }
+		.score-value-lg { font-size: 80px; }
+		.score-value-sm { font-size: 44px; }
+		.score-value-xs { font-size: 28px; }
+		.score-label { color: #4B5563; margin-top: 6px; }
+		.score-label-lg { font-size: 13px; }
+		.score-label-sm { font-size: 11px; }
+		.score-label-xs { font-size: 9px; }
 		.score-green { color: #059669; border-color: #10B981; background-color: #F0FDF4; }
 		.score-amber { color: #D97706; border-color: #F59E0B; background-color: #FFFBEB; }
 		.score-red { color: #DC2626; border-color: #EF4444; background-color: #FEF2F2; }
 		.score-na { color: #9CA3AF; border-color: #E5E7EB; background-color: #F9FAFB; }
 
-		.cover-title-pre { font-size: 14px; color: #6B7280; margin-bottom: 4px; }
-		.cover-title { font-size: 28px; font-weight: bold; color: #111827; line-height: 1.2; margin-bottom: 4px; }
-		.cover-url { font-size: 13px; color: #6B7280; margin-bottom: 14px; }
-		.cover-intro { font-size: 13px; color: #6B7280; line-height: 1.7; margin-bottom: 24px; }
+		/* ── Cover Title ── */
+		.cover-review { font-size: 32px; color: #374151; line-height: 1.3; margin-bottom: 6px; }
+		.cover-domain { color: {{ $accentColor }}; font-weight: bold; }
+		.cover-date { font-size: 13px; color: #9CA3AF; margin-bottom: 50px; }
+
+		/* ── Cover Introduction (two-column) ── */
+		.cover-intro-table { width: 100%; border-collapse: collapse; }
+		.cover-intro-label-cell { width: 140px; vertical-align: top; padding-right: 20px; }
+		.cover-intro-label { font-size: 14px; color: #9CA3AF; letter-spacing: 0.5px; }
+		.cover-intro-body { font-size: 12px; color: #6B7280; line-height: 1.8; }
 
 
 
@@ -199,56 +210,92 @@
 
 	{{-- ── Page 1: Cover ── --}}
 	<div class="cover">
+		{{-- Top row: brand left, score pyramid right --}}
 		<table class="cover-top">
 			<tr>
 				<td>
 					@if($logoPath)
-						<img src="{{ $logoPath }}" style="max-width: 120px; max-height: 40px; margin-bottom: 4px;" alt="{{ $pdfBrandName }}">
+						<img src="{{ $logoPath }}" style="max-width: 220px; max-height: 70px; margin-bottom: 6px;" alt="{{ $pdfBrandName }}">
+					@else
+						<div class="brand">{{ $pdfBrandName }}</div>
 					@endif
-					<div class="brand">{{ $pdfBrandName }}</div>
 					<div class="brand-sub">Website Audit Report</div>
 				</td>
-				<td style="text-align: right; width: 160px;">
-					<div class="score-box {{ $overallClass }}">
-						<div class="score-value">{{ $scan->overall_score ?? 0 }}</div>
-						<div class="score-label">out of 100 &middot; Overall</div>
+				<td style="text-align: right; width: 200px; vertical-align: top;">
+					{{-- Overall score (large) --}}
+					<div class="score-box score-box-lg {{ $overallClass }}" style="margin-bottom: 8px;">
+						<div class="score-value score-value-lg">{{ $scan->overall_score ?? 0 }}</div>
+						<div class="score-label score-label-lg">Overall Score</div>
 					</div>
+					{{-- SEO + Health (small, side by side under overall) --}}
+					<table style="width: 100%; border-collapse: collapse;">
+						<tr>
+							<td style="width: 50%; padding-right: 3px;">
+								<div class="score-box score-box-xs {{ $seoClass }}">
+									<div class="score-value score-value-xs">{!! $scan->seo_score ?? "&mdash;" !!}</div>
+									<div class="score-label score-label-xs">SEO</div>
+								</div>
+							</td>
+							<td style="width: 50%; padding-left: 3px;">
+								<div class="score-box score-box-xs {{ $healthClass }}">
+									<div class="score-value score-value-xs">{!! $scan->health_score ?? "&mdash;" !!}</div>
+									<div class="score-label score-label-xs">Health</div>
+								</div>
+							</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 		</table>
 
-		<div class="brand-bar"></div>
+		{{-- Title: "Review of domain.com" --}}
+		<div class="cover-review">Review of <span class="cover-domain">{{ $project->domain() }}</span></div>
+		<div class="cover-date">Generated on {{ $scan->created_at->format("F j, Y") }}</div>
 
-		<div class="cover-title-pre">A comprehensive analysis of</div>
-		<div class="cover-title">{{ $project->name }}</div>
-		<div class="cover-url">{{ $project->url }}</div>
-
-		<div class="cover-intro">
-			This report is a comprehensive audit of {{ $project->url }}, analyzing {{ $totalModules }} key factors across SEO, security, performance, content quality, and technical health. From on-page optimization and search visibility to platform vulnerabilities, malware detection, and Core Web Vitals &mdash; each check is scored and prioritized so you know exactly what to fix first and why it matters.
-			@if($hasAiSuggestions)
-				<span style="color: {{ $accentColor }};">This report also includes {{ $aiProviderLabel ?? "AI" }}-powered recommendations with specific, actionable optimizations tailored to your site.</span>
-			@endif
-		</div>
-
-		<table class="score-row">
+		{{-- Introduction (two-column layout like WooRank) --}}
+		<table class="cover-intro-table">
 			<tr>
-				<td class="score-box score-box-sm {{ $seoClass }}">
-					<div class="score-value score-value-sm">{!! $scan->seo_score ?? "&mdash;" !!}</div>
-					<div class="score-label score-label-sub">out of 100 &middot; SEO Score</div>
+				<td class="cover-intro-label-cell">
+					<div class="cover-intro-label">Introduction</div>
 				</td>
-				<td class="score-box score-box-sm {{ $healthClass }}">
-					<div class="score-value score-value-sm">{!! $scan->health_score ?? "&mdash;" !!}</div>
-					<div class="score-label score-label-sub">out of 100 &middot; Site Health</div>
+				<td>
+					<div class="cover-intro-body">
+						This report is a comprehensive audit of {{ $project->url }}, analyzing {{ $totalModules }} key factors across SEO, security, performance, content quality, and technical health. From on-page optimization and search visibility to platform vulnerabilities, malware detection, and Core Web Vitals &mdash; each check is scored and prioritized so you know exactly what to fix first and why it matters.
+					</div>
+					@if($hasAiSuggestions)
+					<div class="cover-intro-body" style="margin-top: 10px; color: {{ $accentColor }};">
+						This report also includes {{ $aiProviderLabel ?? "AI" }}-powered recommendations with specific, actionable optimizations tailored to your site.
+					</div>
+					@endif
+				</td>
+			</tr>
+			<tr>
+				<td class="cover-intro-label-cell" style="padding-top: 60px;">
+					<div class="cover-intro-label">Prepared By</div>
+				</td>
+				<td style="padding-top: 60px;">
+					@if($reportAuthor)
+						<div class="cover-intro-body" style="font-weight: bold; color: #111827;">{{ $reportAuthor->name }}</div>
+						@if($reportAuthor->email)
+							<div class="cover-intro-body">{{ $reportAuthor->email }}</div>
+						@endif
+						@if($reportAuthor->phone)
+							<div class="cover-intro-body">{{ $reportAuthor->phone }}</div>
+						@endif
+					@endif
+					<div class="cover-intro-body">{{ $scan->created_at->format("F j, Y") }}</div>
 				</td>
 			</tr>
 		</table>
-		<div style="font-size: 10px; color: #4B5563; line-height: 1.8; margin-bottom: 20px;">
-			<strong>Overall Score</strong> &mdash; A weighted aggregate of all {{ $totalModules }} checks across every category.<br/>
-			<strong>SEO Score</strong> &mdash; Calculated independently from SEO-related modules: on-page optimization, technical SEO, content quality, and search visibility.<br/>
-			<strong>Site Health Score</strong> &mdash; Calculated independently from infrastructure modules: performance, security, analytics, and technology stack.
-		</div>
+	</div>
 
-		<div class="divider"></div>
+	{{-- ── Page 2: Scan Details ── --}}
+	<div class="page-break"></div>
+	<div class="section">
+		<div class="section-header" style="border-bottom-color: {{ $accentColor }};">
+			<div class="section-title" style="color: {{ $accentColor }};">Scan Details</div>
+			<div class="section-subtitle">Technical metadata for this audit.</div>
+		</div>
 
 		<table class="meta-table">
 			<tr>
@@ -256,8 +303,16 @@
 				<td class="meta-value">{{ $project->url }}</td>
 			</tr>
 			<tr>
+				<td class="meta-label">Project</td>
+				<td class="meta-value">{{ $project->name }}</td>
+			</tr>
+			<tr>
 				<td class="meta-label">Scan Date</td>
-				<td class="meta-value">{{ $scan->created_at->format("F j, Y") }}</td>
+				<td class="meta-value">{{ $scan->created_at->format("F j, Y \\a\\t g:i A") }}</td>
+			</tr>
+			<tr>
+				<td class="meta-label">Scan Type</td>
+				<td class="meta-value">{{ $scan->isCrawlScan() ? "Multi-Page Crawl" : "Homepage Analysis" }}</td>
 			</tr>
 			@if($scan->isCrawlScan())
 			<tr>
@@ -265,16 +320,16 @@
 				<td class="meta-value">{{ $scan->pages_crawled }} {{ Str::plural("page", $scan->pages_crawled) }}</td>
 			</tr>
 			@endif
-			<tr>
-				<td class="meta-label">Scan Type</td>
-				<td class="meta-value">{{ $scan->isCrawlScan() ? "Multi-Page Crawl" : "Homepage Analysis" }}</td>
-			</tr>
 			@if($scan->scan_duration_ms)
 			<tr>
 				<td class="meta-label">Duration</td>
 				<td class="meta-value">{{ $scan->formattedDuration() }}</td>
 			</tr>
 			@endif
+			<tr>
+				<td class="meta-label">Checks Run</td>
+				<td class="meta-value">{{ $totalModules }} analyzers across SEO, content, security, and performance</td>
+			</tr>
 			@if($scan->fetcher_used === "zyte")
 			<tr>
 				<td class="meta-label">Fetcher</td>
@@ -292,6 +347,15 @@
 			</tr>
 			@endif
 		</table>
+
+		<div class="divider"></div>
+
+		{{-- Score breakdown explanation --}}
+		<div style="font-size: 11px; color: #4B5563; line-height: 1.8; margin-bottom: 16px;">
+			<strong>Overall Score</strong> &mdash; A weighted aggregate of all {{ $totalModules }} checks across every category.<br/>
+			<strong>SEO Score</strong> &mdash; On-page optimization, technical SEO, content quality, and search visibility.<br/>
+			<strong>Site Health</strong> &mdash; Performance, security, analytics, and technology stack.
+		</div>
 
 		@include("reports.partials.pdf-contact-info", array("author" => $reportAuthor, "variant" => "cover"))
 	</div>
