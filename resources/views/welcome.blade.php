@@ -18,12 +18,22 @@
 					Dashboard
 				</a>
 			@else
-				<a
-					href="{{ route('login') }}"
-					class="inline-block px-6 py-2 bg-[#1b1b18] dark:bg-[#eeeeec] text-white dark:text-[#1C1C1A] rounded-sm text-sm font-medium leading-normal hover:bg-black dark:hover:bg-white transition"
-				>
-					Log in
-				</a>
+				<div class="flex items-center gap-4">
+					<a
+						href="{{ route('login') }}"
+						class="inline-block px-6 py-2 bg-[#1b1b18] dark:bg-[#eeeeec] text-white dark:text-[#1C1C1A] rounded-sm text-sm font-medium leading-normal hover:bg-black dark:hover:bg-white transition"
+					>
+						Log in
+					</a>
+					@if (\App\Models\Setting::getValue("registration_enabled", "0") === "1")
+						<a
+							href="{{ route('register') }}"
+							class="inline-block px-6 py-2 border border-[#19140035] dark:border-[#3E3E3A] text-[#1b1b18] dark:text-[#EDEDEC] rounded-sm text-sm font-medium leading-normal hover:border-[#1915014a] dark:hover:border-[#62605b] transition"
+						>
+							Register
+						</a>
+					@endif
+				</div>
 			@endauth
 		</div>
 
