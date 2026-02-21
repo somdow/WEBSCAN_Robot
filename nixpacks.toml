@@ -22,7 +22,6 @@ nixPkgs = [
     "php84Extensions.filter",
     "php84Extensions.session",
     "php84Extensions.openssl",
-    "php84Extensions.phar",
     "php84Extensions.iconv",
     "php84Extensions.opcache",
     "php84Extensions.pcntl",
