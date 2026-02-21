@@ -1,0 +1,22 @@
+# Funnel Analysis Workflow
+name: funnel-analysis
+description: "Analyze marketing and conversion funnels to identify drop-offs and optimization opportunities"
+author: "Maya"
+
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+enable_web_research: true
+
+installed_path: "{project-root}/.bmad/bmm/workflows/marketing/funnel-analysis"
+instructions: "{installed_path}/instructions.md"
+template: "{installed_path}/template.md"
+validation: "{installed_path}/checklist.md"
+
+default_output_file: "{output_folder}/funnel-analysis-{{date}}.md"
+
+standalone: true

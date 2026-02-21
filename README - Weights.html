@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Hello SEO Analyzer — Module Scoring Weights</title>
+	<style>
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #FAFAFA; color: #1a1a1a; padding: 40px 20px; }
+		.container { max-width: 720px; margin: 0 auto; }
+		h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+		.subtitle { font-size: 0.875rem; color: #6b7280; margin-bottom: 32px; }
+		h2 { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; margin: 28px 0 10px; }
+		h2:first-of-type { margin-top: 0; }
+		table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 8px; }
+		th { text-align: left; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: #6b7280; padding: 10px 16px; border-bottom: 2px solid #e5e7eb; }
+		th:last-child { text-align: center; width: 80px; }
+		td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; font-size: 0.875rem; }
+		td:last-child { text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+		tr:last-child td { border-bottom: none; }
+		tr:hover td { background: #f9fafb; }
+		.weight-20 { color: #dc2626; }
+		.weight-high { color: #b45309; }
+		.weight-mid { color: #4f46e5; }
+		.weight-low { color: #6b7280; }
+		.weight-zero { color: #d1d5db; }
+		.formula { margin-top: 32px; background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); font-size: 0.875rem; color: #374151; line-height: 1.6; }
+		.formula code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 0.8125rem; }
+		.formula strong { color: #1a1a1a; }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Module Scoring Weights</h1>
+		<p class="subtitle">Cross-tool validated against SEMrush, Ahrefs, Screaming Frog, Lighthouse, and WooRank. Score = sum(weight &times; multiplier) / totalWeight &times; 100</p>
+
+		<h2>Security — Critical</h2>
+		<table>
+			<tr><th>Module</th><th>Weight</th></tr>
+			<tr><td>SSL Certificate</td><td class="weight-20">20</td></tr>
+		</table>
+
+		<h2>Tier 1 — Content Fundamentals</h2>
+		<table>
+			<tr><th>Module</th><th>Weight</th></tr>
+			<tr><td>Title Tag</td><td class="weight-high">15</td></tr>
+			<tr><td>Content Keywords</td><td class="weight-high">12</td></tr>
+			<tr><td>H1 Tag</td><td class="weight-high">10</td></tr>
+			<tr><td>Content Readability</td><td class="weight-high">9</td></tr>
+			<tr><td>Meta Description</td><td class="weight-mid">8</td></tr>
+			<tr><td>Duplicate Content</td><td class="weight-mid">8</td></tr>
+		</table>
+
+		<h2>Tier 2 — Technical Essentials</h2>
+		<table>
+			<tr><th>Module</th><th>Weight</th></tr>
+			<tr><td>Canonical Tag</td><td class="weight-mid">8</td></tr>
+			<tr><td>HTTPS Redirect</td><td class="weight-mid">7</td></tr>
+			<tr><td>Redirect Chain</td><td class="weight-mid">7</td></tr>
+			<tr><td>Sitemap Analysis</td><td class="weight-mid">6</td></tr>
+			<tr><td>Duplicate URL Detection</td><td class="weight-mid">6</td></tr>
+			<tr><td>HTTP Headers</td><td class="weight-mid">5</td></tr>
+			<tr><td>Robots.txt</td><td class="weight-mid">5</td></tr>
+			<tr><td>URL Structure</td><td class="weight-mid">5</td></tr>
+		</table>
+
+		<h2>Tier 3 — E-E-A-T &amp; Trust Signals</h2>
+		<table>
+			<tr><th>Module</th><th>Weight</th></tr>
+			<tr><td>Trust Pages (About &amp; Contact)</td><td class="weight-mid">8</td></tr>
+			<tr><td>Author Attribution</td><td class="weight-mid">7</td></tr>
+			<tr><td>Business Schema</td><td class="weight-mid">5</td></tr>
+			<tr><td>Privacy &amp; Terms</td><td class="weight-low">4</td></tr>
+		</table>
+
+		<h2>Tier 4 — Supporting Factors</h2>
+		<table>
+			<tr><th>Module</th><th>Weight</th></tr>
+			<tr><td>Link Analysis</td><td class="weight-mid">7</td></tr>
+			<tr><td>Image Analysis</td><td class="weight-mid">6</td></tr>
+			<tr><td>Core Web Vitals (Mobile)</td><td class="weight-mid">6</td></tr>
+			<tr><td>Performance Hints</td><td class="weight-mid">6</td></tr>
+			<tr><td>Core Web Vitals (Desktop)</td><td class="weight-mid">5</td></tr>
+			<tr><td>H2–H6 Tags</td><td class="weight-mid">5</td></tr>
+			<tr><td>Schema.org</td><td class="weight-mid">5</td></tr>
+			<tr><td>Viewport Tag</td><td class="weight-mid">5</td></tr>
+			<tr><td>Compression &amp; Caching</td><td class="weight-low">4</td></tr>
+			<tr><td>Accessibility</td><td class="weight-low">3</td></tr>
+			<tr><td>Breadcrumbs</td><td class="weight-low">3</td></tr>
+			<tr><td>Semantic HTML</td><td class="weight-low">3</td></tr>
+			<tr><td>Hreflang</td><td class="weight-low">3</td></tr>
+		</table>
+
+		<h2>Security — Defensive</h2>
+		<table>
+			<tr><th>Module</th><th>Weight</th></tr>
+			<tr><td>Mixed Content</td><td class="weight-mid">6</td></tr>
+			<tr><td>Exposed Sensitive Files</td><td class="weight-mid">5</td></tr>
+			<tr><td>Security Headers</td><td class="weight-low">4</td></tr>
+		</table>
+
+		<h2>Tier 5 — Baseline Expectations</h2>
+		<table>
+			<tr><th>Module</th><th>Weight</th></tr>
+			<tr><td>Noindex Check</td><td class="weight-low">4</td></tr>
+			<tr><td>Blacklist Check</td><td class="weight-low">3</td></tr>
+			<tr><td>Robots Meta</td><td class="weight-low">3</td></tr>
+			<tr><td>HTML Lang</td><td class="weight-low">2</td></tr>
+			<tr><td>Doctype &amp; Charset</td><td class="weight-low">2</td></tr>
+		</table>
+
+		<h2>Tier 6 — WordPress-Specific</h2>
+		<table>
+			<tr><th>Module</th><th>Weight</th></tr>
+			<tr><td>WordPress Plugins</td><td class="weight-mid">7</td></tr>
+			<tr><td>WordPress Theme</td><td class="weight-mid">5</td></tr>
+		</table>
+
+		<h2>Info-Only (Not Scored)</h2>
+		<table>
+			<tr><th>Module</th><th>Weight</th></tr>
+			<tr><td>Social Tags (Open Graph)</td><td class="weight-zero">0</td></tr>
+			<tr><td>Favicon</td><td class="weight-zero">0</td></tr>
+			<tr><td>Google Map Embed</td><td class="weight-zero">0</td></tr>
+			<tr><td>Analytics Detection</td><td class="weight-zero">0</td></tr>
+			<tr><td>WordPress Detection</td><td class="weight-zero">0</td></tr>
+			<tr><td>Technology Stack</td><td class="weight-zero">0</td></tr>
+			<tr><td>Keyword Consistency</td><td class="weight-zero">0</td></tr>
+			<tr><td>SERP Preview</td><td class="weight-zero">0</td></tr>
+		</table>
+
+		<div class="formula">
+			<strong>Scoring Formula</strong><br>
+			Each module result gets a multiplier: <code>Ok = 1.0</code>, <code>Warning = 0.5</code>, <code>Bad = 0.0</code>, <code>Info = excluded</code>.<br><br>
+			<strong>Overall Score</strong> = <code>sum(weight &times; multiplier)</code> / <code>sum(weight)</code> &times; 100<br><br>
+			Example: If SSL Certificate (20) is Bad and Title Tag (15) is Ok, the score loses 20 points from the pool but keeps 15. Modules with weight 0 are displayed in results but do not affect the score.
+		</div>
+	</div>
+</body>
+</html>

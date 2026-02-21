@@ -1,0 +1,22 @@
+# A/B Test Plan Workflow
+name: ab-test-plan
+description: "Design rigorous A/B tests with proper hypothesis, sample size, and analysis plan"
+author: "Dana"
+
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+enable_web_research: true
+
+installed_path: "{project-root}/.bmad/bmm/workflows/data/ab-test-plan"
+instructions: "{installed_path}/instructions.md"
+template: "{installed_path}/template.md"
+validation: "{installed_path}/checklist.md"
+
+default_output_file: "{output_folder}/ab-test-plan-{{date}}.md"
+
+standalone: true

@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git stash:*)",
+      "Bash(ls:*)",
+      "Bash(php artisan view:clear:*)",
+      "Bash(php artisan queue:restart:*)",
+      "Bash(php artisan make:migration:*)",
+      "Bash(php artisan migrate:*)",
+      "Bash(php artisan:*)",
+      "Bash(sqlite3:*)",
+      "Bash(php artisan tinker:*)",
+      "Bash(php artisan test:*)",
+      "Bash(npx vite build)",
+      "WebFetch(domain:developers.google.com)",
+      "WebFetch(domain:mudplugz.com)",
+      "Bash(php:*)",
+      "mcp__context7__resolve-library-id",
+      "WebSearch",
+      "mcp__context7__query-docs",
+      "WebFetch(domain:docs.stripe.com)",
+      "Bash(xargs cat:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)"
+    ]
+  }
+}

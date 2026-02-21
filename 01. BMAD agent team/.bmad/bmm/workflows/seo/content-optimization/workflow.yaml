@@ -1,0 +1,26 @@
+# Content Optimization Workflow
+name: content-optimization
+description: "Review and optimize any content piece for SEO best practices, E-E-A-T signals, and search visibility"
+author: "The SEO Guy"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+# Web research for SERP analysis
+enable_web_research: true
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/seo/content-optimization"
+instructions: "{installed_path}/instructions.md"
+template: "{installed_path}/template.md"
+validation: "{installed_path}/checklist.md"
+
+# Output configuration
+default_output_file: "{output_folder}/content-optimization-{{date}}.md"
+
+standalone: true

@@ -1,0 +1,22 @@
+# CI/CD Setup Workflow
+name: ci-cd-setup
+description: "Design and implement continuous integration and deployment pipelines"
+author: "Diego"
+
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+enable_web_research: true
+
+installed_path: "{project-root}/.bmad/bmm/workflows/devops/ci-cd-setup"
+instructions: "{installed_path}/instructions.md"
+template: "{installed_path}/template.md"
+validation: "{installed_path}/checklist.md"
+
+default_output_file: "{output_folder}/ci-cd-setup-{{date}}.md"
+
+standalone: true

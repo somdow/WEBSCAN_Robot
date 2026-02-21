@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(del \"F:\\xampp\\htdocs\\onchannelg\\debug_guide.php\")",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: OCG (OnChannel Gaming) Guide Generator\n\nAI-powered Star Citizen guide generator using Gemini + YouTube.\n\nFeatures:\n- Topic discovery (What''s Hot, SC Pulse Check, AI Suggests, Search)\n- YouTube video analysis via Gemini API\n- Markdown guide generation with streaming progress\n- Guide review/edit/approve workflow\n- Dashboard with stats\n- Settings management (curated topics, API config)\n\nTech stack:\n- PHP 8+ with SQLite database\n- Vanilla JavaScript (no frameworks)\n- YouTube Data API v3\n- Google Gemini API\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)",
+      "WebSearch",
+      "WebFetch(domain:rapidapi.com)",
+      "WebFetch(domain:apyhub.com)",
+      "WebFetch(domain:apify.com)",
+      "WebFetch(domain:docs.apify.com)",
+      "WebFetch(domain:coolify.io)",
+      "WebFetch(domain:stackoverflow.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.apify.com)",
+      "Bash(php -r:*)",
+      "Bash(php -l:*)",
+      "Bash(git stash:*)",
+      "Bash(git branch:*)",
+      "Bash(del \"F:\\xampp\\htdocs\\onchannelg\\api\\debug-images.php\")",
+      "Bash(del \"F:\\xampp\\htdocs\\onchannelg\\api\\test-imageserver.php\")",
+      "WebFetch(domain:imageserver.smdbeta.com)",
+      "Bash(findstr:*)",
+      "Bash(php -i:*)",
+      "Bash(git restore:*)",
+      "WebFetch(domain:docs.browserless.io)",
+      "Bash(php:*)",
+      "Bash(dir:*)",
+      "Bash(git push:*)",
+      "SlashCommand(/bmad:bmm:workflows:workflow-status)",
+      "SlashCommand(/bmad:core:workflows:party-mode)",
+      "Bash(more:*)",
+      "Bash(powershell -Command \"Get-Content ''F:\\xampp\\htdocs\\onchannelg\\logs\\activity.log'' -Tail 30\")",
+      "Bash(powershell:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

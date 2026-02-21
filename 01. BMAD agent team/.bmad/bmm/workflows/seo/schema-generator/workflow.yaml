@@ -1,0 +1,26 @@
+# Schema Generator Workflow
+name: schema-generator
+description: "Generate JSON-LD structured data markup for rich search results (HowTo, FAQ, Article, Product, etc.)"
+author: "The SEO Guy"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+# Web research for schema validation and examples
+enable_web_research: true
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/seo/schema-generator"
+instructions: "{installed_path}/instructions.md"
+template: "{installed_path}/template.md"
+validation: "{installed_path}/checklist.md"
+
+# Output configuration
+default_output_file: "{output_folder}/schema-markup-{{date}}.md"
+
+standalone: true

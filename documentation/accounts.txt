@@ -1,0 +1,22 @@
+Test Accounts
+==============
+
+Super Admin (Agency Plan)
+-------------------------
+Email:    somdow@gmail.com
+Password: Wpwpwp3#
+Plan:     Agency (all features, super admin powers)
+Org:      Hello SEO
+
+Free Plan
+---------
+Email:    freeaccount@gmail.com
+Password: password
+Plan:     Free (AI features locked, limited scans)
+Org:      Free User Org
+
+Notes
+-----
+- Both accounts are created by SuperAdminSeeder (run via `php artisan db:seed`)
+- Super admin has is_super_admin=true flag for admin panel access
+- Free user is for testing pro feature locks and upgrade prompts

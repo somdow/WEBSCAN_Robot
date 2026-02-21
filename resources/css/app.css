@@ -1,0 +1,130 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+@theme {
+	/* ── Typography ── */
+	--font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+	/* ── Surface Colors ── */
+	--color-background: #EBEBEB;
+	--color-surface: #FFFFFF;
+	--color-surface-inset: #EFF1F5;
+
+	/* ── Text Colors ── */
+	--color-text-primary: #111827;
+	--color-text-secondary: #6B7280;
+	--color-text-tertiary: #9CA3AF;
+
+	/* ── Border Colors ── */
+	--color-border: #E5E7EB;
+	--color-border-strong: #D1D5DB;
+
+	/* ── Accent / Brand ── */
+	--color-accent: #f25a15;
+	--color-accent-hover: #d94e10;
+	--color-accent-light: #fff7ed;
+
+	/* ── AI Purple ── */
+	--color-ai: #5555AA;
+	--color-ai-light: #EDEDF5;
+	--color-ai-border: #CDCDE8;
+
+	/* ── Status Colors ── */
+	--color-success: #10B981;
+	--color-success-light: #ECFDF5;
+	--color-warning: #F59E0B;
+	--color-warning-light: #FFFBEB;
+	--color-danger: #EF4444;
+	--color-danger-light: #FEF2F2;
+	--color-info: #6366F1;
+	--color-info-light: #EEF2FF;
+
+	/* ── Shadows ── */
+	--shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+	--shadow-card-hover: 0 4px 6px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Alpine.js x-cloak: hide elements until Alpine initializes */
+[x-cloak] {
+	display: none !important;
+}
+
+/* AI markdown content rendered inside purple panels */
+.ai-prose p {
+	margin-bottom: 0.5rem;
+}
+.ai-prose p:last-child {
+	margin-bottom: 0;
+}
+.ai-prose ul,
+.ai-prose ol {
+	margin-left: 1.25rem;
+	margin-bottom: 0.5rem;
+}
+.ai-prose ul {
+	list-style-type: disc;
+}
+.ai-prose ol {
+	list-style-type: decimal;
+}
+.ai-prose li {
+	margin-bottom: 0.25rem;
+}
+.ai-prose li:last-child {
+	margin-bottom: 0;
+}
+.ai-prose strong {
+	font-weight: 600;
+}
+.ai-prose a {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+.ai-prose h3,
+.ai-prose h4 {
+	font-weight: 600;
+	margin-bottom: 0.25rem;
+}
+.ai-prose table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 0.5rem;
+}
+.ai-prose th,
+.ai-prose td {
+	padding: 0.25rem 0.5rem;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+	text-align: left;
+}
+.ai-prose th {
+	font-weight: 600;
+}
+.ai-prose pre {
+	background: rgba(0, 0, 0, 0.3);
+	border-radius: 0.375rem;
+	padding: 0.75rem 1rem;
+	margin-bottom: 0.5rem;
+	overflow-x: auto;
+	white-space: pre;
+	font-size: 0.8125rem;
+	line-height: 1.6;
+}
+.ai-prose pre code {
+	background: transparent;
+	padding: 0;
+	border-radius: 0;
+	font-size: inherit;
+	color: inherit;
+	white-space: pre;
+	word-break: normal;
+	overflow-wrap: normal;
+}
+.ai-prose code {
+	background: rgba(0, 0, 0, 0.25);
+	padding: 0.125rem 0.375rem;
+	border-radius: 0.25rem;
+	font-size: 0.8125rem;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	word-break: break-all;
+	overflow-wrap: break-word;
+}

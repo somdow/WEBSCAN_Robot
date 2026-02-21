@@ -1,0 +1,200 @@
+# AI Model Selection Report
+
+**Date:** {{date}}
+**Project:** {{project_name}}
+**Author:** Nova (AI/ML)
+
+---
+
+## Executive Summary
+
+{{executive_summary}}
+
+**Recommended Model:** {{recommended_model}}
+**Estimated Cost:** {{estimated_cost}} per 1K requests
+**Confidence Level:** {{confidence_level}}
+
+---
+
+## 1. Use Case Analysis
+
+### Task Description
+
+{{task_description}}
+
+### Input/Output Profile
+
+| Attribute | Value |
+|-----------|-------|
+| Input Type | {{input_type}} |
+| Avg Input Size | {{avg_input_size}} tokens |
+| Max Input Size | {{max_input_size}} tokens |
+| Output Type | {{output_type}} |
+| Avg Output Size | {{avg_output_size}} tokens |
+| Structured Output | {{structured_output}} |
+
+### Volume and Performance Requirements
+
+| Requirement | Target |
+|-------------|--------|
+| Expected Daily Volume | {{daily_volume}} |
+| Latency Requirement | {{latency_req}} |
+| Availability Target | {{availability_target}} |
+| Budget per 1K Requests | {{budget_per_1k}} |
+
+### Constraints
+
+{{constraints}}
+
+---
+
+## 2. Quality Requirements
+
+### Capability Needs
+
+| Capability | Required | Priority |
+|------------|----------|----------|
+| Reasoning Depth | {{reasoning_req}} | {{reasoning_pri}} |
+| Instruction Following | {{instruction_req}} | {{instruction_pri}} |
+| Domain Knowledge | {{domain_req}} | {{domain_pri}} |
+| Creativity | {{creativity_req}} | {{creativity_pri}} |
+| Consistency | {{consistency_req}} | {{consistency_pri}} |
+| Context Length | {{context_req}} | {{context_pri}} |
+
+### Quality Threshold
+
+**Minimum Acceptable:**
+{{min_quality}}
+
+**Target Quality:**
+{{target_quality}}
+
+---
+
+## 3. Model Evaluation
+
+### Candidate Models
+
+| Model | Provider | Context | Input $/1M | Output $/1M | Strengths |
+|-------|----------|---------|------------|-------------|-----------|
+| {{model_1}} | {{prov_1}} | {{ctx_1}} | {{in_1}} | {{out_1}} | {{str_1}} |
+| {{model_2}} | {{prov_2}} | {{ctx_2}} | {{in_2}} | {{out_2}} | {{str_2}} |
+| {{model_3}} | {{prov_3}} | {{ctx_3}} | {{in_3}} | {{out_3}} | {{str_3}} |
+| {{model_4}} | {{prov_4}} | {{ctx_4}} | {{in_4}} | {{out_4}} | {{str_4}} |
+
+### Capability Comparison
+
+| Capability | {{model_1}} | {{model_2}} | {{model_3}} | {{model_4}} |
+|------------|-------------|-------------|-------------|-------------|
+| Reasoning | {{r_1}} | {{r_2}} | {{r_3}} | {{r_4}} |
+| Instructions | {{i_1}} | {{i_2}} | {{i_3}} | {{i_4}} |
+| Speed | {{s_1}} | {{s_2}} | {{s_3}} | {{s_4}} |
+| Cost | {{c_1}} | {{c_2}} | {{c_3}} | {{c_4}} |
+| Reliability | {{rel_1}} | {{rel_2}} | {{rel_3}} | {{rel_4}} |
+
+### Cost Projection
+
+| Model | Cost per Request | Daily Cost | Monthly Cost |
+|-------|------------------|------------|--------------|
+| {{model_1}} | {{cpr_1}} | {{cd_1}} | {{cm_1}} |
+| {{model_2}} | {{cpr_2}} | {{cd_2}} | {{cm_2}} |
+| {{model_3}} | {{cpr_3}} | {{cd_3}} | {{cm_3}} |
+
+---
+
+## 4. Benchmark Design
+
+### Test Cases
+
+| Category | Count | Description |
+|----------|-------|-------------|
+| {{cat_1}} | {{count_1}} | {{desc_1}} |
+| {{cat_2}} | {{count_2}} | {{desc_2}} |
+| {{cat_3}} | {{count_3}} | {{desc_3}} |
+| Edge Cases | {{edge_count}} | {{edge_desc}} |
+
+### Scoring Rubric
+
+{{scoring_rubric}}
+
+### Benchmark Results (if run)
+
+| Model | Success Rate | Avg Quality | p50 Latency | p95 Latency | Cost/Success |
+|-------|--------------|-------------|-------------|-------------|--------------|
+| {{model_1}} | {{sr_1}} | {{q_1}} | {{p50_1}} | {{p95_1}} | {{cs_1}} |
+| {{model_2}} | {{sr_2}} | {{q_2}} | {{p50_2}} | {{p95_2}} | {{cs_2}} |
+| {{model_3}} | {{sr_3}} | {{q_3}} | {{p50_3}} | {{p95_3}} | {{cs_3}} |
+
+---
+
+## 5. Recommendation
+
+### Primary Recommendation
+
+**Model:** {{primary_model}}
+**Provider:** {{primary_provider}}
+
+**Rationale:**
+{{primary_rationale}}
+
+### Fallback Option
+
+**Model:** {{fallback_model}}
+**When to Use:** {{fallback_trigger}}
+
+### Model Routing Strategy (if applicable)
+
+{{routing_strategy}}
+
+---
+
+## 6. Risk Assessment
+
+### Identified Risks
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| {{risk_1}} | {{like_1}} | {{impact_1}} | {{mit_1}} |
+| {{risk_2}} | {{like_2}} | {{impact_2}} | {{mit_2}} |
+| {{risk_3}} | {{like_3}} | {{impact_3}} | {{mit_3}} |
+
+### Vendor Considerations
+
+{{vendor_considerations}}
+
+---
+
+## 7. Implementation Guidance
+
+### Integration Approach
+
+{{integration_approach}}
+
+### Configuration Recommendations
+
+```
+{{config_recommendations}}
+```
+
+### Error Handling
+
+{{error_handling}}
+
+### Monitoring Plan
+
+| Metric | Target | Alert Threshold |
+|--------|--------|-----------------|
+| Success Rate | {{sr_target}} | {{sr_alert}} |
+| Latency p95 | {{lat_target}} | {{lat_alert}} |
+| Cost per Day | {{cost_target}} | {{cost_alert}} |
+| Quality Score | {{qual_target}} | {{qual_alert}} |
+
+---
+
+## 8. Next Steps
+
+{{next_steps}}
+
+---
+
+*Generated by Nova - BMAD AI/ML Engineer*

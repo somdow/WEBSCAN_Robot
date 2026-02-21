@@ -1,0 +1,22 @@
+# Dashboard Design Workflow
+name: dashboard-design
+description: "Design effective data dashboards with proper visualization, layout, and user-centric metrics"
+author: "Dana"
+
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+enable_web_research: true
+
+installed_path: "{project-root}/.bmad/bmm/workflows/data/dashboard-design"
+instructions: "{installed_path}/instructions.md"
+template: "{installed_path}/template.md"
+validation: "{installed_path}/checklist.md"
+
+default_output_file: "{output_folder}/dashboard-design-{{date}}.md"
+
+standalone: true

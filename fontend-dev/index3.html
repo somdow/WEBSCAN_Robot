@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Hello SEO Analyzer — Your Website's SEO Health Check</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+	<style>
+		* { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+		@keyframes marquee {
+			0% { transform: translateX(0); }
+			100% { transform: translateX(-50%); }
+		}
+		.marquee-track { animation: marquee 30s linear infinite; }
+		.marquee-track:hover { animation-play-state: paused; }
+		@keyframes float-gentle {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-6px); }
+		}
+		.float-gentle { animation: float-gentle 5s ease-in-out infinite; }
+		.highlight-underline {
+			background-image: linear-gradient(transparent 65%, #FDE68A 65%);
+			padding-bottom: 2px;
+		}
+		.card-playful { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+		.card-playful:hover { transform: translateY(-6px) rotate(-0.5deg); box-shadow: 0 16px 32px rgba(0,0,0,0.08); }
+	</style>
+</head>
+<body class="bg-[#FAFAF8] text-gray-800">
+
+	<!-- NAV -->
+	<nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4" x-data="{ mobileOpen: false }">
+		<div class="bg-white rounded-2xl shadow-lg border border-gray-100 px-6 py-3 flex items-center justify-between">
+			<a href="#" class="flex items-center gap-2">
+				<svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+					<circle cx="13" cy="13" r="11" fill="#EEF2FF"/>
+					<circle cx="13" cy="13" r="7" fill="none" stroke="#4F46E5" stroke-width="2"/>
+					<circle cx="13" cy="13" r="2.5" fill="#4F46E5"/>
+					<line x1="18" y1="8" x2="22" y2="4" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+				</svg>
+				<span class="text-lg font-bold">Hello SEO</span>
+			</a>
+			<div class="hidden md:flex items-center gap-6">
+				<a href="#features" class="text-sm text-gray-500 hover:text-gray-900 transition relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-indigo-500 after:transition-all hover:after:w-full">Features</a>
+				<a href="#pricing" class="text-sm text-gray-500 hover:text-gray-900 transition relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-indigo-500 after:transition-all hover:after:w-full">Pricing</a>
+				<a href="#faq" class="text-sm text-gray-500 hover:text-gray-900 transition relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-indigo-500 after:transition-all hover:after:w-full">FAQ</a>
+				<a href="#" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-full transition">Try Free</a>
+			</div>
+			<button class="md:hidden" @click="mobileOpen = !mobileOpen">
+				<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+			</button>
+		</div>
+		<div x-show="mobileOpen" x-transition class="bg-white rounded-2xl shadow-lg mt-2 px-6 py-4 space-y-3 md:hidden">
+			<a href="#features" class="block text-sm">Features</a>
+			<a href="#pricing" class="block text-sm">Pricing</a>
+			<a href="#faq" class="block text-sm">FAQ</a>
+			<a href="#" class="block bg-indigo-600 text-white text-sm font-medium px-5 py-2 rounded-full text-center">Try Free</a>
+		</div>
+	</nav>
+
+	<!-- HERO -->
+	<section class="max-w-6xl mx-auto px-6 pt-20 pb-16 grid md:grid-cols-2 gap-12 items-center">
+		<div>
+			<h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-6">
+				Your Website's SEO Health Check, Powered by <span class="highlight-underline">AI</span>
+			</h1>
+			<p class="text-lg text-gray-500 mb-8 leading-relaxed">48 audit checks, AI-powered fix suggestions, and professional PDF reports. Understand your site's SEO in seconds.</p>
+			<div class="flex bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden mb-4">
+				<input type="url" placeholder="Enter any website URL..." class="flex-1 px-5 py-4 outline-none text-base">
+				<button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-4 transition rounded-r-2xl whitespace-nowrap">Check Now</button>
+			</div>
+			<p class="text-sm text-gray-400">Free forever &middot; No credit card &middot; 48 audit checks</p>
+		</div>
+		<div class="flex justify-center">
+			<!-- Composed SVG Dashboard Mockup -->
+			<svg viewBox="0 0 400 300" class="w-full max-w-md float-gentle" fill="none">
+				<!-- Browser frame -->
+				<rect x="20" y="10" width="360" height="270" rx="12" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+				<circle cx="44" cy="28" r="5" fill="#EF4444"/>
+				<circle cx="62" cy="28" r="5" fill="#F59E0B"/>
+				<circle cx="80" cy="28" r="5" fill="#10B981"/>
+				<rect x="100" y="22" width="200" height="12" rx="6" fill="#F3F4F6"/>
+				<line x1="20" y1="44" x2="380" y2="44" stroke="#E5E7EB" stroke-width="1"/>
+				<!-- Score ring -->
+				<circle cx="100" cy="130" r="40" fill="none" stroke="#E5E7EB" stroke-width="6"/>
+				<circle cx="100" cy="130" r="40" fill="none" stroke="#10B981" stroke-width="6" stroke-dasharray="220" stroke-dashoffset="30" stroke-linecap="round" transform="rotate(-90 100 130)"/>
+				<text x="100" y="127" text-anchor="middle" fill="#111827" font-size="20" font-weight="bold">87</text>
+				<text x="100" y="143" text-anchor="middle" fill="#9CA3AF" font-size="10">/ 100</text>
+				<!-- Chart bars -->
+				<rect x="190" y="70" width="24" height="80" rx="4" fill="#EEF2FF"/>
+				<rect x="190" y="100" width="24" height="50" rx="4" fill="#4F46E5"/>
+				<rect x="224" y="70" width="24" height="80" rx="4" fill="#ECFDF5"/>
+				<rect x="224" y="85" width="24" height="65" rx="4" fill="#10B981"/>
+				<rect x="258" y="70" width="24" height="80" rx="4" fill="#FEF3C7"/>
+				<rect x="258" y="110" width="24" height="40" rx="4" fill="#F59E0B"/>
+				<rect x="292" y="70" width="24" height="80" rx="4" fill="#FEE2E2"/>
+				<rect x="292" y="120" width="24" height="30" rx="4" fill="#EF4444"/>
+				<rect x="326" y="70" width="24" height="80" rx="4" fill="#EEF2FF"/>
+				<rect x="326" y="90" width="24" height="60" rx="4" fill="#4F46E5"/>
+				<!-- List items -->
+				<rect x="50" y="190" width="14" height="14" rx="3" fill="#10B981"/>
+				<rect x="72" y="192" width="120" height="8" rx="4" fill="#E5E7EB"/>
+				<rect x="50" y="216" width="14" height="14" rx="3" fill="#10B981"/>
+				<rect x="72" y="218" width="100" height="8" rx="4" fill="#E5E7EB"/>
+				<rect x="50" y="242" width="14" height="14" rx="3" fill="#F59E0B"/>
+				<rect x="72" y="244" width="140" height="8" rx="4" fill="#E5E7EB"/>
+				<!-- AI badge -->
+				<rect x="240" y="200" width="100" height="36" rx="18" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1"/>
+				<text x="290" y="222" text-anchor="middle" fill="#7C3AED" font-size="11" font-weight="600">AI Optimized</text>
+				<!-- Checkmarks -->
+				<rect x="240" y="246" width="60" height="20" rx="10" fill="#ECFDF5"/>
+				<text x="270" y="260" text-anchor="middle" fill="#10B981" font-size="10" font-weight="600">32 Pass</text>
+				<rect x="308" y="246" width="52" height="20" rx="10" fill="#FEE2E2"/>
+				<text x="334" y="260" text-anchor="middle" fill="#EF4444" font-size="10" font-weight="600">3 Fail</text>
+			</svg>
+		</div>
+	</section>
+
+	<!-- FEATURE MARQUEE -->
+	<section class="bg-indigo-50 py-4 overflow-hidden">
+		<div class="flex whitespace-nowrap">
+			<div class="marquee-track flex items-center gap-8 text-sm font-medium text-indigo-600">
+				<span>AI Suggestions</span><span class="text-indigo-300">&diams;</span>
+				<span>PDF Reports</span><span class="text-indigo-300">&diams;</span>
+				<span>48 Modules</span><span class="text-indigo-300">&diams;</span>
+				<span>Security Audit</span><span class="text-indigo-300">&diams;</span>
+				<span>WordPress Scan</span><span class="text-indigo-300">&diams;</span>
+				<span>Core Web Vitals</span><span class="text-indigo-300">&diams;</span>
+				<span>Multi-Page Crawl</span><span class="text-indigo-300">&diams;</span>
+				<span>Bot Protection</span><span class="text-indigo-300">&diams;</span>
+				<span>E-E-A-T Signals</span><span class="text-indigo-300">&diams;</span>
+				<span>SERP Preview</span><span class="text-indigo-300">&diams;</span>
+				<!-- Duplicate for seamless loop -->
+				<span>AI Suggestions</span><span class="text-indigo-300">&diams;</span>
+				<span>PDF Reports</span><span class="text-indigo-300">&diams;</span>
+				<span>48 Modules</span><span class="text-indigo-300">&diams;</span>
+				<span>Security Audit</span><span class="text-indigo-300">&diams;</span>
+				<span>WordPress Scan</span><span class="text-indigo-300">&diams;</span>
+				<span>Core Web Vitals</span><span class="text-indigo-300">&diams;</span>
+				<span>Multi-Page Crawl</span><span class="text-indigo-300">&diams;</span>
+				<span>Bot Protection</span><span class="text-indigo-300">&diams;</span>
+				<span>E-E-A-T Signals</span><span class="text-indigo-300">&diams;</span>
+				<span>SERP Preview</span><span class="text-indigo-300">&diams;</span>
+			</div>
+		</div>
+	</section>
+
+	<!-- ZIGZAG FEATURES -->
+	<section id="features" class="py-20">
+		<div class="max-w-6xl mx-auto px-6">
+			<h2 class="text-3xl md:text-4xl font-bold text-center mb-4">What makes us different</h2>
+			<p class="text-gray-500 text-center text-lg mb-16">Three reasons to choose Hello SEO over the competition.</p>
+
+			<!-- Feature 1: AI (image right) -->
+			<div class="grid md:grid-cols-2 gap-12 items-center mb-20">
+				<div>
+					<span class="inline-block bg-purple-50 text-purple-700 text-xs font-bold px-3 py-1 rounded-full mb-4">AI-POWERED</span>
+					<h3 class="text-2xl font-bold mb-4">One-Click AI Optimization</h3>
+					<p class="text-gray-500 leading-relaxed mb-4">Choose from GPT-4o, Claude, or Gemini. Each AI analyzes your specific SEO issues and generates optimized rewrites for meta tags, content, and executive summaries.</p>
+					<div class="bg-purple-50 rounded-2xl p-5">
+						<div class="text-xs text-purple-500 font-medium mb-3">BEFORE &rarr; AFTER</div>
+						<div class="text-sm text-red-500 line-through mb-2">Home | My Business Website - Welcome</div>
+						<div class="text-sm text-emerald-600 font-medium">Expert Web Development Services | MyBiz &mdash; Est. 2015</div>
+					</div>
+				</div>
+				<div class="bg-purple-50 rounded-3xl p-8 flex items-center justify-center">
+					<svg viewBox="0 0 200 200" class="w-48 h-48" fill="none">
+						<circle cx="100" cy="100" r="80" fill="white" stroke="#DDD6FE" stroke-width="2"/>
+						<circle cx="100" cy="100" r="50" fill="#F5F3FF"/>
+						<path d="M85 80 L100 60 L115 80 L105 80 L105 120 L115 120 L100 140 L85 120 L95 120 L95 80Z" fill="#7C3AED" opacity="0.8"/>
+						<circle cx="70" cy="70" r="8" fill="#A78BFA" opacity="0.5"/>
+						<circle cx="130" cy="130" r="6" fill="#A78BFA" opacity="0.5"/>
+						<circle cx="140" cy="70" r="4" fill="#C4B5FD" opacity="0.6"/>
+					</svg>
+				</div>
+			</div>
+
+			<!-- Feature 2: Coverage (image left) -->
+			<div class="grid md:grid-cols-2 gap-12 items-center mb-20">
+				<div class="order-2 md:order-1 bg-amber-50 rounded-3xl p-8 flex items-center justify-center">
+					<div class="grid grid-cols-3 gap-3">
+						<div class="bg-white rounded-xl p-3 text-center shadow-sm"><div class="text-lg font-bold text-indigo-600">10</div><div class="text-[10px] text-gray-400">On-Page</div></div>
+						<div class="bg-white rounded-xl p-3 text-center shadow-sm"><div class="text-lg font-bold text-blue-600">9</div><div class="text-[10px] text-gray-400">Technical</div></div>
+						<div class="bg-white rounded-xl p-3 text-center shadow-sm"><div class="text-lg font-bold text-emerald-600">7</div><div class="text-[10px] text-gray-400">Usability</div></div>
+						<div class="bg-white rounded-xl p-3 text-center shadow-sm"><div class="text-lg font-bold text-amber-600">3</div><div class="text-[10px] text-gray-400">Content</div></div>
+						<div class="bg-white rounded-xl p-3 text-center shadow-sm"><div class="text-lg font-bold text-purple-600">4</div><div class="text-[10px] text-gray-400">E-E-A-T</div></div>
+						<div class="bg-white rounded-xl p-3 text-center shadow-sm"><div class="text-lg font-bold text-red-600">4</div><div class="text-[10px] text-gray-400">Security</div></div>
+						<div class="bg-white rounded-xl p-3 text-center shadow-sm"><div class="text-lg font-bold text-sky-600">3</div><div class="text-[10px] text-gray-400">WordPress</div></div>
+						<div class="bg-white rounded-xl p-3 text-center shadow-sm"><div class="text-lg font-bold text-teal-600">3</div><div class="text-[10px] text-gray-400">Discovery</div></div>
+						<div class="bg-white rounded-xl p-3 text-center shadow-sm"><div class="text-lg font-bold text-gray-600">2</div><div class="text-[10px] text-gray-400">Utility</div></div>
+					</div>
+				</div>
+				<div class="order-1 md:order-2">
+					<span class="inline-block bg-amber-50 text-amber-700 text-xs font-bold px-3 py-1 rounded-full mb-4">COMPLETE COVERAGE</span>
+					<h3 class="text-2xl font-bold mb-4">48 Modules, 10 Categories</h3>
+					<p class="text-gray-500 leading-relaxed">From title tags to security headers, from Core Web Vitals to WordPress vulnerabilities. Every aspect of SEO covered with research-backed scoring weights.</p>
+				</div>
+			</div>
+
+			<!-- Feature 3: Reports (image right) -->
+			<div class="grid md:grid-cols-2 gap-12 items-center">
+				<div>
+					<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full mb-4">CLIENT-READY</span>
+					<h3 class="text-2xl font-bold mb-4">Professional PDF Reports</h3>
+					<p class="text-gray-500 leading-relaxed">Generate branded, downloadable PDF reports for every scan. Agency plans include white-label reports with your own logo and colors. Perfect for client pitches.</p>
+				</div>
+				<div class="bg-emerald-50 rounded-3xl p-8 flex items-center justify-center">
+					<svg viewBox="0 0 180 220" class="w-40" fill="none">
+						<rect x="10" y="10" width="160" height="200" rx="8" fill="white" stroke="#D1FAE5" stroke-width="2"/>
+						<rect x="30" y="30" width="80" height="10" rx="2" fill="#111827"/>
+						<rect x="30" y="50" width="120" height="6" rx="2" fill="#E5E7EB"/>
+						<rect x="30" y="62" width="100" height="6" rx="2" fill="#E5E7EB"/>
+						<rect x="30" y="80" width="40" height="40" rx="20" fill="#ECFDF5" stroke="#10B981" stroke-width="3"/>
+						<text x="50" y="105" text-anchor="middle" fill="#10B981" font-size="14" font-weight="bold">87</text>
+						<rect x="85" y="85" width="60" height="6" rx="2" fill="#10B981"/>
+						<rect x="85" y="97" width="45" height="6" rx="2" fill="#F59E0B"/>
+						<rect x="85" y="109" width="20" height="6" rx="2" fill="#EF4444"/>
+						<rect x="30" y="135" width="120" height="6" rx="2" fill="#E5E7EB"/>
+						<rect x="30" y="147" width="110" height="6" rx="2" fill="#E5E7EB"/>
+						<rect x="30" y="159" width="95" height="6" rx="2" fill="#E5E7EB"/>
+						<rect x="30" y="180" width="50" height="16" rx="4" fill="#4F46E5"/>
+						<text x="55" y="191" text-anchor="middle" fill="white" font-size="8" font-weight="600">Download</text>
+					</svg>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- HOW IT WORKS -->
+	<section class="py-20 bg-white">
+		<div class="max-w-5xl mx-auto px-6">
+			<h2 class="text-3xl md:text-4xl font-bold text-center mb-16">How it works</h2>
+			<div class="grid md:grid-cols-3 gap-10 relative">
+				<!-- Curved path (desktop only) -->
+				<svg class="hidden md:block absolute top-12 left-[18%] right-[18%] w-[64%] h-8" viewBox="0 0 600 30" fill="none">
+					<path d="M0 15 Q150 0 300 15 Q450 30 600 15" stroke="#E5E7EB" stroke-width="2" stroke-dasharray="8 6"/>
+				</svg>
+				<div class="text-center">
+					<div class="w-20 h-20 bg-indigo-100 text-indigo-700 rounded-3xl flex items-center justify-center text-3xl font-bold mx-auto mb-6 relative z-10">1</div>
+					<h3 class="font-bold text-lg mb-2">Paste your URL</h3>
+					<p class="text-gray-500 text-sm">Enter any publicly accessible website. Works with any site, any CMS.</p>
+				</div>
+				<div class="text-center">
+					<div class="w-20 h-20 bg-amber-100 text-amber-700 rounded-3xl flex items-center justify-center text-3xl font-bold mx-auto mb-6 relative z-10">2</div>
+					<h3 class="font-bold text-lg mb-2">We analyze 48 checks</h3>
+					<p class="text-gray-500 text-sm">Our engine scans across 10 categories with real-time progress tracking.</p>
+				</div>
+				<div class="text-center">
+					<div class="w-20 h-20 bg-emerald-100 text-emerald-700 rounded-3xl flex items-center justify-center text-3xl font-bold mx-auto mb-6 relative z-10">3</div>
+					<h3 class="font-bold text-lg mb-2">Get score + AI fixes</h3>
+					<p class="text-gray-500 text-sm">See your 0-100 score and let AI rewrite your meta tags and generate summaries.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- EXPANDABLE CATEGORIES -->
+	<section class="py-20">
+		<div class="max-w-4xl mx-auto px-6" x-data="{ expandedCategory: null }">
+			<h2 class="text-3xl md:text-4xl font-bold text-center mb-4">48 modules. 10 categories. Zero blind spots.</h2>
+			<p class="text-gray-500 text-center text-lg mb-12">Click to explore each category.</p>
+			<div class="grid sm:grid-cols-2 gap-4">
+				<template x-for="(cat, idx) in [
+					{ name: 'On-Page SEO', count: 10, color: 'indigo', modules: 'Title Tag, Meta Description, H1 Structure, H2-H6 Hierarchy, Schema Markup, Semantic HTML, Breadcrumbs, Open Graph, Internal Links, Favicon' },
+					{ name: 'Technical SEO', count: 9, color: 'blue', modules: 'Canonical, Robots.txt, Sitemap, HTTPS Redirect, URL Duplicates, Redirect Chains, Hreflang, URL Structure, Doctype' },
+					{ name: 'Usability & Performance', count: 7, color: 'emerald', modules: 'Mobile Viewport, Image Optimization, Page Speed, Core Web Vitals (Mobile), Core Web Vitals (Desktop), Compression, Accessibility' },
+					{ name: 'Content Analysis', count: 3, color: 'amber', modules: 'Keyword Presence, Readability, Duplicate Content' },
+					{ name: 'E-E-A-T Signals', count: 4, color: 'purple', modules: 'Author Attribution, Business Schema, Privacy/Terms, About/Contact' },
+					{ name: 'Security', count: 4, color: 'red', modules: 'Security Headers, Mixed Content, Exposed Files, Blacklist Status' },
+					{ name: 'WordPress', count: 3, color: 'sky', modules: 'Version Detection, Plugin Security, Theme Security' },
+					{ name: 'Discovery & Social', count: 3, color: 'teal', modules: 'Analytics Detection, Google Maps, Technology Stack' },
+					{ name: 'Utility', count: 2, color: 'gray', modules: 'Keyword Consistency, SERP Preview' }
+				]" :key="idx">
+					<button @click="expandedCategory = expandedCategory === idx ? null : idx" class="text-left w-full bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md transition group">
+						<div class="flex items-center justify-between mb-1">
+							<span class="font-semibold" x-text="cat.name"></span>
+							<span class="text-xs font-bold px-2.5 py-1 rounded-full"
+								:class="`bg-${cat.color}-50 text-${cat.color}-700`"
+								x-text="cat.count + ' modules'"></span>
+						</div>
+						<div x-show="expandedCategory === idx" x-transition class="mt-3 text-sm text-gray-500 leading-relaxed" x-text="cat.modules"></div>
+					</button>
+				</template>
+			</div>
+		</div>
+	</section>
+
+	<!-- PRICING -->
+	<section id="pricing" class="py-20 bg-white">
+		<div class="max-w-6xl mx-auto px-6" x-data="{ annual: true }">
+			<div class="text-center mb-14">
+				<h2 class="text-3xl md:text-4xl font-bold mb-2">Pick your plan</h2>
+				<p class="text-gray-500 mb-6">Start free, scale as you grow.</p>
+				<div class="inline-flex items-center bg-gray-100 rounded-full p-1">
+					<button @click="annual = false" :class="!annual ? 'bg-white shadow text-gray-900' : 'text-gray-500'" class="px-5 py-2 rounded-full text-sm font-medium transition">Monthly</button>
+					<button @click="annual = true" :class="annual ? 'bg-white shadow text-gray-900' : 'text-gray-500'" class="px-5 py-2 rounded-full text-sm font-medium transition">Annual</button>
+				</div>
+			</div>
+			<div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+				<!-- Free -->
+				<div class="bg-[#FAFAF8] rounded-3xl p-8 border border-gray-100 card-playful">
+					<h3 class="font-bold text-xl mb-1">Free</h3>
+					<p class="text-gray-400 text-sm mb-5">For getting started</p>
+					<div class="mb-6"><span class="text-4xl font-extrabold">$0</span><span class="text-gray-400">/mo</span></div>
+					<ul class="space-y-3 mb-8 text-sm text-gray-600">
+						<li class="flex gap-2"><span class="text-emerald-500">&#10003;</span> 1 project, 10 scans/mo</li>
+						<li class="flex gap-2"><span class="text-emerald-500">&#10003;</span> Homepage analysis</li>
+						<li class="flex gap-2"><span class="text-emerald-500">&#10003;</span> PDF reports</li>
+						<li class="flex gap-2"><span class="text-emerald-500">&#10003;</span> 7-day scan history</li>
+					</ul>
+					<a href="#" class="block text-center border-2 border-gray-300 text-gray-700 font-semibold py-3 rounded-2xl hover:bg-gray-100 transition">Start Free</a>
+				</div>
+				<!-- Pro -->
+				<div class="bg-white rounded-3xl p-8 border-2 border-indigo-500 relative card-playful shadow-xl">
+					<div class="absolute -top-3 right-6 bg-amber-400 text-amber-900 text-xs font-bold px-4 py-1 rounded-full">Best Value</div>
+					<h3 class="font-bold text-xl mb-1">Pro</h3>
+					<p class="text-gray-400 text-sm mb-5">For professionals</p>
+					<div class="mb-6">
+						<span class="text-4xl font-extrabold" x-text="annual ? '$39' : '$49'">$39</span>
+						<span class="text-gray-400">/mo</span>
+					</div>
+					<ul class="space-y-3 mb-8 text-sm text-gray-600">
+						<li class="flex gap-2"><span class="text-indigo-500">&#10003;</span> 5 projects, 100 scans/mo</li>
+						<li class="flex gap-2"><span class="text-indigo-500">&#10003;</span> Multi-page crawl (25 pages)</li>
+						<li class="flex gap-2"><span class="text-indigo-500">&#10003;</span> AI suggestions + summaries</li>
+						<li class="flex gap-2"><span class="text-indigo-500">&#10003;</span> Scheduled scans</li>
+						<li class="flex gap-2"><span class="text-indigo-500">&#10003;</span> 3 team members, 90-day history</li>
+					</ul>
+					<a href="#" class="block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-2xl transition">Start Trial</a>
+				</div>
+				<!-- Agency -->
+				<div class="bg-[#FAFAF8] rounded-3xl p-8 border border-gray-100 card-playful">
+					<h3 class="font-bold text-xl mb-1">Agency</h3>
+					<p class="text-gray-400 text-sm mb-5">For teams</p>
+					<div class="mb-6">
+						<span class="text-4xl font-extrabold" x-text="annual ? '$119' : '$149'">$119</span>
+						<span class="text-gray-400">/mo</span>
+					</div>
+					<ul class="space-y-3 mb-8 text-sm text-gray-600">
+						<li class="flex gap-2"><span class="text-emerald-500">&#10003;</span> 25 projects, 500 scans/mo</li>
+						<li class="flex gap-2"><span class="text-emerald-500">&#10003;</span> Full-site crawl (100 pages)</li>
+						<li class="flex gap-2"><span class="text-emerald-500">&#10003;</span> API access, white-label</li>
+						<li class="flex gap-2"><span class="text-emerald-500">&#10003;</span> 10 team members</li>
+						<li class="flex gap-2"><span class="text-emerald-500">&#10003;</span> Permanent scan history</li>
+					</ul>
+					<a href="#" class="block text-center border-2 border-gray-300 text-gray-700 font-semibold py-3 rounded-2xl hover:bg-gray-100 transition">Start Trial</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- TESTIMONIAL CAROUSEL -->
+	<section class="py-20">
+		<div class="max-w-3xl mx-auto px-6" x-data="{ active: 0, testimonials: [
+			{ quote: 'The AI suggestions saved me hours rewriting client meta tags. This tool pays for itself.', name: 'Sarah Chen', role: 'SEO Consultant', initials: 'SC', color: 'bg-indigo-500' },
+			{ quote: 'We use Hello SEO for every client pitch. The PDF reports are clean and professional.', name: 'James Rodriguez', role: 'Agency Director', initials: 'JR', color: 'bg-emerald-500' },
+			{ quote: 'Caught exposed .env files on two client sites. Potentially saved them from breaches.', name: 'Priya Sharma', role: 'Web Developer', initials: 'PS', color: 'bg-amber-500' }
+		] }">
+			<div class="text-center">
+				<svg class="w-10 h-10 text-indigo-200 mx-auto mb-6" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+				<p class="text-xl text-gray-700 leading-relaxed mb-8 min-h-[60px]" x-text="testimonials[active].quote"></p>
+				<div class="flex items-center justify-center gap-3 mb-8">
+					<div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold" :class="testimonials[active].color" x-text="testimonials[active].initials"></div>
+					<div class="text-left">
+						<div class="font-semibold text-sm" x-text="testimonials[active].name"></div>
+						<div class="text-gray-400 text-xs" x-text="testimonials[active].role"></div>
+					</div>
+				</div>
+				<div class="flex justify-center gap-2">
+					<template x-for="(t, i) in testimonials" :key="i">
+						<button @click="active = i" :class="active === i ? 'bg-indigo-600 w-8' : 'bg-gray-300 w-2'" class="h-2 rounded-full transition-all"></button>
+					</template>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- FAQ -->
+	<section id="faq" class="py-20 bg-white">
+		<div class="max-w-3xl mx-auto px-6">
+			<h2 class="text-3xl md:text-4xl font-bold text-center mb-14">Frequently asked questions</h2>
+			<div class="space-y-4" x-data="{ open: null }">
+				<template x-for="(faq, idx) in [
+					{ q: 'What websites can I scan?', a: 'Any publicly accessible website. You don\'t need to own it. We handle bot protection from Cloudflare, SiteGround, and Sucuri automatically.' },
+					{ q: 'How does the scoring work?', a: 'Each of 48 modules has a research-backed weight. Results are pass/warning/fail. The weighted average produces a 0-100 score.' },
+					{ q: 'What AI providers are available?', a: 'OpenAI GPT-4o, Anthropic Claude, and Google Gemini. Choose your preferred provider per request.' },
+					{ q: 'Can I export PDF reports?', a: 'Yes, all plans include PDF generation. Agency plans get white-label reports with custom branding.' },
+					{ q: 'Do you detect WordPress sites?', a: 'Yes. We auto-detect WP and run additional checks for plugin vulnerabilities, outdated versions, and theme security.' },
+					{ q: 'Is the free plan really free forever?', a: '1 project, 10 scans/month, PDF reports. No credit card, no time limit. Free forever.' }
+				]" :key="idx">
+					<div class="bg-gray-50 rounded-2xl overflow-hidden border border-gray-100">
+						<button @click="open = open === idx ? null : idx" class="w-full flex items-center justify-between px-6 py-4 text-left font-medium hover:bg-gray-100 transition">
+							<span x-text="faq.q"></span>
+							<div :class="open === idx ? 'bg-indigo-600' : 'bg-gray-200'" class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition">
+								<svg :class="[open === idx ? 'rotate-180 text-white' : 'text-gray-500']" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+							</div>
+						</button>
+						<div x-show="open === idx" x-transition class="px-6 pb-4 text-sm text-gray-500 leading-relaxed" x-text="faq.a"></div>
+					</div>
+				</template>
+			</div>
+		</div>
+	</section>
+
+	<!-- FINAL CTA -->
+	<section class="py-20">
+		<div class="max-w-5xl mx-auto px-6 relative">
+			<div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl p-12 md:p-16 text-center text-white relative overflow-hidden">
+				<!-- Decorative circles -->
+				<div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full"></div>
+				<div class="absolute -bottom-16 -left-16 w-48 h-48 bg-white/5 rounded-full"></div>
+				<div class="absolute top-1/2 right-1/4 w-6 h-6 bg-white/10 rounded-full"></div>
+				<div class="absolute bottom-10 right-10 w-4 h-4 bg-white/15 rounded-full"></div>
+
+				<h2 class="text-3xl md:text-4xl font-bold mb-4 relative z-10">Start scanning for free.<br>See results in 30 seconds.</h2>
+				<p class="text-indigo-200 mb-8 relative z-10">No credit card required. Free forever plan available.</p>
+				<div class="max-w-md mx-auto flex bg-white/10 backdrop-blur rounded-2xl overflow-hidden border border-white/20 relative z-10">
+					<input type="url" placeholder="Enter any URL..." class="flex-1 px-5 py-4 bg-transparent text-white placeholder-indigo-300 outline-none">
+					<button class="bg-white text-indigo-700 font-semibold px-6 py-4 hover:bg-indigo-50 transition whitespace-nowrap rounded-r-2xl">Analyze</button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- FOOTER -->
+	<footer class="py-16 border-t border-gray-100">
+		<div class="max-w-6xl mx-auto px-6">
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+				<div>
+					<h4 class="font-semibold text-sm mb-4">Product</h4>
+					<ul class="space-y-2 text-sm text-gray-500"><li><a href="#" class="hover:text-gray-900 transition">Features</a></li><li><a href="#" class="hover:text-gray-900 transition">Pricing</a></li><li><a href="#" class="hover:text-gray-900 transition">API</a></li><li><a href="#" class="hover:text-gray-900 transition">Changelog</a></li></ul>
+				</div>
+				<div>
+					<h4 class="font-semibold text-sm mb-4">Company</h4>
+					<ul class="space-y-2 text-sm text-gray-500"><li><a href="#" class="hover:text-gray-900 transition">About</a></li><li><a href="#" class="hover:text-gray-900 transition">Blog</a></li><li><a href="#" class="hover:text-gray-900 transition">Careers</a></li><li><a href="#" class="hover:text-gray-900 transition">Contact</a></li></ul>
+				</div>
+				<div>
+					<h4 class="font-semibold text-sm mb-4">Resources</h4>
+					<ul class="space-y-2 text-sm text-gray-500"><li><a href="#" class="hover:text-gray-900 transition">Documentation</a></li><li><a href="#" class="hover:text-gray-900 transition">Help Center</a></li><li><a href="#" class="hover:text-gray-900 transition">Status</a></li></ul>
+				</div>
+				<div>
+					<h4 class="font-semibold text-sm mb-4">Legal</h4>
+					<ul class="space-y-2 text-sm text-gray-500"><li><a href="#" class="hover:text-gray-900 transition">Privacy</a></li><li><a href="#" class="hover:text-gray-900 transition">Terms</a></li><li><a href="#" class="hover:text-gray-900 transition">Cookies</a></li></ul>
+				</div>
+			</div>
+			<div class="border-t border-gray-100 pt-8 text-center text-sm text-gray-400">&copy; 2026 Hello SEO Analyzer. Made with Laravel.</div>
+		</div>
+	</footer>
+
+</body>
+</html>

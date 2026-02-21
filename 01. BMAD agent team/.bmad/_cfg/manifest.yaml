@@ -1,0 +1,14 @@
+installation:
+  version: 6.0.0-alpha.12
+  installDate: '2025-11-26T17:30:08.057Z'
+  lastUpdated: '2025-11-26T17:30:08.057Z'
+modules:
+  - core
+  - bmm
+ides:
+  - claude-code
+  - codex
+  - cursor
+  - windsurf
+  - gemini
+  - antigravity
