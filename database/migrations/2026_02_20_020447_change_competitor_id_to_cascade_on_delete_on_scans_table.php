@@ -11,25 +11,25 @@ return new class extends Migration
 	{
 		/* Clean up orphaned ghost scans — competitor scans whose competitor was deleted,
 		   leaving competitor_id = NULL and polluting project scan history.
-		   These have no matching competitor record but are clearly not real project scans. */
-		DB::table("scans")
-			->whereNull("competitor_id")
-			->whereIn("id", function ($query) {
-				/* Find scans that share exact scores with a known competitor scan for the same project,
-				   but are NOT the project's original scans (they appeared after competitor scans started). */
-				$query->select("s1.id")
-					->from("scans as s1")
-					->join("scans as s2", function ($join) {
-						$join->on("s1.project_id", "=", "s2.project_id")
-							->whereNotNull("s2.competitor_id")
-							->on("s1.overall_score", "=", "s2.overall_score")
-							->on("s1.seo_score", "=", "s2.seo_score")
-							->on("s1.health_score", "=", "s2.health_score");
-					})
-					->whereNull("s1.competitor_id")
-					->where("s1.id", ">", DB::raw("s2.id - 5"));
+		   MySQL doesn't allow DELETE with subquery on same table, so collect IDs first. */
+		$orphanIds = DB::table("scans as s1")
+			->join("scans as s2", function ($join) {
+				$join->on("s1.project_id", "=", "s2.project_id")
+					->whereNotNull("s2.competitor_id")
+					->on("s1.overall_score", "=", "s2.overall_score")
+					->on("s1.seo_score", "=", "s2.seo_score")
+					->on("s1.health_score", "=", "s2.health_score");
 			})
-			->delete();
+			->whereNull("s1.competitor_id")
+			->where("s1.id", ">", DB::raw("s2.id - 5"))
+			->pluck("s1.id")
+			->unique()
+			->values()
+			->all();
+
+		if (count($orphanIds) > 0) {
+			DB::table("scans")->whereIn("id", $orphanIds)->delete();
+		}
 
 		/* Switch FK from nullOnDelete to cascadeOnDelete */
 		Schema::table("scans", function (Blueprint $table) {
