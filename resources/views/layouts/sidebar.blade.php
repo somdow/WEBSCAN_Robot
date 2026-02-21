@@ -91,7 +91,7 @@
 				<span class="text-sm font-medium leading-6 text-gray-500">Account</span>
 			</div>
 			<x-sidebar-link :href="route('billing.index')" :active="request()->routeIs('billing.*')" icon="creditcard">
-				Billing
+				Billing (disabled)
 			</x-sidebar-link>
 			<x-sidebar-link :href="route('branding.edit')" :active="request()->routeIs('branding.*')" icon="paintbrush">
 				Branding
