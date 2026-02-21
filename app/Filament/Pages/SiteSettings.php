@@ -44,6 +44,7 @@ class SiteSettings extends Page
 			"google_threat_commercial_mode" => (bool) Setting::getValue("google_threat_commercial_mode", false),
 			"zyte_api_key" => Setting::getValue("zyte_api_key", ""),
 			"zyte_enabled" => (bool) Setting::getValue("zyte_enabled", false),
+			"registration_enabled" => (bool) Setting::getValue("registration_enabled", false),
 		));
 	}
 
@@ -52,6 +53,16 @@ class SiteSettings extends Page
 		return $schema
 			->gap()
 			->components(array(
+				Section::make("Registration")
+					->description("Control whether new users can sign up.")
+					->schema(array(
+						Toggle::make("registration_enabled")
+							->label("Enable Registration")
+							->helperText("OFF = the /register page redirects to login with a 'Registration is currently closed' message. ON = new users can sign up normally.")
+							->default(false),
+					))
+					->columns(1),
+
 				Section::make("Branding & Identity")
 					->schema(array(
 						TextInput::make("site_name")
@@ -183,6 +194,7 @@ class SiteSettings extends Page
 			"google_threat_commercial_mode",
 			"zyte_api_key",
 			"zyte_enabled",
+			"registration_enabled",
 		);
 
 		foreach ($settingKeys as $key) {

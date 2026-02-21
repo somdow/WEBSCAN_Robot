@@ -19,9 +19,11 @@ Route::get("admin/login/verify/{nonce}", AdminLoginVerificationController::class
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
+        ->middleware(\App\Http\Middleware\EnsureRegistrationEnabled::class)
         ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::post('register', [RegisteredUserController::class, 'store'])
+        ->middleware(\App\Http\Middleware\EnsureRegistrationEnabled::class);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');

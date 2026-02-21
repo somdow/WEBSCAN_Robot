@@ -18,6 +18,7 @@ class SettingsSeeder extends Seeder
 			"trial_days" => "14",
 			"annual_discount_text" => "Save 20%",
 			"whatcms_api_key" => "",
+			"registration_enabled" => "0",
 		);
 
 		foreach ($defaults as $key => $value) {
