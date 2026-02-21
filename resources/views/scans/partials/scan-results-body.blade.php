@@ -188,8 +188,8 @@
 				<path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
 			</svg>
 			<p class="text-[13px] leading-relaxed text-amber-900">
-				<span x-show="scoreTab === 'all' && (!pages || pages.length === 0)">Here's your overall health check based on a homepage-only analysis. This is a great starting point, <a @click.prevent="scoreTab = 'addPages'; statusFilter = ''" href="#" class="font-bold text-amber-700 underline underline-offset-2 hover:text-amber-900">add more pages</a> to broaden your sample size and get a more accurate, site-wide picture.</span>
-				<span x-show="scoreTab === 'all' && pages && pages.length > 0">Your scores are based on the homepage plus <strong x-text="pages.length"></strong> additional <span x-text="pages.length === 1 ? 'page' : 'pages'"></span>. The more pages you analyze, the more reliable your scores become. <a @click.prevent="scoreTab = 'addPages'; statusFilter = ''" href="#" class="font-bold text-amber-700 underline underline-offset-2 hover:text-amber-900">Add more pages</a> for even better accuracy.</span>
+				<span x-show="scoreTab === 'all' && (!pages || pages.length === 0)">Here's your overall health check based on a homepage-only analysis.@if($showPagesTab) This is a great starting point, <a @click.prevent="scoreTab = 'addPages'; statusFilter = ''" href="#" class="font-bold text-amber-700 underline underline-offset-2 hover:text-amber-900">add more pages</a> to broaden your sample size and get a more accurate, site-wide picture.@else This is a great starting point for understanding your site's SEO health.@endif</span>
+				<span x-show="scoreTab === 'all' && pages && pages.length > 0">Your scores are based on the homepage plus <strong x-text="pages.length"></strong> additional <span x-text="pages.length === 1 ? 'page' : 'pages'"></span>. The more pages you analyze, the more reliable your scores become. @if($showPagesTab)<a @click.prevent="scoreTab = 'addPages'; statusFilter = ''" href="#" class="font-bold text-amber-700 underline underline-offset-2 hover:text-amber-900">Add more pages</a> for even better accuracy.@endif</span>
 				<span x-show="scoreTab === 'seo'">Everything that shapes how search engines see your site — page titles, content quality, linking structure, and trust signals like E-E-A-T. Address these areas to boost your organic visibility.</span>
 				<span x-show="scoreTab === 'technical'">The technical foundation behind your site — page speed, security headers, mobile-friendliness, and server reliability. A strong technical base helps both rankings and user experience.</span>
 				@if($showCompetitorsTab)
@@ -280,6 +280,7 @@
 					scoreTab: 'all',
 					healthSection: '',
 					seoSection: '',
+					pages: [],
 					liveOverallScore: @json($scan->overall_score ?? null),
 					liveSeoScore: @json($scan->seo_score ?? null),
 					liveHealthScore: @json($scan->health_score ?? null),
