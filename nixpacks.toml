@@ -1,5 +1,42 @@
 [phases.setup]
-nixPkgs = ["php84", "php84Extensions.intl", "php84Extensions.bcmath", "php84Extensions.zip", "php84Extensions.pdo_mysql", "php84Extensions.gd", "php84Extensions.curl", "php84Extensions.mbstring", "php84Extensions.dom", "php84Extensions.xml", "php84Extensions.opcache", "php84Packages.composer", "nodejs_22", "python311Packages.supervisor"]
+nixPkgs = [
+    "php84",
+    "php84Extensions.intl",
+    "php84Extensions.bcmath",
+    "php84Extensions.zip",
+    "php84Extensions.zlib",
+    "php84Extensions.pdo_mysql",
+    "php84Extensions.pdo_sqlite",
+    "php84Extensions.mysqli",
+    "php84Extensions.gd",
+    "php84Extensions.curl",
+    "php84Extensions.mbstring",
+    "php84Extensions.dom",
+    "php84Extensions.xml",
+    "php84Extensions.xmlreader",
+    "php84Extensions.xmlwriter",
+    "php84Extensions.simplexml",
+    "php84Extensions.fileinfo",
+    "php84Extensions.tokenizer",
+    "php84Extensions.ctype",
+    "php84Extensions.filter",
+    "php84Extensions.session",
+    "php84Extensions.openssl",
+    "php84Extensions.phar",
+    "php84Extensions.iconv",
+    "php84Extensions.opcache",
+    "php84Extensions.pcntl",
+    "php84Extensions.redis",
+    "php84Extensions.gmp",
+    "php84Packages.composer",
+    "nodejs_22",
+    "nginx",
+    "python311Packages.supervisor",
+    "git",
+    "unzip",
+    "zip",
+    "curl"
+]
 
 [phases.build]
 cmds = [
