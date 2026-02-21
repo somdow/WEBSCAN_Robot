@@ -123,7 +123,7 @@ class AppServiceProvider extends ServiceProvider
 		View::composer("*", function ($view) {
 			$view->with(array(
 				"siteName" => Setting::getValue("site_name", "HELLO WEB_SCANS"),
-				"siteTagline" => Setting::getValue("site_tagline", "your all-in-one SEO analysis platform"),
+				"siteTagline" => Setting::getValue("site_tagline", ""),
 				"analyzerCount" => Setting::getValue("analyzer_count", "43"),
 				"supportEmail" => Setting::getValue("support_email", "support@helloseo.com"),
 				"enterpriseEmail" => Setting::getValue("enterprise_email", "hello@helloseo.com"),

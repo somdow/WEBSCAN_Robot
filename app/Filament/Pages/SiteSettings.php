@@ -33,7 +33,7 @@ class SiteSettings extends Page
 	{
 		$this->form->fill(array(
 			"site_name" => Setting::getValue("site_name", "HELLO WEB_SCANS"),
-			"site_tagline" => Setting::getValue("site_tagline", "your all-in-one SEO analysis platform"),
+			"site_tagline" => Setting::getValue("site_tagline", ""),
 			"analyzer_count" => Setting::getValue("analyzer_count", "37"),
 			"support_email" => Setting::getValue("support_email", "support@helloseo.com"),
 			"enterprise_email" => Setting::getValue("enterprise_email", "hello@helloseo.com"),

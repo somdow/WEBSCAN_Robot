@@ -20,7 +20,7 @@ class WelcomeNotification extends Notification implements ShouldQueue
 	public function toMail(object $notifiable): MailMessage
 	{
 		$siteName = Setting::getValue("site_name", "HELLO WEB_SCANS");
-		$siteTagline = Setting::getValue("site_tagline", "your all-in-one SEO analysis platform");
+		$siteTagline = Setting::getValue("site_tagline", "");
 		$analyzerCount = Setting::getValue("analyzer_count", "37");
 
 		return (new MailMessage())

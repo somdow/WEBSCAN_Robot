@@ -71,7 +71,7 @@
 
 				<footer class="mx-auto max-w-7xl px-6 py-10 lg:px-8 text-center">
 					<p class="text-sm font-extrabold text-text-primary">{{ \App\Models\Setting::getValue("site_name", config("app.name", "HELLO WEB_SCANS")) }}</p>
-					<p class="mt-1 text-xs text-text-secondary">{{ \App\Models\Setting::getValue("site_tagline", "your all-in-one SEO analysis platform") }}</p>
+					<p class="mt-1 text-xs text-text-secondary">{{ \App\Models\Setting::getValue("site_tagline", "") }}</p>
 					<p class="mt-2 text-xs text-gray-400">&copy; {{ date("Y") }} {{ \App\Models\Setting::getValue("site_name", config("app.name", "HELLO WEB_SCANS")) }}. All rights reserved.</p>
 				</footer>
 			</div>
