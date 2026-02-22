@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\OrganizationResource;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Actions\Action;
@@ -80,9 +81,13 @@ class UserResource extends Resource
 					->badge()
 					->state(fn (User $record): string => $record->isActive() ? "Active" : "Deactivated")
 					->color(fn (string $state): string => $state === "Active" ? "success" : "danger"),
-				TextColumn::make("organizations_count")
-					->counts("organizations")
-					->label("Orgs")
+				TextColumn::make("organizations.name")
+					->label("Organization")
+					->url(fn (User $record): ?string => $record->organizations->first()
+						? OrganizationResource::getUrl("edit", array("record" => $record->organizations->first()))
+						: null
+					)
+					->color("primary")
 					->sortable(),
 				TextColumn::make("created_at")
 					->dateTime()

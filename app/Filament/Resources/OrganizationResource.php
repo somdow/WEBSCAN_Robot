@@ -8,8 +8,10 @@ use App\Models\AuditLog;
 use App\Models\Organization;
 use App\Models\Plan;
 use App\Services\PlanOverrideService;
+use Carbon\CarbonInterval;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Forms\Components\Placeholder;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -72,6 +74,16 @@ class OrganizationResource extends Resource
 					->disabled(),
 			))->columns(3)->hiddenOn("create"),
 
+			Section::make("Active Override")
+				->icon(Heroicon::OutlinedExclamationTriangle)
+				->schema(array(
+					Placeholder::make("override_info")
+						->label("")
+						->content(fn (Organization $record): HtmlString => self::renderOverrideInfo($record)),
+				))
+				->visible(fn (?Organization $record): bool => $record?->hasActiveOverride() ?? false)
+				->hiddenOn("create"),
+
 			Section::make("Plan Override History")
 				->schema(array(
 					\Filament\Forms\Components\Placeholder::make("plan_override_history")
@@ -93,7 +105,34 @@ class OrganizationResource extends Resource
 					->searchable(),
 				TextColumn::make("plan.name")
 					->badge()
+					->color(fn (?string $state): string => match($state) {
+						"Free" => "gray",
+						"Pro" => "info",
+						"Agency" => "warning",
+						"Preview" => "success",
+						default => "gray",
+					})
 					->sortable(),
+				TextColumn::make("override_status")
+					->label("Override")
+					->state(function (Organization $record): string {
+						if (!$record->hasActiveOverride()) {
+							return "";
+						}
+						$originalName = $record->originalPlan?->name ?? "Unknown";
+						if ($record->override_expires_at !== null) {
+							$timeLeft = now()->diffForHumans($record->override_expires_at, true);
+							return "Overridden (was {$originalName}, {$timeLeft} left)";
+						}
+						return "Overridden (was {$originalName}, no expiry)";
+					})
+					->badge()
+					->color("warning")
+					->placeholder("")
+					->tooltip(fn (Organization $record): ?string => $record->hasActiveOverride()
+						? "Original plan: " . ($record->originalPlan?->name ?? "Unknown")
+						: null
+					),
 				TextColumn::make("last_override_at")
 					->label("Last Override")
 					->state(fn (Organization $record): string => self::resolveLastOverrideAt($record))
@@ -143,6 +182,21 @@ class OrganizationResource extends Resource
 								->label("New Plan")
 								->options(Plan::query()->ordered()->pluck("name", "id")->toArray())
 								->required(),
+							Select::make("duration")
+								->label("Duration")
+								->options(array(
+									"" => "No expiration",
+									"5_minutes" => "5 minutes",
+									"1_hour" => "1 hour",
+									"4_hours" => "4 hours",
+									"24_hours" => "24 hours",
+									"3_days" => "3 days",
+									"7_days" => "7 days",
+									"14_days" => "14 days",
+									"30_days" => "30 days",
+								))
+								->default("")
+								->helperText("Override auto-reverts to the original plan after this duration."),
 							Textarea::make("reason")
 								->label("Reason / Notes")
 								->rows(3)
@@ -154,16 +208,52 @@ class OrganizationResource extends Resource
 							$actor = auth()->user();
 							abort_unless($actor instanceof \App\Models\User, 403);
 
+							$duration = self::parseDuration($data["duration"] ?? "");
+
 							app(PlanOverrideService::class)->applyOverride(
 								$record,
 								$targetPlan,
 								$actor,
 								$data["reason"] ?? null,
+								$duration,
+							);
+
+							$expiryLabel = $duration !== null ? " (expires in {$data["duration"]})" : "";
+							Notification::make()
+								->title("Plan overridden")
+								->body("{$record->name} is now on {$targetPlan->name}.{$expiryLabel}")
+								->success()
+								->send();
+						}),
+					Action::make("removeOverride")
+						->label("Remove Override")
+						->icon(Heroicon::OutlinedArrowUturnLeft)
+						->color("danger")
+						->hidden(fn (Organization $record): bool => !$record->hasActiveOverride())
+						->modalHeading("Remove Plan Override")
+						->modalDescription(fn (Organization $record): string =>
+							"This will restore {$record->name} from {$record->plan?->name} back to {$record->originalPlan?->name}."
+						)
+						->schema(array(
+							Textarea::make("reason")
+								->label("Reason / Notes")
+								->rows(2)
+								->maxLength(1000),
+						))
+						->action(function (Organization $record, array $data): void {
+							$actor = auth()->user();
+							abort_unless($actor instanceof \App\Models\User, 403);
+							$originalPlanName = $record->originalPlan?->name ?? "original plan";
+
+							app(PlanOverrideService::class)->removeOverride(
+								$record,
+								$actor,
+								$data["reason"] ?? null,
 							);
 
 							Notification::make()
-								->title("Plan overridden")
-								->body("{$record->name} is now on {$targetPlan->name}.")
+								->title("Override removed")
+								->body("{$record->name} restored to {$originalPlanName}.")
 								->success()
 								->send();
 						}),
@@ -210,6 +300,45 @@ class OrganizationResource extends Resource
 		);
 	}
 
+	private static function parseDuration(string $duration): ?CarbonInterval
+	{
+		return match ($duration) {
+			"5_minutes" => CarbonInterval::minutes(5),
+			"1_hour" => CarbonInterval::hour(),
+			"4_hours" => CarbonInterval::hours(4),
+			"24_hours" => CarbonInterval::hours(24),
+			"3_days" => CarbonInterval::days(3),
+			"7_days" => CarbonInterval::days(7),
+			"14_days" => CarbonInterval::days(14),
+			"30_days" => CarbonInterval::days(30),
+			default => null,
+		};
+	}
+
+	private static function renderOverrideInfo(Organization $record): HtmlString
+	{
+		$originalPlanName = $record->originalPlan?->name ?? "Unknown";
+		$currentPlanName = $record->plan?->name ?? "Unknown";
+
+		$expiresHtml = "No expiration (manual removal required)";
+		if ($record->override_expires_at !== null) {
+			$expiresFormatted = $record->override_expires_at->format("M j, Y g:i A");
+			$timeLeft = now()->diffForHumans($record->override_expires_at, true);
+			$expiresHtml = "{$expiresFormatted} ({$timeLeft} remaining)";
+		}
+
+		return new HtmlString(
+			'<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">'
+			. '<div><div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Original Plan</div>'
+			. '<div style="font-weight:600;">' . e($originalPlanName) . '</div></div>'
+			. '<div><div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Current Override</div>'
+			. '<div style="font-weight:600;">' . e($currentPlanName) . '</div></div>'
+			. '<div><div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Expires</div>'
+			. '<div style="font-weight:600;">' . $expiresHtml . '</div></div>'
+			. '</div>'
+		);
+	}
+
 	private static function resolveLastOverrideAt(Organization $record): string
 	{
 		$lastOverride = AuditLog::query()
@@ -234,7 +363,7 @@ class OrganizationResource extends Resource
 
 		$logs = AuditLog::query()
 			->with("user")
-			->where("action", "organization.plan_override")
+			->whereIn("action", array("organization.plan_override", "organization.plan_override_removed"))
 			->where("auditable_type", Organization::class)
 			->where("auditable_id", $record->id)
 			->latest("created_at")
@@ -251,13 +380,19 @@ class OrganizationResource extends Resource
 			$reason = $log->new_values["reason"] ?? "";
 			$actor = $log->user?->email ?? "System";
 			$timestamp = $log->created_at?->format("M j, Y g:i A") ?? "Unknown time";
+			$isRemoval = $log->action === "organization.plan_override_removed";
+			$autoExpired = $log->new_values["auto_expired"] ?? false;
+
+			$actionLabel = $isRemoval
+				? ($autoExpired ? '<span style="color:#dc2626;">Auto-expired</span>' : '<span style="color:#dc2626;">Removed</span>')
+				: '<span style="color:#d97706;">Override</span>';
 
 			$reasonHtml = $reason !== ""
 				? '<div style="color:#4b5563; margin-top:2px;">Reason: ' . e($reason) . '</div>'
 				: "";
 
 			return '<li style="padding:8px 0; border-bottom:1px solid #e5e7eb;">'
-				. '<div><strong>' . e($fromPlan) . '</strong> &rarr; <strong>' . e($toPlan) . '</strong></div>'
+				. '<div>' . $actionLabel . ': <strong>' . e($fromPlan) . '</strong> &rarr; <strong>' . e($toPlan) . '</strong></div>'
 				. '<div style="color:#6b7280;">By ' . e($actor) . ' on ' . e($timestamp) . '</div>'
 				. $reasonHtml
 				. '</li>';

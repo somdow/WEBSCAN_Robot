@@ -12,7 +12,7 @@
 					array('label' => 'Projects', 'url' => route('projects.index')),
 					array('label' => $scan->project->name, 'url' => route('projects.show', $scan->project)),
 					array('label' => 'Site Crawl Report', 'url' => route('projects.show', array('project' => $scan->project, 'scan' => $scan))),
-					array('label' => $scanPage->url),
+					array('label' => $scanPage->url, 'externalUrl' => $scanPage->url),
 				)"
 			/>
 			<div class="mt-6 flex flex-col items-end gap-3">

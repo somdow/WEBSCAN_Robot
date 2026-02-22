@@ -38,6 +38,8 @@ class Organization extends Model
 		"pdf_company_name",
 		"brand_color",
 		"plan_id",
+		"original_plan_id",
+		"override_expires_at",
 		"deactivated_at",
 	);
 
@@ -45,6 +47,7 @@ class Organization extends Model
 	{
 		return array(
 			"trial_ends_at" => "datetime",
+			"override_expires_at" => "datetime",
 			"deactivated_at" => "datetime",
 		);
 	}
@@ -54,6 +57,11 @@ class Organization extends Model
 	public function plan(): BelongsTo
 	{
 		return $this->belongsTo(Plan::class);
+	}
+
+	public function originalPlan(): BelongsTo
+	{
+		return $this->belongsTo(Plan::class, "original_plan_id");
 	}
 
 	public function users(): BelongsToMany
@@ -136,6 +144,20 @@ class Organization extends Model
 	public function isOnFreePlan(): bool
 	{
 		return $this->plan === null || $this->plan->slug === "free";
+	}
+
+	/* ── Plan Override ── */
+
+	public function hasActiveOverride(): bool
+	{
+		return $this->original_plan_id !== null;
+	}
+
+	public function isOverrideExpired(): bool
+	{
+		return $this->hasActiveOverride()
+			&& $this->override_expires_at !== null
+			&& $this->override_expires_at->isPast();
 	}
 
 	/* ── PDF Branding ── */
