@@ -26,9 +26,9 @@
 
 				<div class="mt-5">
 					<x-input-label for="url" value="Website URL" />
-					<x-text-input id="url" name="url" type="url" class="mt-1.5 block w-full" :value="old('url', $project->url)" required placeholder="https://example.com" />
+					<x-text-input id="url" name="url" type="text" class="mt-1.5 block w-full" :value="old('url', $project->url)" required placeholder="example.com" />
 					<x-input-error :messages="$errors->get('url')" class="mt-2" />
-					<p class="mt-1.5 text-xs text-text-tertiary">Enter the full URL including https://</p>
+					<p class="mt-1.5 text-xs text-text-tertiary">https:// will be added automatically if omitted</p>
 				</div>
 
 				<div class="mt-5">

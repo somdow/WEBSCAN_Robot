@@ -71,6 +71,11 @@
 							}"
 							x-text="page.analysis_status.charAt(0).toUpperCase() + page.analysis_status.slice(1)"
 						></span>
+						<span
+							x-show="page.analysis_status === 'failed'"
+							x-cloak
+							class="ml-1 inline-block rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-600 border border-amber-200"
+						>Credit Refunded</span>
 					</td>
 					<td class="px-4 py-3">
 						<span

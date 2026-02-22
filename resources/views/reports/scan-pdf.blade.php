@@ -126,6 +126,11 @@
 		.card-ai-text pre code { background: transparent; padding: 0; }
 		.ai-page-type-badge { display: inline-block; padding: 2px 8px; background-color: {{ $accentColor }}; color: #FFFFFF; font-size: 9px; font-weight: bold; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
 
+		/* ── Show Stopper Section ── */
+		.section-showstopper .section-header { border-bottom-color: #7F1D1D; background-color: #FEF2F2; padding: 14px 16px; border-radius: 4px; }
+		.section-showstopper .section-title { color: #7F1D1D; font-size: 20px; }
+		.section-showstopper .section-subtitle { color: #991B1B; }
+
 		/* ── Category Sub-Headers ── */
 		.category-subheader { font-size: 14px; font-weight: bold; color: #374151; margin-top: 18px; margin-bottom: 4px; padding-bottom: 6px; border-bottom: 1px solid #E5E7EB; }
 		.category-subheader-desc { font-size: 10px; color: #9CA3AF; margin-bottom: 10px; }
@@ -369,6 +374,7 @@
 			<strong>SEO Score</strong> &mdash; On-page optimization, technical SEO, content quality, and search visibility.<br/>
 			<strong>Site Health</strong> &mdash; Performance, security, analytics, and technology stack.
 		</div>
+
 	</div>
 
 	{{-- ══════════════════════════════════════════════════════════════════════
@@ -396,10 +402,15 @@
 
 		$nonWpResults = $uniqueResults->reject(fn($r) => in_array($r->module_key, $wpModuleKeys));
 
-		$failedModules = $nonWpResults->filter(fn($r) => $r->status->value === "bad")->values();
-		$warningModules = $nonWpResults->filter(fn($r) => $r->status->value === "warning")->values();
-		$infoModules = $nonWpResults->filter(fn($r) => $r->status->value === "info")->values();
-		$passedModules = $nonWpResults->filter(fn($r) => $r->status->value === "ok")
+		/* Show stoppers: fundamental failures that break everything (e.g. expired SSL) */
+		$showStopperKeys = array("sslCertificate", "httpsRedirect");
+		$showStopperModules = $nonWpResults->filter(fn($r) => $r->status->value === "bad" && in_array($r->module_key, $showStopperKeys))->values();
+		$nonShowStopperResults = $nonWpResults->reject(fn($r) => $r->status->value === "bad" && in_array($r->module_key, $showStopperKeys));
+
+		$failedModules = $nonShowStopperResults->filter(fn($r) => $r->status->value === "bad")->values();
+		$warningModules = $nonShowStopperResults->filter(fn($r) => $r->status->value === "warning")->values();
+		$infoModules = $nonShowStopperResults->filter(fn($r) => $r->status->value === "info")->values();
+		$passedModules = $nonShowStopperResults->filter(fn($r) => $r->status->value === "ok")
 			->merge($passedWordPressModules)
 			->values();
 
@@ -452,7 +463,7 @@
 		}
 
 		$totalPagesAnalyzed = $combinedPages->count();
-		$topPages = $combinedPages->sortBy("score")->take(10);
+		$topPages = $combinedPages->sortBy("score")->take(5);
 	@endphp
 
 	{{-- ── Page 3: Results Summary ── --}}
@@ -474,24 +485,60 @@
 			</tr>
 		</table>
 
+		{{-- AI narrative (merged from executive summary) --}}
+		@if($scan->ai_executive_summary && !empty($scan->ai_executive_summary["summary"]))
+		<div style="font-size: 11px; color: #374151; line-height: 1.7; margin-top: 16px; padding: 10px 12px; background-color: #F9FAFB; border-radius: 4px; border-left: 3px solid {{ $accentColor }};">
+			{{ $scan->ai_executive_summary["summary"] }}
+		</div>
+		@endif
+
 		@if($aggregateCritical > 0 || $aggregateWarnings > 0)
-		<div style="font-size: 12px; color: #6B7280; line-height: 1.7; margin-top: 16px;">
+		<div style="font-size: 12px; color: #6B7280; line-height: 1.7; margin-top: 12px;">
 			@if($aggregateCritical > 0)
 				<span style="color: #DC2626; font-weight: bold;">{{ $aggregateCritical }} critical {{ Str::plural("issue", $aggregateCritical) }}</span> {{ $aggregateCritical === 1 ? "requires" : "require" }} immediate attention.
 			@endif
 			@if($aggregateWarnings > 0)
 				<span style="color: #D97706; font-weight: bold;">{{ $aggregateWarnings }} {{ Str::plural("warning", $aggregateWarnings) }}</span> may be impacting your search performance.
 			@endif
-			The following pages break down each finding with actionable recommendations.
 		</div>
+		@endif
+
+		{{-- Top Issues + Quick Wins (two-column) --}}
+		@if($scan->ai_executive_summary && (!empty($scan->ai_executive_summary["topIssues"]) || !empty($scan->ai_executive_summary["quickWins"])))
+		<table style="width: 100%; border-collapse: separate; border-spacing: 8px 0; margin-top: 16px;">
+			<tr>
+				@if(!empty($scan->ai_executive_summary["topIssues"]))
+				<td style="width: {{ !empty($scan->ai_executive_summary['quickWins']) ? '50%' : '100%' }}; vertical-align: top; padding: 10px 12px; background-color: #FEF2F2; border-radius: 4px;">
+					<div style="font-size: 10px; font-weight: bold; color: #991B1B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">&#9888; Top Issues</div>
+					@foreach(array_slice($scan->ai_executive_summary["topIssues"], 0, 5) as $issue)
+						@php $issueText = is_array($issue) ? ($issue["issue"] ?? ($issue["description"] ?? "")) : $issue; @endphp
+						<div class="card-finding" style="font-size: 10px;">{{ $issueText }}</div>
+					@endforeach
+				</td>
+				@endif
+				@if(!empty($scan->ai_executive_summary["quickWins"]))
+				<td style="width: {{ !empty($scan->ai_executive_summary['topIssues']) ? '50%' : '100%' }}; vertical-align: top; padding: 10px 12px; background-color: #F0FDF4; border-radius: 4px;">
+					<div style="font-size: 10px; font-weight: bold; color: #065F46; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">&#9889; Quick Wins</div>
+					@foreach(array_slice($scan->ai_executive_summary["quickWins"], 0, 5) as $quickWin)
+						<div class="card-finding" style="font-size: 10px;">
+							{{ is_array($quickWin) ? ($quickWin["action"] ?? ($quickWin["description"] ?? "")) : $quickWin }}
+							@if(is_array($quickWin) && !empty($quickWin["estimatedPoints"]))
+								<span style="color: #9CA3AF; font-size: 9px;">(+{{ $quickWin["estimatedPoints"] }} pts)</span>
+							@endif
+						</div>
+					@endforeach
+				</td>
+				@endif
+			</tr>
+		</table>
 		@endif
 
 		{{-- Top pages table (worst-scoring first) --}}
 		@if($totalPagesAnalyzed > 0)
-		<div style="margin-top: 24px;">
+		<div style="margin-top: 20px;">
 			<div style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 10px;">
 				Pages Analyzed
-				<span style="font-size: 11px; font-weight: normal; color: #9CA3AF;">({{ $totalPagesAnalyzed }} {{ Str::plural("page", $totalPagesAnalyzed) }}{{ $totalPagesAnalyzed > 10 ? ", showing lowest-scoring 10" : "" }})</span>
+				<span style="font-size: 11px; font-weight: normal; color: #9CA3AF;">({{ $totalPagesAnalyzed }} {{ Str::plural("page", $totalPagesAnalyzed) }}{{ $totalPagesAnalyzed > 5 ? ", showing lowest-scoring 5" : "" }})</span>
 			</div>
 
 			<table class="pages-table">
@@ -528,62 +575,18 @@
 		@endif
 	</div>
 
-	{{-- ── AI Executive Summary ── --}}
-	@if($scan->ai_executive_summary)
+	{{-- ── Show Stoppers (SSL, HTTPS — fundamental failures) ── --}}
+	@if($showStopperModules->isNotEmpty())
 	<div class="page-break"></div>
-	<div class="section section-indigo">
+	<div class="section section-showstopper">
 		<div class="section-header">
-			<div class="section-title"><span class="section-icon">&#9733;</span>Executive Summary</div>
-			<div class="section-subtitle">AI-generated overview of your site's health.</div>
+			<div class="section-title"><span class="section-icon">&#9888;</span>Show Stopper{{ $showStopperModules->count() > 1 ? "s" : "" }}</div>
+			<div class="section-subtitle">{{ $showStopperModules->count() === 1 ? "This issue" : "These issues" }} must be resolved before anything else &mdash; {{ $showStopperModules->count() === 1 ? "it prevents" : "they prevent" }} your site from functioning properly.</div>
 		</div>
 
-		<div class="card card-info avoid-break">
-			<div class="card-header">
-				<span class="card-title">Overview</span>
-				<span class="card-badge badge-info">AI</span>
-			</div>
-			@if(!empty($scan->ai_executive_summary["summary"]))
-				<div class="card-findings">
-					<div style="font-size: 11px; color: #374151; line-height: 1.7;">{{ $scan->ai_executive_summary["summary"] }}</div>
-				</div>
-			@endif
-		</div>
-
-		@if(!empty($scan->ai_executive_summary["topIssues"]))
-		<div class="card card-fail avoid-break">
-			<div class="card-header">
-				<span class="card-title">&#9888; Top Issues</span>
-				<span class="card-badge badge-fail">Priority</span>
-			</div>
-			<div class="card-findings">
-				@foreach($scan->ai_executive_summary["topIssues"] as $issue)
-					@php
-						$issueText = is_array($issue) ? ($issue["issue"] ?? ($issue["description"] ?? "")) : $issue;
-					@endphp
-					<div class="card-finding">{{ $issueText }}</div>
-				@endforeach
-			</div>
-		</div>
-		@endif
-
-		@if(!empty($scan->ai_executive_summary["quickWins"]))
-		<div class="card avoid-break">
-			<div class="card-header">
-				<span class="card-title">&#9889; Quick Wins</span>
-				<span class="card-badge">Easy Fixes</span>
-			</div>
-			<div class="card-findings">
-				@foreach($scan->ai_executive_summary["quickWins"] as $quickWin)
-					<div class="card-finding">
-						{{ is_array($quickWin) ? ($quickWin["action"] ?? ($quickWin["description"] ?? "")) : $quickWin }}
-						@if(is_array($quickWin) && !empty($quickWin["estimatedPoints"]))
-							<span style="color: #9CA3AF; font-size: 9px;">(+{{ $quickWin["estimatedPoints"] }} pts)</span>
-						@endif
-					</div>
-				@endforeach
-			</div>
-		</div>
-		@endif
+		@foreach($showStopperModules as $result)
+			@include("reports.partials.pdf-module-result", array("result" => $result, "findingsLimit" => 10, "showAi" => true))
+		@endforeach
 	</div>
 	@endif
 

@@ -15,6 +15,17 @@ abstract class ProjectFormRequest extends FormRequest
 		return true;
 	}
 
+	protected function prepareForValidation(): void
+	{
+		$rawUrl = trim($this->input("url", ""));
+
+		if ($rawUrl !== "" && !preg_match("#^https?://#i", $rawUrl)) {
+			$rawUrl = "https://" . $rawUrl;
+		}
+
+		$this->merge(array("url" => $rawUrl));
+	}
+
 	public function rules(): array
 	{
 		return array(
@@ -27,7 +38,7 @@ abstract class ProjectFormRequest extends FormRequest
 	public function messages(): array
 	{
 		return array(
-			"url.url" => "Please enter a valid URL starting with http:// or https://",
+			"url.url" => "Please enter a valid website URL (e.g. example.com)",
 		);
 	}
 }

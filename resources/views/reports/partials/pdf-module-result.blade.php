@@ -46,28 +46,31 @@
 	};
 @endphp
 
-<div class="card {{ $cardClass }} avoid-break">
-	<div class="card-header">
-		<table class="card-header-table">
-			<tr>
-				<td><span class="card-title">{{ $moduleLabels[$result->module_key] ?? $result->module_key }}</span></td>
-				<td style="text-align: right;"><span class="card-badge {{ $badgeClass }}">{{ $badgeLabel }}</span></td>
-			</tr>
-		</table>
-	</div>
+<div class="card {{ $cardClass }}">
+	{{-- Header + Why This Matters stay together --}}
+	<div class="avoid-break">
+		<div class="card-header">
+			<table class="card-header-table">
+				<tr>
+					<td><span class="card-title">{{ $moduleLabels[$result->module_key] ?? $result->module_key }}</span></td>
+					<td style="text-align: right;"><span class="card-badge {{ $badgeClass }}">{{ $badgeLabel }}</span></td>
+				</tr>
+			</table>
+		</div>
 
-	@if($desc)
-	<div class="{{ $insightClass }}">
-		<div class="card-recs-title">{!! $insightTitle !!}</div>
-		<div class="card-insight-text">{{ $desc["description"] }}</div>
-		@if($statusValue === "ok" && !empty($desc["passing"]))
-			<div class="card-passing">&#10004; {{ $desc["passing"] }}</div>
+		@if($desc)
+		<div class="{{ $insightClass }}">
+			<div class="card-recs-title">{!! $insightTitle !!}</div>
+			<div class="card-insight-text">{{ $desc["description"] }}</div>
+			@if($statusValue === "ok" && !empty($desc["passing"]))
+				<div class="card-passing">&#10004; {{ $desc["passing"] }}</div>
+			@endif
+		</div>
 		@endif
 	</div>
-	@endif
 
 	@if($findings->isNotEmpty())
-	<div class="card-findings">
+	<div class="card-findings avoid-break">
 		<div class="card-recs-title" style="margin-bottom: 6px;">{!! $findingsTitle !!}</div>
 		@foreach($findings->take($findingsLimit) as $finding)
 			<div class="card-finding">{{ is_array($finding) ? ($finding["message"] ?? ($finding["text"] ?? "")) : $finding }}</div>
@@ -76,7 +79,7 @@
 	@endif
 
 	@if($showRecs && !empty($result->recommendations))
-	<div class="card-recs {{ $recsClass }}">
+	<div class="card-recs {{ $recsClass }} avoid-break">
 		<div class="card-recs-title">&#9654; Recommendations</div>
 		@foreach($result->recommendations as $rec)
 			<div class="card-rec {{ $recItemClass }}">{{ is_array($rec) ? ($rec["text"] ?? ($rec["message"] ?? "")) : $rec }}</div>
@@ -95,7 +98,7 @@
 		$aiContent = preg_replace("/<p>\s*(?:<[^>]+>\s*)*PAGE_TYPE:[^<]*(?:<\/[^>]+>\s*)*<\/p>/i", "", $aiContent);
 		$safeAiContent = Str::limit(strip_tags(trim($aiContent), "<p><strong><em><ul><ol><li><br><h3><h4><code><pre><table><thead><tbody><tr><th><td>"), 800);
 	@endphp
-	<div class="card-ai">
+	<div class="card-ai avoid-break">
 		<div class="card-ai-title">&#9733; AI Suggestion</div>
 		@if($aiPageType)
 			<div style="margin-bottom: 6px;">
