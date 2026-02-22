@@ -15,6 +15,8 @@ class ScanReportController extends Controller
 	 * Download a PDF report for a completed scan.
 	 * GET /scans/{scan}/pdf
 	 */
+	private const VALID_REPORT_TYPES = array("full", "seo", "health");
+
 	public function download(Request $request, Scan $scan, PdfReportService $reportService): Response
 	{
 		Gate::authorize("access", $scan->project);
@@ -25,6 +27,11 @@ class ScanReportController extends Controller
 				->with("error", "PDF reports are only available for completed scans.");
 		}
 
-		return $reportService->generateReport($scan);
+		$reportType = $request->query("type", "full");
+		if (!in_array($reportType, self::VALID_REPORT_TYPES, true)) {
+			$reportType = "full";
+		}
+
+		return $reportService->generateReport($scan, $reportType);
 	}
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>{{ $pdfBrandName }} - Website Audit Report - {{ $project->name }}</title>
+	<title>{{ $pdfBrandName }} - {{ $reportTypeLabel }} - {{ $project->name }}</title>
 	<style>
 		* { margin: 0; padding: 0; }
 		body { font-family: DejaVu Sans, sans-serif; font-size: 12px; color: #111827; line-height: 1.5; margin: 40px; }
@@ -240,31 +240,44 @@
 					@else
 						<div class="brand">{{ $pdfBrandName }}</div>
 					@endif
-					<div class="brand-sub">Website Audit Report</div>
+					<div class="brand-sub">{{ $reportTypeLabel }}</div>
 				</td>
 				<td style="text-align: right; width: 200px; vertical-align: top;">
-					{{-- Overall score (large) --}}
-					<div class="score-box score-box-lg {{ $overallClass }}" style="margin-bottom: 8px;">
-						<div class="score-value score-value-lg">{{ $scan->overall_score ?? 0 }}</div>
-						<div class="score-label score-label-lg">Overall Score</div>
-					</div>
-					{{-- SEO + Health (small, side by side under overall) --}}
-					<table style="width: 100%; border-collapse: collapse;">
-						<tr>
-							<td style="width: 50%; padding-right: 3px;">
-								<div class="score-box score-box-xs {{ $seoClass }}">
-									<div class="score-value score-value-xs">{!! $scan->seo_score ?? "&mdash;" !!}</div>
-									<div class="score-label score-label-xs">SEO</div>
-								</div>
-							</td>
-							<td style="width: 50%; padding-left: 3px;">
-								<div class="score-box score-box-xs {{ $healthClass }}">
-									<div class="score-value score-value-xs">{!! $scan->health_score ?? "&mdash;" !!}</div>
-									<div class="score-label score-label-xs">Health</div>
-								</div>
-							</td>
-						</tr>
-					</table>
+					@if($reportType === "seo")
+						{{-- SEO report: single SEO score only --}}
+						<div class="score-box score-box-lg {{ $seoClass }}">
+							<div class="score-value score-value-lg">{!! $scan->seo_score ?? "&mdash;" !!}</div>
+							<div class="score-label score-label-lg">SEO Score</div>
+						</div>
+					@elseif($reportType === "health")
+						{{-- Health report: single Health score only --}}
+						<div class="score-box score-box-lg {{ $healthClass }}">
+							<div class="score-value score-value-lg">{!! $scan->health_score ?? "&mdash;" !!}</div>
+							<div class="score-label score-label-lg">Health Score</div>
+						</div>
+					@else
+						{{-- Full: overall large, SEO + Health small --}}
+						<div class="score-box score-box-lg {{ $overallClass }}" style="margin-bottom: 8px;">
+							<div class="score-value score-value-lg">{{ $scan->overall_score ?? 0 }}</div>
+							<div class="score-label score-label-lg">Overall Score</div>
+						</div>
+						<table style="width: 100%; border-collapse: collapse;">
+							<tr>
+								<td style="width: 50%; padding-right: 3px;">
+									<div class="score-box score-box-xs {{ $seoClass }}">
+										<div class="score-value score-value-xs">{!! $scan->seo_score ?? "&mdash;" !!}</div>
+										<div class="score-label score-label-xs">SEO</div>
+									</div>
+								</td>
+								<td style="width: 50%; padding-left: 3px;">
+									<div class="score-box score-box-xs {{ $healthClass }}">
+										<div class="score-value score-value-xs">{!! $scan->health_score ?? "&mdash;" !!}</div>
+										<div class="score-label score-label-xs">Health</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					@endif
 				</td>
 			</tr>
 		</table>
@@ -281,7 +294,13 @@
 				</td>
 				<td>
 					<div class="cover-intro-body">
-						This report is a comprehensive audit of {{ $project->url }}, analyzing {{ $totalModules }} key factors across SEO, security, performance, content quality, and technical health. From on-page optimization and search visibility to platform vulnerabilities, malware detection, and Core Web Vitals &mdash; each check is scored and prioritized so you know exactly what to fix first and why it matters.
+						@if($reportType === "seo")
+							This report is a focused SEO audit of {{ $project->url }}, analyzing {{ $totalModules }} factors that directly impact your search engine visibility and rankings. From on-page optimization and keyword targeting to technical SEO, content quality, and E-E-A-T signals &mdash; each check is scored and prioritized so you know exactly what to fix first to climb the search results.
+						@elseif($reportType === "health")
+							This report is a site health audit of {{ $project->url }}, analyzing {{ $totalModules }} factors that affect your website's performance, security, and technical reliability. From Core Web Vitals and page speed to SSL security, malware detection, and platform vulnerabilities &mdash; each check is scored and prioritized so you know exactly what to fix first to keep your site fast, safe, and stable.
+						@else
+							This report is a comprehensive audit of {{ $project->url }}, analyzing {{ $totalModules }} key factors across SEO, security, performance, content quality, and technical health. From on-page optimization and search visibility to platform vulnerabilities, malware detection, and Core Web Vitals &mdash; each check is scored and prioritized so you know exactly what to fix first and why it matters.
+						@endif
 					</div>
 					@if($hasAiSuggestions)
 					<div class="cover-intro-body" style="margin-top: 10px; color: {{ $accentColor }};">
@@ -345,7 +364,15 @@
 			</tr>
 			<tr>
 				<td class="meta-label">Checks Run</td>
-				<td class="meta-value">{{ $totalModules }} analyzers across SEO, content, security, and performance</td>
+				<td class="meta-value">
+					@if($reportType === "seo")
+						{{ $totalModules }} analyzers across on-page SEO, technical SEO, content quality, and search visibility
+					@elseif($reportType === "health")
+						{{ $totalModules }} analyzers across performance, security, analytics, and technology stack
+					@else
+						{{ $totalModules }} analyzers across SEO, content, security, and performance
+					@endif
+				</td>
 			</tr>
 			@if($scan->fetcher_used === "zyte")
 			<tr>
@@ -353,7 +380,7 @@
 				<td class="meta-value">Zyte Browser Rendering (bot protection bypass)</td>
 			</tr>
 			@endif
-			@if(!empty($project->target_keywords))
+			@if(!empty($project->target_keywords) && $reportType !== "health")
 			<tr>
 				<td class="meta-label">Keywords</td>
 				<td class="meta-value">
@@ -370,9 +397,15 @@
 		{{-- Score breakdown explanation --}}
 		<div style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 8px;">Score Breakdown</div>
 		<div style="font-size: 11px; color: #4B5563; line-height: 1.8;">
-			<strong>Overall Score</strong> &mdash; A weighted aggregate of all {{ $totalModules }} checks across every category.<br/>
-			<strong>SEO Score</strong> &mdash; On-page optimization, technical SEO, content quality, and search visibility.<br/>
-			<strong>Site Health</strong> &mdash; Performance, security, analytics, and technology stack.
+			@if($reportType === "seo")
+				<strong>SEO Score</strong> &mdash; A weighted aggregate of {{ $totalModules }} checks covering on-page optimization, technical SEO, content quality, E-E-A-T signals, and search visibility.
+			@elseif($reportType === "health")
+				<strong>Health Score</strong> &mdash; A weighted aggregate of {{ $totalModules }} checks covering performance, security, analytics, technology stack, and platform health.
+			@else
+				<strong>Overall Score</strong> &mdash; A weighted aggregate of all {{ $totalModules }} checks across every category.<br/>
+				<strong>SEO Score</strong> &mdash; On-page optimization, technical SEO, content quality, and search visibility.<br/>
+				<strong>Site Health</strong> &mdash; Performance, security, analytics, and technology stack.
+			@endif
 		</div>
 
 	</div>
@@ -422,30 +455,77 @@
 
 		$moduleDescriptions = config("module-descriptions");
 
+		/* ── Filter helper: restrict module results to allowed categories when not "full" ── */
+		$filterByAllowedModules = function ($moduleResults) use ($allowedModuleKeys) {
+			if ($allowedModuleKeys === null) {
+				return $moduleResults;
+			}
+			return $moduleResults->filter(fn($r) => in_array($r->module_key, $allowedModuleKeys, true));
+		};
+
 		/* ── Aggregate counts across homepage + additional pages ── */
-		$additionalPageResults = $additionalPages->flatMap(fn($p) => $p->moduleResults);
+		$additionalPageResults = $additionalPages->flatMap(fn($p) => $filterByAllowedModules($p->moduleResults));
 		$aggregateCritical = $failedModules->count() + $additionalPageResults->where("status.value", "bad")->count();
 		$aggregateWarnings = $warningModules->count() + $additionalPageResults->where("status.value", "warning")->count();
 		$aggregateInfo = $infoModules->count() + $additionalPageResults->where("status.value", "info")->count();
 		$aggregatePassed = $passedModules->count() + $additionalPageResults->where("status.value", "ok")->count();
+
+		/* ── Helper: compute a page score from only the relevant module results ── */
+		$computeFilteredPageScore = function ($pageModuleResults) use ($allowedModuleKeys) {
+			if ($allowedModuleKeys === null) {
+				return null;
+			}
+			$filtered = $pageModuleResults->filter(fn($r) => in_array($r->module_key, $allowedModuleKeys, true));
+			if ($filtered->isEmpty()) {
+				return null;
+			}
+			$totalWeight = 0;
+			$weightedSum = 0;
+			foreach ($filtered as $result) {
+				$weight = $result->weight ?? 1;
+				$score = match($result->status->value) {
+					"ok" => 100,
+					"warning" => 50,
+					"info" => 75,
+					default => 0,
+				};
+				$weightedSum += $score * $weight;
+				$totalWeight += $weight;
+			}
+			return $totalWeight > 0 ? (int) round($weightedSum / $totalWeight) : null;
+		};
+
+		/* ── Determine the primary score for each page based on report type ── */
+		$resolvePageScore = function ($page) use ($reportType, $computeFilteredPageScore) {
+			if ($reportType === "full") {
+				return $page->page_score;
+			}
+			return $computeFilteredPageScore($page->moduleResults);
+		};
 
 		/* ── Combined pages list (homepage + crawl pages + additional pages) ── */
 		$combinedPages = collect();
 
 		if ($scanPages->count() > 1) {
 			foreach ($scanPages as $crawledPage) {
+				$filteredResults = $filterByAllowedModules($crawledPage->moduleResults);
 				$combinedPages->push((object) array(
 					"url" => $crawledPage->truncatedUrl(70),
-					"score" => $crawledPage->page_score,
-					"ok" => $crawledPage->moduleResults->where("status.value", "ok")->count(),
-					"warn" => $crawledPage->moduleResults->where("status.value", "warning")->count(),
-					"bad" => $crawledPage->moduleResults->where("status.value", "bad")->count(),
+					"score" => $resolvePageScore($crawledPage),
+					"ok" => $filteredResults->where("status.value", "ok")->count(),
+					"warn" => $filteredResults->where("status.value", "warning")->count(),
+					"bad" => $filteredResults->where("status.value", "bad")->count(),
 				));
 			}
 		} else {
+			$homepageScore = match($reportType) {
+				"seo" => $scan->seo_score,
+				"health" => $scan->health_score,
+				default => $scan->overall_score,
+			};
 			$combinedPages->push((object) array(
 				"url" => $project->url,
-				"score" => $scan->overall_score,
+				"score" => $homepageScore,
 				"ok" => $passedModules->count(),
 				"warn" => $warningModules->count(),
 				"bad" => $failedModules->count(),
@@ -453,12 +533,13 @@
 		}
 
 		foreach ($additionalPages as $addedPage) {
+			$filteredResults = $filterByAllowedModules($addedPage->moduleResults);
 			$combinedPages->push((object) array(
 				"url" => $addedPage->truncatedUrl(70),
-				"score" => $addedPage->page_score,
-				"ok" => $addedPage->moduleResults->where("status.value", "ok")->count(),
-				"warn" => $addedPage->moduleResults->where("status.value", "warning")->count(),
-				"bad" => $addedPage->moduleResults->where("status.value", "bad")->count(),
+				"score" => $resolvePageScore($addedPage),
+				"ok" => $filteredResults->where("status.value", "ok")->count(),
+				"warn" => $filteredResults->where("status.value", "warning")->count(),
+				"bad" => $filteredResults->where("status.value", "bad")->count(),
 			));
 		}
 
@@ -485,8 +566,8 @@
 			</tr>
 		</table>
 
-		{{-- AI narrative (merged from executive summary) --}}
-		@if($scan->ai_executive_summary && !empty($scan->ai_executive_summary["summary"]))
+		{{-- AI narrative (merged from executive summary) — full report only since it covers all categories --}}
+		@if($reportType === "full" && $scan->ai_executive_summary && !empty($scan->ai_executive_summary["summary"]))
 		<div style="font-size: 11px; color: #374151; line-height: 1.7; margin-top: 16px; padding: 10px 12px; background-color: #F9FAFB; border-radius: 4px; border-left: 3px solid {{ $accentColor }};">
 			{{ $scan->ai_executive_summary["summary"] }}
 		</div>
@@ -498,13 +579,17 @@
 				<span style="color: #DC2626; font-weight: bold;">{{ $aggregateCritical }} critical {{ Str::plural("issue", $aggregateCritical) }}</span> {{ $aggregateCritical === 1 ? "requires" : "require" }} immediate attention.
 			@endif
 			@if($aggregateWarnings > 0)
-				<span style="color: #D97706; font-weight: bold;">{{ $aggregateWarnings }} {{ Str::plural("warning", $aggregateWarnings) }}</span> may be impacting your search performance.
+				<span style="color: #D97706; font-weight: bold;">{{ $aggregateWarnings }} {{ Str::plural("warning", $aggregateWarnings) }}</span> may be impacting your
+				@if($reportType === "seo") search performance.
+				@elseif($reportType === "health") site performance and security.
+				@else search performance.
+				@endif
 			@endif
 		</div>
 		@endif
 
-		{{-- Top Issues + Quick Wins (two-column) --}}
-		@if($scan->ai_executive_summary && (!empty($scan->ai_executive_summary["topIssues"]) || !empty($scan->ai_executive_summary["quickWins"])))
+		{{-- Top Issues + Quick Wins (two-column) — full report only since AI summary covers all categories --}}
+		@if($reportType === "full" && $scan->ai_executive_summary && (!empty($scan->ai_executive_summary["topIssues"]) || !empty($scan->ai_executive_summary["quickWins"])))
 		<table style="width: 100%; border-collapse: separate; border-spacing: 8px 0; margin-top: 16px;">
 			<tr>
 				@if(!empty($scan->ai_executive_summary["topIssues"]))
@@ -617,7 +702,11 @@
 	<div class="section section-amber">
 		<div class="section-header">
 			<div class="section-title"><span class="section-icon">&#9888;</span>Needs Attention</div>
-			<div class="section-subtitle">{{ $warningModules->count() }} {{ Str::plural("check", $warningModules->count()) }} flagged &mdash; these issues may be impacting your search performance.</div>
+			<div class="section-subtitle">{{ $warningModules->count() }} {{ Str::plural("check", $warningModules->count()) }} flagged &mdash; these issues may be impacting your
+				@if($reportType === "health") site performance and reliability.
+				@else search performance.
+				@endif
+			</div>
 		</div>
 
 		@foreach($warningByCategory as $categoryName => $categoryResults)
@@ -707,21 +796,42 @@
 
 		{{-- Dynamic recap --}}
 		@php
+			$outroScore = match($reportType) {
+				"seo" => $scan->seo_score,
+				"health" => $scan->health_score,
+				default => $scan->overall_score,
+			};
+			$outroScoreLabel = match($reportType) {
+				"seo" => "SEO Score",
+				"health" => "Health Score",
+				default => "Overall Score",
+			};
 			$outroScoreClass = match(true) {
-				$scan->overall_score === null => "#9CA3AF",
-				$scan->overall_score >= 80 => "#059669",
-				$scan->overall_score >= 50 => "#D97706",
+				$outroScore === null => "#9CA3AF",
+				$outroScore >= 80 => "#059669",
+				$outroScore >= 50 => "#D97706",
 				default => "#DC2626",
 			};
 		@endphp
-		<div class="outro-title">Your Site Scored <span style="color: {{ $outroScoreClass }};">{{ $scan->overall_score ?? 0 }}/100</span></div>
+		<div class="outro-title">Your {{ $outroScoreLabel }}: <span style="color: {{ $outroScoreClass }};">{{ $outroScore ?? 0 }}/100</span></div>
 		<div class="outro-text">
 			@if($aggregateCritical > 0)
-				Fixing the <strong style="color: #DC2626;">{{ $aggregateCritical }} critical {{ Str::plural("issue", $aggregateCritical) }}</strong> identified in this report could significantly improve your search ranking, security posture, and user experience.
+				Fixing the <strong style="color: #DC2626;">{{ $aggregateCritical }} critical {{ Str::plural("issue", $aggregateCritical) }}</strong> identified in this report could significantly improve your
+				@if($reportType === "seo") search rankings and organic visibility.
+				@elseif($reportType === "health") site performance, security, and reliability.
+				@else search ranking, security posture, and user experience.
+				@endif
 			@elseif($aggregateWarnings > 0)
-				Addressing the <strong style="color: #D97706;">{{ $aggregateWarnings }} {{ Str::plural("warning", $aggregateWarnings) }}</strong> identified in this report will help fine-tune your site's performance and visibility.
+				Addressing the <strong style="color: #D97706;">{{ $aggregateWarnings }} {{ Str::plural("warning", $aggregateWarnings) }}</strong> identified in this report will help fine-tune your
+				@if($reportType === "seo") search performance and content quality.
+				@elseif($reportType === "health") site speed, security, and technical health.
+				@else site's performance and visibility.
+				@endif
 			@else
-				Your site is in great shape. Keep monitoring regularly to maintain your competitive edge.
+				@if($reportType === "seo") Your SEO is in great shape. Keep monitoring regularly to maintain your search visibility.
+				@elseif($reportType === "health") Your site health is solid. Keep monitoring regularly to maintain performance and security.
+				@else Your site is in great shape. Keep monitoring regularly to maintain your competitive edge.
+				@endif
 			@endif
 		</div>
 
