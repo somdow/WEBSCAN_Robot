@@ -14,8 +14,6 @@ class PlanSeeder extends Seeder
 			array(
 				"name" => "Free",
 				"description" => "Get started with basic SEO analysis. No credit card required.",
-				"stripe_monthly_price_id" => env("STRIPE_FREE_MONTHLY_PRICE_ID"),
-				"stripe_annual_price_id" => env("STRIPE_FREE_ANNUAL_PRICE_ID"),
 				"price_monthly" => 0,
 				"price_annual" => 0,
 				"max_users" => 1,
@@ -43,8 +41,6 @@ class PlanSeeder extends Seeder
 			array(
 				"name" => "Pro",
 				"description" => "For professionals who need deeper insights and more capacity.",
-				"stripe_monthly_price_id" => env("STRIPE_PRO_MONTHLY_PRICE_ID"),
-				"stripe_annual_price_id" => env("STRIPE_PRO_ANNUAL_PRICE_ID"),
 				"price_monthly" => 49.00,
 				"price_annual" => 468.00,
 				"max_users" => 3,
@@ -72,8 +68,6 @@ class PlanSeeder extends Seeder
 			array(
 				"name" => "Agency",
 				"description" => "Full-featured plan for agencies managing multiple clients.",
-				"stripe_monthly_price_id" => env("STRIPE_AGENCY_MONTHLY_PRICE_ID"),
-				"stripe_annual_price_id" => env("STRIPE_AGENCY_ANNUAL_PRICE_ID"),
 				"price_monthly" => 149.00,
 				"price_annual" => 1428.00,
 				"max_users" => 10,
