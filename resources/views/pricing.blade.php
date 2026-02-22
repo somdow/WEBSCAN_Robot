@@ -96,12 +96,6 @@
 								White-label reports
 							</li>
 						@endif
-						@if($planItem->hasFeature("api_access"))
-							<li class="flex items-center gap-2 text-text-primary">
-								<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-								API access
-							</li>
-						@endif
 					</ul>
 
 					<div class="mt-6">

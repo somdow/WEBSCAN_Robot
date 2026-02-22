@@ -83,7 +83,7 @@ class AdminPanelProvider extends PanelProvider
 							background-color: #E5E7EB !important;
 						}
 						.fi-no-notification:not(.fi-inline) {
-							background-color: #F97316 !important;
+							background-color: #F25A15 !important;
 							color: #FFFFFF !important;
 						}
 						.fi-no-notification:not(.fi-inline) .fi-no-notification-title {

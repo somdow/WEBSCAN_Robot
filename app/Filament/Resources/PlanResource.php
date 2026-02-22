@@ -106,17 +106,9 @@ class PlanResource extends Resource
 			))->columns(3),
 
 			Section::make("Feature Flags")->schema(array(
-				Toggle::make("feature_flags.branded_pdf")
-					->label("Branded PDF Reports"),
 				Toggle::make("feature_flags.white_label")
 					->label("White Label"),
-				Toggle::make("feature_flags.api_access")
-					->label("API Access"),
-				Toggle::make("feature_flags.scheduled_scans")
-					->label("Scheduled Scans"),
-				Toggle::make("feature_flags.leadgen")
-					->label("Lead Generation"),
-			))->columns(3),
+				))->columns(3),
 		));
 	}
 
