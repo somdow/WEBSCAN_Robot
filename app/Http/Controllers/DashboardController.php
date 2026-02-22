@@ -31,6 +31,7 @@ class DashboardController extends Controller
 			: array("hasProject" => false, "hasCompletedScan" => false);
 
 		return view("dashboard", array(
+			"organization" => $organization,
 			"projectCount" => $stats["projectCount"],
 			"scansThisMonth" => $stats["scansThisMonth"],
 			"maxScans" => $plan->max_scans_per_month ?? 10,

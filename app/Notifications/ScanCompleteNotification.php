@@ -26,12 +26,16 @@ class ScanCompleteNotification extends Notification implements ShouldQueue
 		$projectName = $this->scan->project->name ?? "your project";
 		$score = $this->scan->overall_score ?? 0;
 
+		$resultsUrl = $this->scan->project !== null
+			? route("projects.show", $this->scan->project) . "?scan={$this->scan->uuid}"
+			: url("/");
+
 		return (new MailMessage())
 			->subject("SEO Scan Complete — Score: {$score}/100")
 			->greeting("Hello " . $notifiable->name . "!")
 			->line("Your SEO scan for **{$projectName}** is complete.")
 			->line("**Overall Score: {$score}/100**")
-			->action("View Results", url("/scans/{$this->scan->id}"))
+			->action("View Results", $resultsUrl)
 			->line("You can also download a PDF report from the scan results page.");
 	}
 }

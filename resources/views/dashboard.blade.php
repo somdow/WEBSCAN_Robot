@@ -36,11 +36,23 @@
 				<div class="mt-1 text-xs text-text-tertiary">No scans yet</div>
 			@endif
 		</div>
-		<div class="rounded-lg border border-border bg-surface p-5 shadow-card">
+		@php
+			$planCardClasses = $organization?->hasActiveOverride()
+				? "border-amber-300 bg-amber-50"
+				: "border-emerald-300 bg-emerald-100";
+		@endphp
+		<div class="rounded-lg border p-5 shadow-card {{ $planCardClasses }}">
 			<div class="text-xs font-medium uppercase tracking-wider text-text-tertiary">Current Plan</div>
-			<div class="mt-2 text-2xl font-bold tracking-tight text-text-primary">{{ $plan->name ?? "Free" }}</div>
+			<div class="mt-2 flex items-center gap-2">
+				<span class="text-2xl font-bold tracking-tight text-text-primary">{{ $plan->name ?? "Free" }}</span>
+				@if($organization?->hasActiveOverride())
+					<span class="inline-flex items-center rounded-full border border-amber-300 bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-800">Override</span>
+				@endif
+			</div>
 			<div class="mt-1">
-				@if($plan && $plan->slug !== "free")
+				@if($organization?->hasActiveOverride())
+					<span class="text-xs text-amber-700">Original: {{ $organization->originalPlan?->name ?? "Unknown" }}</span>
+				@elseif($plan && $plan->slug !== "free")
 					<span class="text-xs font-medium text-emerald-600">Active</span>
 				@else
 					<a href="{{ route("pricing") }}" class="text-xs font-medium text-accent hover:text-accent-hover">Upgrade</a>

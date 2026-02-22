@@ -155,7 +155,7 @@ class Organization extends Model
 
 	public function isOverrideExpired(): bool
 	{
-		return $this->hasActiveOverride()
+		return $this->original_plan_id !== null
 			&& $this->override_expires_at !== null
 			&& $this->override_expires_at->isPast();
 	}

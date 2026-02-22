@@ -38,59 +38,63 @@ class OrganizationResource extends Resource
 
 	public static function form(Schema $schema): Schema
 	{
-		return $schema->components(array(
-			Section::make("Organization Details")->schema(array(
-				TextInput::make("name")
-					->required()
-					->maxLength(255)
-					->live(onBlur: true)
-					->afterStateUpdated(function (string $operation, ?string $state, callable $set) {
-						if ($operation === "create" && $state) {
-							$set("slug", Str::slug($state));
-						}
-					}),
-				TextInput::make("slug")
-					->required()
-					->maxLength(255)
-					->unique(ignoreRecord: true)
-					->disabledOn("edit"),
-				Select::make("plan_id")
-					->label("Plan")
-					->options(Plan::pluck("name", "id")->toArray())
-					->required()
-					->disabledOn("edit")
-					->helperText("Plan changes on existing organizations must be done via the 'Override Plan' action for audit tracking."),
-			))->columns(2),
+		return $schema->columns(1)->components(array(
+			\Filament\Schemas\Components\Grid::make(2)->schema(array(
 
-			Section::make("Stripe")->schema(array(
-				TextInput::make("stripe_id")
-					->label("Stripe Customer ID")
-					->disabled(),
-				TextInput::make("pm_type")
-					->label("Payment Method Type")
-					->disabled(),
-				TextInput::make("pm_last_four")
-					->label("Card Last Four")
-					->disabled(),
-			))->columns(3)->hiddenOn("create"),
+				/* Left column: Organization Details */
+				Section::make("Organization Details")->schema(array(
+					TextInput::make("name")
+						->required()
+						->maxLength(255)
+						->live(onBlur: true)
+						->afterStateUpdated(function (string $operation, ?string $state, callable $set) {
+							if ($operation === "create" && $state) {
+								$set("slug", Str::slug($state));
+							}
+						}),
+					TextInput::make("slug")
+						->required()
+						->maxLength(255)
+						->unique(ignoreRecord: true)
+						->disabledOn("edit"),
+					Select::make("plan_id")
+						->label("Plan")
+						->options(Plan::pluck("name", "id")->toArray())
+						->required()
+						->disabledOn("edit")
+						->helperText("Plan changes on existing organizations must be done via the 'Override Plan' action for audit tracking."),
+				))->columnSpan(1),
 
-			Section::make("Active Override")
-				->icon(Heroicon::OutlinedExclamationTriangle)
-				->schema(array(
-					Placeholder::make("override_info")
-						->label("")
-						->content(fn (Organization $record): HtmlString => self::renderOverrideInfo($record)),
-				))
-				->visible(fn (?Organization $record): bool => $record?->hasActiveOverride() ?? false)
-				->hiddenOn("create"),
+				/* Right column: Stripe + Plan Override History */
+				\Filament\Schemas\Components\Grid::make(1)->schema(array(
+					Section::make("Stripe")->schema(array(
+						TextInput::make("stripe_id")
+							->label("Stripe Customer ID")
+							->disabled(),
+						TextInput::make("pm_type")
+							->label("Payment Method Type")
+							->disabled(),
+						TextInput::make("pm_last_four")
+							->label("Card Last Four")
+							->disabled(),
+					))->hiddenOn("create"),
 
-			Section::make("Plan Override History")
-				->schema(array(
-					\Filament\Forms\Components\Placeholder::make("plan_override_history")
-						->label("")
-						->content(fn (?Organization $record) => self::renderOverrideHistory($record)),
-				))
-				->hiddenOn("create"),
+					Section::make("Plan Override History")
+						->schema(array(
+							Placeholder::make("override_info")
+								->label("")
+								->content(fn (Organization $record): HtmlString => self::renderOverrideInfo($record))
+								->visible(fn (?Organization $record): bool => $record?->hasActiveOverride() ?? false),
+							Placeholder::make("plan_override_history")
+								->label("")
+								->content(fn (?Organization $record) => self::renderOverrideHistory($record)),
+						))
+						->collapsible()
+						->collapsed()
+						->hiddenOn("create"),
+				))->columnSpan(1),
+
+			)),
 		));
 	}
 
@@ -115,24 +119,29 @@ class OrganizationResource extends Resource
 					->sortable(),
 				TextColumn::make("override_status")
 					->label("Override")
+					->state(fn (Organization $record): string => $record->hasActiveOverride() ? "Active" : "")
+					->badge()
+					->color("warning")
+					->placeholder(""),
+				TextColumn::make("original_plan")
+					->label("Original Plan")
+					->state(fn (Organization $record): string => $record->hasActiveOverride()
+						? ($record->originalPlan?->name ?? "Unknown")
+						: ""
+					)
+					->placeholder(""),
+				TextColumn::make("override_expires")
+					->label("Override Expires")
 					->state(function (Organization $record): string {
 						if (!$record->hasActiveOverride()) {
 							return "";
 						}
-						$originalName = $record->originalPlan?->name ?? "Unknown";
-						if ($record->override_expires_at !== null) {
-							$timeLeft = now()->diffForHumans($record->override_expires_at, true);
-							return "Overridden (was {$originalName}, {$timeLeft} left)";
+						if ($record->override_expires_at === null) {
+							return "No expiry";
 						}
-						return "Overridden (was {$originalName}, no expiry)";
+						return $record->override_expires_at->diffForHumans(null, false, false, 2);
 					})
-					->badge()
-					->color("warning")
-					->placeholder("")
-					->tooltip(fn (Organization $record): ?string => $record->hasActiveOverride()
-						? "Original plan: " . ($record->originalPlan?->name ?? "Unknown")
-						: null
-					),
+					->placeholder(""),
 				TextColumn::make("last_override_at")
 					->label("Last Override")
 					->state(fn (Organization $record): string => self::resolveLastOverrideAt($record))
@@ -218,7 +227,7 @@ class OrganizationResource extends Resource
 								$duration,
 							);
 
-							$expiryLabel = $duration !== null ? " (expires in {$data["duration"]})" : "";
+							$expiryLabel = $duration !== null ? " (expires in " . $duration->forHumans() . ")" : "";
 							Notification::make()
 								->title("Plan overridden")
 								->body("{$record->name} is now on {$targetPlan->name}.{$expiryLabel}")
@@ -300,7 +309,7 @@ class OrganizationResource extends Resource
 		);
 	}
 
-	private static function parseDuration(string $duration): ?CarbonInterval
+	public static function parseDuration(string $duration): ?CarbonInterval
 	{
 		return match ($duration) {
 			"5_minutes" => CarbonInterval::minutes(5),
@@ -323,19 +332,22 @@ class OrganizationResource extends Resource
 		$expiresHtml = "No expiration (manual removal required)";
 		if ($record->override_expires_at !== null) {
 			$expiresFormatted = $record->override_expires_at->format("M j, Y g:i A");
-			$timeLeft = now()->diffForHumans($record->override_expires_at, true);
-			$expiresHtml = "{$expiresFormatted} ({$timeLeft} remaining)";
+			$timeLeft = $record->override_expires_at->diffForHumans(null, false, false, 2);
+			$expiresHtml = "{$expiresFormatted} ({$timeLeft})";
 		}
 
+		$escapedOriginal = e($originalPlanName);
+		$escapedCurrent = e($currentPlanName);
+
 		return new HtmlString(
-			'<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">'
-			. '<div><div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Original Plan</div>'
-			. '<div style="font-weight:600;">' . e($originalPlanName) . '</div></div>'
-			. '<div><div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Current Override</div>'
-			. '<div style="font-weight:600;">' . e($currentPlanName) . '</div></div>'
-			. '<div><div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Expires</div>'
-			. '<div style="font-weight:600;">' . $expiresHtml . '</div></div>'
-			. '</div>'
+			"<div style=\"display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;\">"
+			. "<div><div style=\"font-size:12px; color:#6b7280; margin-bottom:4px;\">Original Plan</div>"
+			. "<div style=\"font-weight:600;\">{$escapedOriginal}</div></div>"
+			. "<div><div style=\"font-size:12px; color:#6b7280; margin-bottom:4px;\">Current Override</div>"
+			. "<div style=\"font-weight:600;\">{$escapedCurrent}</div></div>"
+			. "<div><div style=\"font-size:12px; color:#6b7280; margin-bottom:4px;\">Expires</div>"
+			. "<div style=\"font-weight:600;\">{$expiresHtml}</div></div>"
+			. "</div>"
 		);
 	}
 
@@ -371,33 +383,33 @@ class OrganizationResource extends Resource
 			->get();
 
 		if ($logs->isEmpty()) {
-			return new HtmlString('<span style="color:#6b7280;">No plan overrides recorded for this organization.</span>');
+			return new HtmlString("<span style=\"color:#6b7280;\">No plan overrides recorded for this organization.</span>");
 		}
 
 		$rows = $logs->map(function (AuditLog $log): string {
-			$fromPlan = $log->old_values["plan_name"] ?? "Unknown";
-			$toPlan = $log->new_values["plan_name"] ?? "Unknown";
+			$fromPlan = e($log->old_values["plan_name"] ?? "Unknown");
+			$toPlan = e($log->new_values["plan_name"] ?? "Unknown");
 			$reason = $log->new_values["reason"] ?? "";
-			$actor = $log->user?->email ?? "System";
-			$timestamp = $log->created_at?->format("M j, Y g:i A") ?? "Unknown time";
+			$actor = e($log->user?->email ?? "System");
+			$timestamp = e($log->created_at?->format("M j, Y g:i A") ?? "Unknown time");
 			$isRemoval = $log->action === "organization.plan_override_removed";
 			$autoExpired = $log->new_values["auto_expired"] ?? false;
 
 			$actionLabel = $isRemoval
-				? ($autoExpired ? '<span style="color:#dc2626;">Auto-expired</span>' : '<span style="color:#dc2626;">Removed</span>')
-				: '<span style="color:#d97706;">Override</span>';
+				? ($autoExpired ? "<span style=\"color:#dc2626;\">Auto-expired</span>" : "<span style=\"color:#dc2626;\">Removed</span>")
+				: "<span style=\"color:#d97706;\">Override</span>";
 
 			$reasonHtml = $reason !== ""
-				? '<div style="color:#4b5563; margin-top:2px;">Reason: ' . e($reason) . '</div>'
+				? "<div style=\"color:#4b5563; margin-top:2px;\">Reason: " . e($reason) . "</div>"
 				: "";
 
-			return '<li style="padding:8px 0; border-bottom:1px solid #e5e7eb;">'
-				. '<div>' . $actionLabel . ': <strong>' . e($fromPlan) . '</strong> &rarr; <strong>' . e($toPlan) . '</strong></div>'
-				. '<div style="color:#6b7280;">By ' . e($actor) . ' on ' . e($timestamp) . '</div>'
+			return "<li style=\"padding:8px 0; border-bottom:1px solid #e5e7eb;\">"
+				. "<div>{$actionLabel}: <strong>{$fromPlan}</strong> &rarr; <strong>{$toPlan}</strong></div>"
+				. "<div style=\"color:#6b7280;\">By {$actor} on {$timestamp}</div>"
 				. $reasonHtml
-				. '</li>';
+				. "</li>";
 		})->implode("");
 
-		return new HtmlString('<ul style="margin:0; padding-left:0; list-style:none;">' . $rows . '</ul>');
+		return new HtmlString("<div style=\"max-height:300px; overflow-y:auto;\"><ul style=\"margin:0; padding-left:0; list-style:none;\">{$rows}</ul></div>");
 	}
 }

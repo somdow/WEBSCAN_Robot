@@ -1,13 +1,14 @@
 @php
 	$currentOrganization = Auth::user()?->currentOrganization();
-	$isPreviewPlan = $currentOrganization?->plan?->slug === "preview";
+	$hasOverride = $currentOrganization?->hasActiveOverride() ?? false;
+	$overridePlanName = $hasOverride ? ($currentOrganization->plan?->name ?? "Override") : null;
 @endphp
 
 <div x-data="{ open: false }" class="relative">
 	<button @click="open = !open" class="flex items-center gap-2 rounded-lg p-1.5 transition duration-75 hover:bg-gray-100">
-		@if($isPreviewPlan)
+		@if($hasOverride)
 			<span class="inline-flex animate-pulse items-center rounded-full border border-amber-300 bg-amber-100 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-amber-800">
-				Preview Subscription
+				{{ $overridePlanName }} Override
 			</span>
 		@endif
 		<div class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-600 text-xs font-semibold text-white">
