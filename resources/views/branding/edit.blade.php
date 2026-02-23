@@ -10,6 +10,37 @@
 
 	<div class="space-y-6">
 		@if($canWhiteLabel)
+		<div
+			x-data='{
+						brandName: @json(old("pdf_company_name", $organization->pdf_company_name ?? "")),
+						brandColor: @json(old("brand_color", $organization->brand_color ?? $defaultAccentColor)),
+						logoPreview: @json($logoUrl),
+						logoServerPreview: @json($logoUrl),
+						logoFileName: null,
+						handleLogoSelect(event) {
+							const file = event.target.files[0];
+							if (!file) {
+								return;
+							}
+							this.logoFileName = file.name;
+							const reader = new FileReader();
+							reader.onload = (loadEvent) => {
+								this.logoPreview = (loadEvent.target && loadEvent.target.result) ? loadEvent.target.result : null;
+							};
+							reader.readAsDataURL(file);
+						},
+						clearSelectedLogo() {
+							this.logoPreview = this.logoServerPreview;
+							this.logoFileName = null;
+							document.getElementById("logo").value = "";
+						},
+						confirmLogoRemoval() {
+							if (confirm("Remove the logo?")) {
+								document.getElementById("delete-logo-form").submit();
+							}
+						}
+				}'
+		>
 			{{-- Branding Form --}}
 			<div class="rounded-lg border border-border bg-surface p-6 shadow-card sm:p-8">
 				<h2 class="text-lg font-semibold text-text-primary">PDF Report Branding</h2>
@@ -20,17 +51,6 @@
 					action="{{ route("branding.update") }}"
 					enctype="multipart/form-data"
 					class="mt-6 space-y-6"
-					x-data="{
-						brandName: @json(old("pdf_company_name", $organization->pdf_company_name ?? "")),
-						brandColor: @json(old("brand_color", $organization->brand_color ?? $defaultAccentColor)),
-						logoPreview: @json($organization->logoUrl()),
-						handleLogoSelect(event) {
-							const file = event.target.files[0];
-							if (file) {
-								this.logoPreview = URL.createObjectURL(file);
-							}
-						}
-					}"
 				>
 					@csrf
 					@method("PATCH")
@@ -90,51 +110,59 @@
 						<label class="block text-sm font-medium text-text-secondary">Logo</label>
 						<p class="mt-0.5 text-xs text-text-tertiary">Displayed on the PDF cover page above your company name. JPG or PNG, max 512 KB.</p>
 
-						<div class="mt-2 flex items-start gap-4">
-							{{-- Preview --}}
-							<div
-								class="flex h-16 w-32 items-center justify-center rounded-lg border border-dashed border-border bg-gray-50"
-								x-show="logoPreview"
-							>
-								<img
-									x-bind:src="logoPreview"
-									alt="Logo preview"
-									class="max-h-14 max-w-28 object-contain"
-								>
-							</div>
-							<div
-								class="flex h-16 w-32 items-center justify-center rounded-lg border border-dashed border-border bg-gray-50 text-xs text-text-tertiary"
-								x-show="!logoPreview"
-							>
-								No logo
-							</div>
-
-							<div class="flex flex-col gap-2">
+						<div class="mt-3 grid gap-4 rounded-xl border border-border bg-gray-50/60 p-4 sm:grid-cols-[1fr_220px]">
+							<div>
+								<label for="logo" class="block text-sm font-medium text-text-primary">Upload logo file</label>
+								<p class="mt-1 text-xs text-text-tertiary">Best results: transparent PNG around 600x200.</p>
 								<input
 									type="file"
 									name="logo"
 									id="logo"
 									accept="image/jpeg,image/png"
-									@change="handleLogoSelect"
-									class="block w-full text-sm text-text-secondary file:mr-3 file:rounded-md file:border-0 file:bg-accent/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-accent hover:file:bg-accent/20"
+									@change="handleLogoSelect($event)"
+									class="mt-3 block w-full text-sm text-text-secondary file:mr-3 file:rounded-md file:border-0 file:bg-accent/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-accent hover:file:bg-accent/20"
 								>
+								<div class="mt-2 flex flex-wrap items-center gap-3 text-xs">
+									<template x-if="logoFileName">
+										<span class="rounded-md bg-white px-2 py-1 text-text-secondary" x-text="logoFileName"></span>
+									</template>
+									<button
+										type="button"
+										class="font-medium text-text-tertiary transition hover:text-text-secondary"
+										@click="clearSelectedLogo()"
+									>
+										Clear selected file
+									</button>
+									@if($organization->logo_path)
+										<button
+											type="button"
+											class="font-medium text-red-600 transition hover:text-red-700"
+											@click="confirmLogoRemoval()"
+										>
+											Remove current logo
+										</button>
+									@endif
+								</div>
 								@error("logo")
-									<p class="text-sm text-red-600">{{ $message }}</p>
+									<p class="mt-2 text-sm text-red-600">{{ $message }}</p>
 								@enderror
 							</div>
-						</div>
 
-						@if($organization->logo_path)
-							<div class="mt-2">
-								<button
-									type="button"
-									class="text-xs font-medium text-red-600 transition hover:text-red-700"
-									@click="if (confirm('Remove the logo?')) { document.getElementById('delete-logo-form').submit(); }"
+							<div
+								class="flex min-h-36 items-center justify-center rounded-lg border border-dashed border-border bg-white p-4"
+							>
+								<img
+									x-show="logoPreview"
+									x-bind:src="logoPreview"
+									alt="Logo preview"
+									class="max-h-24 w-full object-contain"
 								>
-									Remove current logo
-								</button>
+								<div x-show="!logoPreview" class="text-center text-xs text-text-tertiary">
+									<div class="font-medium text-text-secondary">Logo preview</div>
+									<div class="mt-1">No logo selected yet</div>
+								</div>
 							</div>
-						@endif
+						</div>
 					</div>
 
 					{{-- Save --}}
@@ -160,70 +188,90 @@
 				</form>
 			@endif
 
-			{{-- Live Preview --}}
+			{{-- Live Preview — mirrors scan-pdf.blade.php cover page exactly --}}
 			<div class="rounded-lg border border-border bg-surface p-6 shadow-card sm:p-8">
 				<h2 class="text-lg font-semibold text-text-primary">Preview</h2>
-				<p class="mt-1 text-sm text-text-secondary">Approximate preview of how your PDF cover page will look.</p>
+				<p class="mt-1 text-sm text-text-secondary">This is how the first page of your PDF report will look.</p>
 
-				<div class="mt-4 rounded-lg border border-border bg-white p-8 sm:p-10" style="max-width: 540px;">
-					{{-- Top row: brand left, score right (mirrors PDF .cover-top table) --}}
-					<div class="flex items-start justify-between">
-						<div>
-							<template x-if="logoPreview">
-								<img x-bind:src="logoPreview" class="mb-1.5 max-h-10 max-w-36 object-contain" alt="Logo">
-							</template>
-							<div class="text-xl font-bold text-gray-900" x-text="brandName || @json($organization->name)"></div>
-							<div class="mt-0.5 text-[9px] uppercase tracking-[1.5px] text-gray-400">Website Audit Report</div>
-						</div>
-						{{-- Score pyramid: large overall + two small --}}
-						<div class="text-right" style="min-width: 120px;">
-							<div class="inline-block rounded-xl border-[3px] border-emerald-400 bg-emerald-50 px-4 py-3 text-center">
-								<div class="text-3xl font-bold leading-none text-emerald-600">85</div>
-								<div class="mt-1 text-[9px] text-gray-500">Overall Score</div>
-							</div>
-							<div class="mt-1.5 flex justify-end gap-1">
-								<div class="inline-block rounded-lg border-2 border-emerald-400 bg-emerald-50 px-2.5 py-1.5 text-center">
-									<div class="text-sm font-bold leading-none text-emerald-600">78</div>
-									<div class="mt-0.5 text-[7px] text-gray-500">SEO</div>
-								</div>
-								<div class="inline-block rounded-lg border-2 border-amber-400 bg-amber-50 px-2.5 py-1.5 text-center">
-									<div class="text-sm font-bold leading-none text-amber-600">62</div>
-									<div class="mt-0.5 text-[7px] text-gray-500">Health</div>
-								</div>
-							</div>
-						</div>
-					</div>
+				<div class="mx-auto mt-4 overflow-hidden rounded-lg border border-border bg-white shadow-sm" style="max-width: 720px; font-family: 'DejaVu Sans', sans-serif;">
+					{{-- PDF body area with matching margins --}}
+					<div style="padding: 40px;">
 
-					{{-- "Review of domain.com" (mirrors PDF .cover-review) --}}
-					<div class="mt-5">
-						<div class="text-xl text-gray-700">
-							Review of <span class="font-bold" :style="{ color: brandColor }">example.com</span>
-						</div>
-						<div class="mt-1 text-xs text-gray-400">Generated on {{ now()->format("F j, Y") }}</div>
-					</div>
+						{{-- Cover top: brand left, scores right --}}
+						<table style="width: 100%; border-collapse: collapse; margin-bottom: 40px;">
+							<tr>
+								<td style="vertical-align: top;">
+									<div x-show="logoPreview" style="margin-bottom: 6px;">
+										<img x-bind:src="logoPreview" style="max-width: 220px; max-height: 70px;" alt="Logo">
+									</div>
+									<div x-show="!logoPreview" style="font-size: 22px; font-weight: bold; color: #111827;" x-text="brandName || @json($organization->name)"></div>
+									<div style="font-size: 9px; color: #9CA3AF; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px;">Website Audit Report</div>
+								</td>
+								<td style="text-align: right; width: 200px; vertical-align: top;">
+									{{-- Overall score --}}
+									<div style="text-align: center; padding: 24px 30px; border: 4px solid #10B981; border-radius: 12px; background-color: #F0FDF4; margin-bottom: 8px;">
+										<div style="font-size: 80px; font-weight: bold; line-height: 1; color: #059669;">85</div>
+										<div style="color: #4B5563; margin-top: 6px; font-size: 13px;">Overall Score</div>
+									</div>
+									{{-- SEO + Health sub-scores --}}
+									<table style="width: 100%; border-collapse: collapse;">
+										<tr>
+											<td style="width: 50%; padding-right: 3px;">
+												<div style="text-align: center; padding: 8px 6px; border: 3px solid #10B981; border-radius: 8px; background-color: #F0FDF4;">
+													<div style="font-size: 28px; font-weight: bold; line-height: 1; color: #059669;">78</div>
+													<div style="color: #4B5563; margin-top: 4px; font-size: 9px;">SEO</div>
+												</div>
+											</td>
+											<td style="width: 50%; padding-left: 3px;">
+												<div style="text-align: center; padding: 8px 6px; border: 3px solid #F59E0B; border-radius: 8px; background-color: #FFFBEB;">
+													<div style="font-size: 28px; font-weight: bold; line-height: 1; color: #D97706;">62</div>
+													<div style="color: #4B5563; margin-top: 4px; font-size: 9px;">Health</div>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
 
-					{{-- Introduction preview (mirrors PDF .cover-intro-table) --}}
-					<div class="mt-5 flex gap-4">
-						<div class="w-20 shrink-0 text-[10px] tracking-wide text-gray-400">Introduction</div>
-						<div class="text-[10px] leading-relaxed text-gray-500">
-							This report is a comprehensive audit of example.com, analyzing 48 key factors across SEO, security, performance, content quality, and technical health.
+						{{-- "Review of domain.com" --}}
+						<div style="font-size: 32px; color: #374151; line-height: 1.3; margin-bottom: 6px;">
+							Review of <span style="font-weight: bold;" :style="{ color: brandColor }">example.com</span>
 						</div>
-					</div>
+						<div style="font-size: 13px; color: #9CA3AF; margin-bottom: 50px;">Generated on {{ now()->format("F j, Y") }}</div>
 
-					{{-- Prepared By (mirrors PDF) --}}
-					<div class="mt-4 flex gap-4">
-						<div class="w-20 shrink-0 text-[10px] tracking-wide text-gray-400">Prepared By</div>
-						<div>
-							<div class="text-[10px] font-bold text-gray-900" x-text="brandName || @json($organization->name)"></div>
-						</div>
+						{{-- Introduction two-column --}}
+						<table style="width: 100%; border-collapse: collapse;">
+							<tr>
+								<td style="width: 140px; vertical-align: top; padding-right: 20px;">
+									<div style="font-size: 14px; color: #9CA3AF; letter-spacing: 0.5px;">Introduction</div>
+								</td>
+								<td>
+									<div style="font-size: 12px; color: #6B7280; line-height: 1.8;">
+										This report is a comprehensive audit of example.com, analyzing 48 key factors across SEO, security, performance, content quality, and technical health.
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td style="width: 140px; vertical-align: top; padding-right: 20px; padding-top: 60px;">
+									<div style="font-size: 14px; color: #9CA3AF; letter-spacing: 0.5px;">Prepared By</div>
+								</td>
+								<td style="padding-top: 60px;">
+									<div style="font-size: 12px; font-weight: bold; color: #111827;" x-text="brandName || @json($organization->name)"></div>
+									<div style="font-size: 12px; color: #6B7280;">{{ now()->format("F j, Y") }}</div>
+								</td>
+							</tr>
+						</table>
+
 					</div>
 
 					{{-- Footer --}}
-					<div class="mt-6 border-t border-gray-100 pt-3 text-center text-[8px] text-gray-300">
-						Generated by {{ $siteName }}
+					<div style="padding: 8px 0; font-size: 9px; color: #9CA3AF; text-align: center; border-top: 1px solid #F3F4F6;">
+						Generated by {{ $siteName }} &mdash; {{ now()->format("F j, Y") }}
 					</div>
 				</div>
 			</div>
+		</div>
 		@else
 			{{-- Upgrade CTA --}}
 			<div class="rounded-lg border border-border bg-surface p-6 shadow-card sm:p-8">
