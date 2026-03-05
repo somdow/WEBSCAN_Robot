@@ -1,4 +1,4 @@
-@props(["moduleResult", "moduleLabels", "aiAvailable" => false, "hasApiKey" => false, "scan" => null])
+@props(["moduleResult", "moduleLabels", "hasApiKey" => false, "scan" => null])
 
 @php
 	$statusValue = $moduleResult->status instanceof \BackedEnum ? $moduleResult->status->value : $moduleResult->status;
@@ -614,8 +614,8 @@
 						class="mt-2 text-xs text-red-600"
 						x-text="aiError"
 					></p>
-				@elseif($aiAvailable)
-					{{-- Paid plan but no API key: prompt to configure --}}
+				@else
+					{{-- No API key configured: prompt to add one --}}
 					<button
 						@click.stop="$dispatch('open-modal', 'configure-api-key')"
 						class="inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-ai px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-ai-hover"
@@ -624,18 +624,6 @@
 							<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
 						</svg>
 						AI Optimize
-					</button>
-				@else
-					{{-- Free plan: locked button opens upgrade modal --}}
-					<button
-						@click.stop="$dispatch('open-modal', 'upgrade-pro')"
-						class="inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-ai/40 px-3 py-1.5 text-xs font-semibold text-white/70 transition hover:bg-ai/60"
-					>
-						<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-						</svg>
-						AI Optimize
-						<span class="rounded bg-white/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider">Pro</span>
 					</button>
 				@endif
 			</div>

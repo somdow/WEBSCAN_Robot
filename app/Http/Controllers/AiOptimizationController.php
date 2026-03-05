@@ -64,10 +64,8 @@ class AiOptimizationController extends Controller
 			->pluck("id")
 			->toArray();
 
-		$hasPlanAccess = $request->user()->canAccessAi();
-
 		return response()->json(array(
-			"aiAvailable" => $hasPlanAccess && $this->gatewayFactory->isAvailable($request->user()),
+			"aiAvailable" => $this->gatewayFactory->isAvailable($request->user()),
 			"optimizedModuleIds" => $optimizedModuleIds,
 			"hasExecutiveSummary" => $scan->ai_executive_summary !== null,
 		));
@@ -98,12 +96,6 @@ class AiOptimizationController extends Controller
 
 	private function validateAiAvailable(Request $request): void
 	{
-		abort_unless(
-			$request->user()->canAccessAi(),
-			403,
-			"AI optimization requires a Pro or Agency plan.",
-		);
-
 		$organization = $request->user()->currentOrganization();
 		$usage = $organization ? SubscriptionUsage::resolveCurrentPeriod($organization) : null;
 		$maxAiCalls = (int) config("ai.limits.max_monthly_ai_calls", 500);

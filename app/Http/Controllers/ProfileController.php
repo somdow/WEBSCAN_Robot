@@ -24,7 +24,6 @@ class ProfileController extends Controller
 	{
 		return view("profile.edit", array(
 			"user" => $request->user(),
-			"canAccessAi" => $request->user()->canAccessAi(),
 		));
 	}
 

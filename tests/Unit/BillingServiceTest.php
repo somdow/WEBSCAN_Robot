@@ -210,16 +210,13 @@ class BillingServiceTest extends TestCase
 		$this->assertFalse($this->organization->isOnFreePlan());
 	}
 
-	public function test_organization_can_access_ai_on_pro(): void
+	public function test_organization_can_access_ai_on_any_plan(): void
 	{
+		$this->assertTrue($this->organization->canAccessAi());
+
 		$this->organization->update(array("plan_id" => $this->proPlan->id));
 		$this->organization->refresh();
 
 		$this->assertTrue($this->organization->canAccessAi());
-	}
-
-	public function test_organization_cannot_access_ai_on_free(): void
-	{
-		$this->assertFalse($this->organization->canAccessAi());
 	}
 }

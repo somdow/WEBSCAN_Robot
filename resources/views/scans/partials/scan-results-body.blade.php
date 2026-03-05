@@ -313,9 +313,7 @@
 	</div>
 @endif
 
-{{-- AI modals --}}
-@if(!$aiAvailable)
-	<x-upgrade-modal />
-@elseif(!$hasApiKey)
+{{-- AI modal --}}
+@if(!$hasApiKey)
 	<x-configure-api-key-modal />
 @endif

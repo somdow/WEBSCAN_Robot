@@ -115,12 +115,12 @@ class Organization extends Model
 	}
 
 	/**
-	 * Whether this organization's plan includes AI optimization access.
-	 * Requires ai_tier >= 2 (Pro or Agency).
+	 * Whether this organization has access to AI optimization.
+	 * AI is available to all tiers via BYOK (Bring Your Own Key).
 	 */
 	public function canAccessAi(): bool
 	{
-		return $this->plan !== null && $this->plan->ai_tier >= 2;
+		return true;
 	}
 
 	/**

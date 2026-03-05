@@ -34,16 +34,15 @@ class ScanViewDataService
 
 	/**
 	 * Resolve AI access flags for the current user.
+	 * AI is available to all users via BYOK — only API key presence matters.
 	 *
 	 * @return array{aiAvailable: bool, hasApiKey: bool}
 	 */
 	public function resolveAiAccess(User $user, AiGatewayFactory $gatewayFactory): array
 	{
-		$aiAvailable = $user->canAccessAi();
-
 		return array(
-			"aiAvailable" => $aiAvailable,
-			"hasApiKey" => $aiAvailable && $gatewayFactory->isAvailable($user),
+			"aiAvailable" => true,
+			"hasApiKey" => $gatewayFactory->isAvailable($user),
 		);
 	}
 

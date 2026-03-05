@@ -19,11 +19,10 @@ class AiSettingsController extends Controller
 
 	/**
 	 * Update the user's AI provider preference and per-provider API keys.
-	 * Requires a paid plan with AI access (ai_tier >= 2).
+	 * Available to all users via BYOK (Bring Your Own Key).
 	 */
 	public function update(UpdateAiSettingsRequest $request): RedirectResponse
 	{
-		abort_unless($request->user()->canAccessAi(), 403, "AI settings require a Pro or Agency plan.");
 
 		$validated = $request->validated();
 		$user = $request->user();

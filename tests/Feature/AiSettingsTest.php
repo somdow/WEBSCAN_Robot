@@ -18,7 +18,7 @@ class AiSettingsTest extends TestCase
 			->assertRedirect(route("login"));
 	}
 
-	public function test_ai_settings_requires_pro_plan(): void
+	public function test_any_user_can_save_ai_provider(): void
 	{
 		$plan = Plan::factory()->free()->create();
 		$user = User::factory()->create();
@@ -29,24 +29,10 @@ class AiSettingsTest extends TestCase
 			->patch(route("ai-settings.update"), array(
 				"ai_provider" => "openai",
 			))
-			->assertForbidden();
-	}
-
-	public function test_pro_user_can_save_ai_provider(): void
-	{
-		$proPlan = Plan::factory()->pro()->create();
-		$proUser = User::factory()->create();
-		$proOrg = Organization::factory()->withPlan($proPlan)->create();
-		$proOrg->users()->attach($proUser->id, array("role" => "owner"));
-
-		$this->actingAs($proUser)
-			->patch(route("ai-settings.update"), array(
-				"ai_provider" => "openai",
-			))
 			->assertRedirect(route("profile.edit"));
 
 		$this->assertDatabaseHas("users", array(
-			"id" => $proUser->id,
+			"id" => $user->id,
 			"ai_provider" => "openai",
 		));
 	}

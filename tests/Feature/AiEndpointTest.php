@@ -61,7 +61,7 @@ class AiEndpointTest extends TestCase
 			->assertForbidden();
 	}
 
-	public function test_optimize_module_requires_pro_plan(): void
+	public function test_optimize_module_requires_api_key(): void
 	{
 		$scan = Scan::factory()->create(array(
 			"project_id" => $this->project->id,
@@ -75,10 +75,10 @@ class AiEndpointTest extends TestCase
 
 		$this->actingAs($this->user)
 			->postJson(route("ai.optimize-module", array($scan, $moduleResult)))
-			->assertForbidden();
+			->assertStatus(422);
 	}
 
-	public function test_executive_summary_requires_pro_plan(): void
+	public function test_executive_summary_requires_api_key(): void
 	{
 		$scan = Scan::factory()->create(array(
 			"project_id" => $this->project->id,
@@ -88,7 +88,7 @@ class AiEndpointTest extends TestCase
 
 		$this->actingAs($this->user)
 			->postJson(route("ai.executive-summary", $scan))
-			->assertForbidden();
+			->assertStatus(422);
 	}
 
 	public function test_optimize_module_requires_completed_scan(): void
