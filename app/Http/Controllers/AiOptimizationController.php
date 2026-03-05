@@ -11,6 +11,7 @@ use App\Services\Ai\Prompts\ModulePromptFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class AiOptimizationController extends Controller
 {
@@ -100,11 +101,20 @@ class AiOptimizationController extends Controller
 		$usage = $organization ? SubscriptionUsage::resolveCurrentPeriod($organization) : null;
 		$maxAiCalls = (int) config("ai.limits.max_monthly_ai_calls", 500);
 
-		abort_unless(
-			$usage === null || $usage->ai_calls_used < $maxAiCalls,
-			429,
-			"AI monthly usage limit reached. Upgrade your plan or wait until your next billing period.",
-		);
+		if ($usage !== null && $usage->ai_calls_used >= $maxAiCalls) {
+			$plan = $organization->plan;
+
+			Log::info("Plan limit reached", array(
+				"type" => "ai_calls",
+				"user_id" => $request->user()->id,
+				"organization_id" => $organization->id,
+				"plan" => $plan?->slug ?? "none",
+				"current_usage" => $usage->ai_calls_used,
+				"limit" => $maxAiCalls,
+			));
+
+			abort(429, "AI monthly usage limit reached. Upgrade your plan or wait until your next billing period.");
+		}
 
 		abort_unless(
 			$this->gatewayFactory->isAvailable($request->user()),

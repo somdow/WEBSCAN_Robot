@@ -47,6 +47,7 @@ Route::middleware(["auth", "ensure.active"])->group(function () {
 	Route::patch("/profile", [ProfileController::class, "update"])->name("profile.update");
 	Route::delete("/profile", [ProfileController::class, "destroy"])->name("profile.destroy");
 	Route::patch("/profile/ai-settings", [AiSettingsController::class, "update"])->name("ai-settings.update");
+	Route::post("/profile/ai-settings/test-key", [AiSettingsController::class, "testKey"])->name("ai-settings.test-key");
 });
 
 Route::middleware(["auth", "verified", "ensure.active"])->group(function () {
