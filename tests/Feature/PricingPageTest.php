@@ -62,8 +62,9 @@ class PricingPageTest extends TestCase
 
 		$response->assertOk();
 		$response->assertSeeText("scans/month");
-		$response->assertSeeText("project(s)");
-		$response->assertSeeText("user(s)");
+		$response->assertSeeText("project");
+		$response->assertSeeText("team member");
+		$response->assertSeeText("AI optimization (BYOK)");
 	}
 
 	public function test_pricing_page_shows_enterprise_cta(): void

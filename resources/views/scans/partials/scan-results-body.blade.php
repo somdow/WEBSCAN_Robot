@@ -1,5 +1,5 @@
 {{-- Shared scan results body — used by both projects/show and scans/show --}}
-{{-- Expects: $scan, $scanViewData, $aiAvailable, $hasApiKey --}}
+{{-- Expects: $scan, $scanViewData, $hasApiKey --}}
 {{-- Optional: $activeScan (non-null when a new scan is running — shows progress overlay) --}}
 {{-- Optional: $project, $canAddPages, $additionalPages, $maxAdditionalPages, $displayScan (for Pages tab) --}}
 {{-- Optional: $showCompetitorsTab, $competitors, $maxCompetitors (for Competitors tab) --}}
@@ -220,7 +220,6 @@
 			@include("scans.partials.seo-content-results", array(
 				"scan" => $scan,
 				"scanViewData" => $scanViewData,
-				"aiAvailable" => $aiAvailable,
 				"hasApiKey" => $hasApiKey,
 			))
 		</div>
@@ -230,7 +229,6 @@
 			@include("scans.partials.site-health-results", array(
 				"scan" => $scan,
 				"scanViewData" => $scanViewData,
-				"aiAvailable" => $aiAvailable,
 				"hasApiKey" => $hasApiKey,
 			))
 		</div>

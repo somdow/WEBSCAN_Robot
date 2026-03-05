@@ -1,6 +1,6 @@
 {{-- SEO & Content tab — filtered to SEO/content/trust categories only --}}
 {{-- Expects parent x-data scope with: seoSection --}}
-{{-- Expects variables: $scan, $scanViewData, $aiAvailable, $hasApiKey --}}
+{{-- Expects variables: $scan, $scanViewData, $hasApiKey --}}
 
 @php
 	$seoCategories = array(
@@ -86,7 +86,7 @@
 						</div>
 						<div class="space-y-3">
 							@foreach($moduleResults as $moduleResult)
-								<x-scan.module-card :moduleResult="$moduleResult" :moduleLabels="$moduleLabels" :aiAvailable="$aiAvailable" :hasApiKey="$hasApiKey" :scan="$scan" />
+								<x-scan.module-card :moduleResult="$moduleResult" :moduleLabels="$moduleLabels":hasApiKey="$hasApiKey" :scan="$scan" />
 							@endforeach
 						</div>
 					</div>

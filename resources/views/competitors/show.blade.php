@@ -40,7 +40,6 @@
 		@include("scans.partials.scan-results-body", array(
 			"scan" => $scan,
 			"scanViewData" => $scanViewData,
-			"aiAvailable" => $aiAvailable,
 			"hasApiKey" => $hasApiKey,
 			"showCompetitorsTab" => false,
 			"canAddPages" => false,

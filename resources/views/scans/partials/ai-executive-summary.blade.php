@@ -1,5 +1,5 @@
 {{-- AI Executive Summary — on-demand generation with loading states --}}
-{{-- Expects variables: $scan, $aiAvailable, $hasApiKey --}}
+{{-- Expects variables: $scan, $hasApiKey --}}
 
 @php
 	$existingSummary = $scan->ai_executive_summary;

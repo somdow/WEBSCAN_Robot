@@ -1,6 +1,6 @@
 {{-- Two-column sidebar + results layout for single-page scans --}}
 {{-- Expects parent x-data scope with: activeCategory, statusFilter --}}
-{{-- Expects variables: $groupedResults, $statusGroupedResults, $moduleLabels, $aiAvailable, $hasApiKey, $scan --}}
+{{-- Expects variables: $groupedResults, $statusGroupedResults, $moduleLabels, $hasApiKey, $scan --}}
 
 @php
 	$sidebarGroups = config("scan-ui.sidebar_groups");
@@ -133,7 +133,7 @@
 
 					<div class="space-y-3">
 						@foreach($moduleResults as $moduleResult)
-							<x-scan.module-card :moduleResult="$moduleResult" :moduleLabels="$moduleLabels" :aiAvailable="$aiAvailable" :hasApiKey="$hasApiKey" :scan="$scan" />
+							<x-scan.module-card :moduleResult="$moduleResult" :moduleLabels="$moduleLabels":hasApiKey="$hasApiKey" :scan="$scan" />
 						@endforeach
 					</div>
 				</div>
@@ -155,7 +155,7 @@
 
 						<div class="space-y-3">
 							@foreach($moduleResults as $moduleResult)
-								<x-scan.module-card :moduleResult="$moduleResult" :moduleLabels="$moduleLabels" :aiAvailable="$aiAvailable" :hasApiKey="$hasApiKey" :scan="$scan" />
+								<x-scan.module-card :moduleResult="$moduleResult" :moduleLabels="$moduleLabels":hasApiKey="$hasApiKey" :scan="$scan" />
 							@endforeach
 						</div>
 					</div>
