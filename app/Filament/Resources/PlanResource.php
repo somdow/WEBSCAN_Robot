@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PlanResource\Pages;
 use App\Models\Plan;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -35,7 +34,10 @@ class PlanResource extends Resource
 				TextInput::make("slug")
 					->required()
 					->maxLength(255)
-					->unique(ignoreRecord: true),
+					->unique(ignoreRecord: true)
+					->disabled(fn (?Plan $record): bool => $record?->slug === "free")
+					->dehydrated()
+					->helperText(fn (?Plan $record): ?string => $record?->slug === "free" ? "The Free plan slug cannot be changed." : null),
 				TextInput::make("description")
 					->maxLength(500),
 				TextInput::make("sort_order")
@@ -63,8 +65,11 @@ class PlanResource extends Resource
 					->maxLength(255),
 			))->columns(2),
 
-			Section::make("Limits")->schema(array(
+			Section::make("Volume Limits")
+				->description("These are the only differentiators between plans. All features are available on every tier.")
+				->schema(array(
 				TextInput::make("max_users")
+					->label("Team Members")
 					->numeric()
 					->required()
 					->default(1),
@@ -88,21 +93,17 @@ class PlanResource extends Resource
 					->required()
 					->default(3)
 					->helperText("Max link-clicks deep from homepage (0 = homepage only)"),
+				TextInput::make("max_additional_pages")
+					->label("Additional Pages")
+					->numeric()
+					->default(50),
 				TextInput::make("max_competitors")
 					->numeric()
-					->default(0),
+					->default(5),
 				TextInput::make("scan_history_days")
 					->numeric()
-					->default(7),
-				Select::make("ai_tier")
-					->options(array(
-						0 => "None",
-						1 => "Basic",
-						2 => "Pro",
-						3 => "Agency",
-					))
-					->required()
-					->default(0),
+					->default(7)
+					->helperText("36500 = effectively unlimited"),
 			))->columns(3),
 
 			Section::make("Feature Flags")->schema(array(
@@ -120,57 +121,37 @@ class PlanResource extends Resource
 					->searchable()
 					->sortable(),
 				TextColumn::make("slug")
+					->badge()
+					->color(fn (string $state): string => $state === "free" ? "success" : "gray")
 					->searchable(),
 				TextColumn::make("price_monthly")
 					->money("usd")
 					->sortable(),
-				TextColumn::make("price_annual")
-					->money("usd")
-					->sortable(),
 				TextColumn::make("max_users")
+					->label("Team")
 					->numeric()
 					->sortable(),
 				TextColumn::make("max_projects")
+					->label("Projects")
 					->numeric()
 					->sortable(),
 				TextColumn::make("max_scans_per_month")
 					->label("Scans/mo")
 					->numeric()
 					->sortable(),
-				TextColumn::make("max_pages_per_scan")
-					->label("Pages/scan")
-					->numeric()
+				TextColumn::make("scan_history_days")
+					->label("History")
+					->formatStateUsing(fn (int $state): string => $state >= 36500 ? "Unlimited" : "{$state}d")
 					->sortable(),
-				TextColumn::make("max_crawl_depth")
-					->label("Depth")
-					->numeric()
-					->sortable(),
-				TextColumn::make("ai_tier")
-					->badge()
-					->formatStateUsing(fn (int $state): string => match ($state) {
-						0 => "None",
-						1 => "Basic",
-						2 => "Pro",
-						3 => "Agency",
-						default => "Unknown",
-					})
-					->color(fn (int $state): string => match ($state) {
-						0 => "gray",
-						1 => "info",
-						2 => "success",
-						3 => "warning",
-						default => "gray",
-					}),
 				IconColumn::make("is_public")
 					->boolean()
-					->sortable(),
-				TextColumn::make("sort_order")
-					->numeric()
 					->sortable(),
 			))
 			->defaultSort("sort_order")
 			->recordActions(array(
 				\Filament\Actions\EditAction::make(),
+				\Filament\Actions\DeleteAction::make()
+					->hidden(fn (Plan $record): bool => $record->slug === "free"),
 			))
 			->toolbarActions(array(
 				\Filament\Actions\BulkActionGroup::make(array(

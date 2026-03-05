@@ -2,7 +2,7 @@
 	<x-slot name="header">
 		<div class="text-center">
 			<h1 class="text-3xl font-bold tracking-tight text-text-primary">Pick the plan that fits your needs</h1>
-			<p class="mt-2 text-base text-text-secondary">Start free. Upgrade when you're ready for more power.</p>
+			<p class="mt-2 text-base text-text-secondary">Every plan includes all features. Upgrade for more volume.</p>
 		</div>
 	</x-slot>
 
@@ -33,6 +33,7 @@
 					$isCurrent = $currentPlanId !== null && $planItem->id === $currentPlanId;
 					$isHighlighted = $planItem->slug === "pro";
 					$isFree = $planItem->slug === "free";
+					$historyLabel = $planItem->scan_history_days >= 36500 ? "Unlimited history" : "{$planItem->scan_history_days}-day scan history";
 				@endphp
 
 				<div class="relative flex flex-col rounded-xl border {{ $isHighlighted ? 'border-accent ring-2 ring-accent' : 'border-border' }} bg-surface p-6 shadow-card">
@@ -69,31 +70,32 @@
 					<ul class="mt-6 flex-1 space-y-3 text-sm">
 						<li class="flex items-center gap-2 text-text-primary">
 							<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-							{{ $planItem->max_users }} user(s)
+							<strong>{{ $planItem->max_scans_per_month }}</strong>&nbsp;scans/month
 						</li>
 						<li class="flex items-center gap-2 text-text-primary">
 							<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-							{{ $planItem->max_projects }} project(s)
+							<strong>{{ $planItem->max_projects }}</strong>&nbsp;project{{ $planItem->max_projects > 1 ? "s" : "" }}
 						</li>
 						<li class="flex items-center gap-2 text-text-primary">
 							<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-							{{ $planItem->max_scans_per_month }} scans/month
+							<strong>{{ $planItem->max_users }}</strong>&nbsp;team member{{ $planItem->max_users > 1 ? "s" : "" }}
 						</li>
-						@if($planItem->ai_tier >= 2)
-							<li class="flex items-center gap-2 text-text-primary">
-								<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-								AI optimization
-							</li>
-						@else
-							<li class="flex items-center gap-2 text-text-tertiary">
-								<svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
-								AI optimization
-							</li>
-						@endif
+						<li class="flex items-center gap-2 text-text-primary">
+							<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+							{{ $historyLabel }}
+						</li>
+						<li class="flex items-center gap-2 text-text-primary">
+							<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+							AI optimization (BYOK)
+						</li>
+						<li class="flex items-center gap-2 text-text-primary">
+							<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+							All 48 scan modules
+						</li>
 						@if($planItem->hasFeature("white_label"))
 							<li class="flex items-center gap-2 text-text-primary">
 								<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-								White-label reports
+								White-label PDF reports
 							</li>
 						@endif
 					</ul>

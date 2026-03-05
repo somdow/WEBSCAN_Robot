@@ -24,6 +24,9 @@
 	{{-- Plan cards --}}
 	<div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 		@foreach($availablePlans as $availablePlan)
+			@php
+				$historyLabel = $availablePlan->scan_history_days >= 36500 ? "Unlimited history" : "{$availablePlan->scan_history_days}-day history";
+			@endphp
 			<div class="rounded-lg border border-border p-5 {{ $availablePlan->slug === 'pro' ? 'ring-2 ring-accent' : '' }}">
 				<h3 class="text-base font-semibold text-text-primary">{{ $availablePlan->name }}</h3>
 
@@ -36,22 +39,20 @@
 				<ul class="mt-4 space-y-2 text-sm text-text-secondary">
 					<li class="flex items-center gap-2">
 						<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-						{{ $availablePlan->max_users }} user(s)
+						<strong>{{ $availablePlan->max_scans_per_month }}</strong>&nbsp;scans/month
 					</li>
 					<li class="flex items-center gap-2">
 						<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-						{{ $availablePlan->max_projects }} project(s)
+						<strong>{{ $availablePlan->max_projects }}</strong>&nbsp;project{{ $availablePlan->max_projects > 1 ? "s" : "" }}
 					</li>
 					<li class="flex items-center gap-2">
 						<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-						{{ $availablePlan->max_scans_per_month }} scans/month
+						<strong>{{ $availablePlan->max_users }}</strong>&nbsp;team member{{ $availablePlan->max_users > 1 ? "s" : "" }}
 					</li>
-					@if($availablePlan->ai_tier >= 2)
-						<li class="flex items-center gap-2">
-							<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-							AI optimization
-						</li>
-					@endif
+					<li class="flex items-center gap-2">
+						<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+						{{ $historyLabel }}
+					</li>
 				</ul>
 
 				@if($isOwner)
