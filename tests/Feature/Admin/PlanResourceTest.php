@@ -52,12 +52,11 @@ class PlanResourceTest extends TestCase
 			->assertSee("Agency");
 	}
 
-	public function test_plan_displays_ai_tier_badge(): void
+	public function test_plan_displays_slug_badge(): void
 	{
 		Plan::factory()->create(array(
 			"name" => "Test Plan",
 			"slug" => "test-plan",
-			"ai_tier" => 2,
 		));
 
 		$this->actingAs($this->admin)

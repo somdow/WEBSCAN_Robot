@@ -35,12 +35,10 @@
 						<dt class="text-emerald-700">Scans per month</dt>
 						<dd class="font-medium text-emerald-900">{{ $plan->max_scans_per_month ?? 10 }}</dd>
 					</div>
-					@if($plan && $plan->ai_tier >= 2)
-						<div class="flex justify-between">
-							<dt class="text-emerald-700">AI optimization</dt>
-							<dd class="font-medium text-emerald-900">Enabled</dd>
-						</div>
-					@endif
+					<div class="flex justify-between">
+						<dt class="text-emerald-700">Team members</dt>
+						<dd class="font-medium text-emerald-900">{{ $plan->max_users ?? 1 }}</dd>
+					</div>
 				</dl>
 			</div>
 
