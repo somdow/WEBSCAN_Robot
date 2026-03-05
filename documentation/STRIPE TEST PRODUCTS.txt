@@ -1,0 +1,42 @@
+WEBSCAN_Robot Freelancer
+prod_U5UMtKHnwk0beJ
+
+
+WEBSCAN_Robot Pro
+prod_U5UOu6SvFrx4vk
+
+
+WEBSCAN_Robot Agency
+prod_U5UOaHDqhs4hPg
+
+/////////////////////////////
+TEST(Sandbox)
+
+Destination details
+Destination ID: we_1T7JqY4KJ0gwQ3umdINPAaRY
+Name: WebscanRobot Stripe
+Endpoint URL: https://webscanrobot.com/stripe/webhook
+
+Description
+API version
+2026-01-28.clover
+Listening to 4 events:
+customer.subscription.created
+customer.subscription.deleted
+customer.subscription.trial_will_end
+customer.subscription.updated
+
+Signing secret: whsec_wi0MpfBdAMWu5Cjqc9mTFNbPGgtYF8LQ
+
+
+
+
+
+
+
+
+
+
+
+
+

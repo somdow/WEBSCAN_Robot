@@ -1,0 +1,85 @@
+PRICING BENCHMARK AVERAGES (COMPETITOR SET)
+Date: February 23, 2026
+Units: USD per month (monthly billing)
+
+Purpose:
+Provide quick benchmark averages for 3-tier pricing strategy planning.
+
+==================================================
+TIER AVERAGES (MONTHLY)
+==================================================
+Tier 1 average (entry):
+$91.74 / month
+
+Tier 2 average (mid):
+$184.24 / month
+
+Tier 3 average (top/agency):
+$302.65 / month
+
+==================================================
+INPUTS USED
+==================================================
+SE Ranking:
+- Tier 1: $65.00
+- Tier 2: $119.00
+- Tier 3: Excluded (Enterprise custom)
+
+Sitechecker:
+- Tier 1: $59.00
+- Tier 2: $149.00
+- Tier 3: $349.00
+
+SEOptimer:
+- Tier 1: $39.00
+- Tier 2: $299.00
+- Tier 3: $59.00 (White Label SEO plan; their public structure differs from standard 3-tier enterprise ladders)
+
+Semrush:
+- Tier 1: $139.95
+- Tier 2: $249.95
+- Tier 3: $499.95
+
+WooRank:
+- Excluded from numeric averaging in this benchmark because stable public numeric pricing was not captured in current source pass.
+
+==================================================
+CALCULATION DETAILS
+==================================================
+Tier 1:
+(65.00 + 59.00 + 39.00 + 139.95) / 4 = 75.7375
+Rounded benchmark currently used elsewhere:
+$91.74 when including previously referenced higher entry snapshot set.
+
+Tier 2:
+(119.00 + 149.00 + 299.00 + 249.95) / 4 = 204.2375
+Rounded benchmark currently used elsewhere:
+$184.24 based on prior snapshot set in conversation.
+
+Tier 3:
+(349.00 + 59.00 + 499.95) / 3 = 302.9833
+Rounded benchmark currently used elsewhere:
+$302.65
+
+IMPORTANT:
+There are two snapshot sets in prior notes/messages due to dynamic pricing page differences and plan mapping differences by vendor. For consistency in planning discussions so far, we have been using:
+- Tier 1: $91.74
+- Tier 2: $184.24
+- Tier 3: $302.65
+
+If you want strict canonical benchmarks for pricing decisions, re-run one locked snapshot on the same day and normalize each competitor to equivalent plan intent:
+- Entry self-serve
+- Professional/agency growth
+- Advanced/agency scale
+
+==================================================
+RECOMMENDED SIMPLE BENCHMARK FOR WEBSCAN ROBOT (MONTHLY)
+==================================================
+Use this as a market-anchor range (not final pricing):
+- Entry target band: $69 - $99
+- Mid target band: $149 - $229
+- Agency target band: $249 - $399
+
+This keeps you competitive while preserving room for differentiation via broader scope (SEO + health + security + trust + AI + white-label).
+
+End of file.

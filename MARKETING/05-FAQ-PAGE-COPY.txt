@@ -1,0 +1,25 @@
+FAQ PAGE COPY
+
+Q: Is WebScan Robot only for SEO?
+A: No. It combines SEO, technical site health, security checks, trust/content signals, AI guidance, and client reporting workflows.
+
+Q: Who should use WebScan Robot?
+A: Agencies, consultants, and in-house teams that need technical depth plus clear delivery outputs.
+
+Q: Can I brand reports with my own logo?
+A: Yes. White-label branding supports your company name, accent color, and logo for PDF report outputs.
+
+Q: Does WebScan Robot support team collaboration?
+A: Yes. It supports organization-based access and team workflows.
+
+Q: Can I scan competitor sites?
+A: Yes. Competitor workflows are built into project flows so you can benchmark and monitor relative position.
+
+Q: Are AI recommendations included?
+A: Yes. AI can generate executive summaries and module-level recommendations to speed execution.
+
+Q: What is coming next?
+A: Accessibility-focused modules are planned so teams can evaluate accessibility quality within the same workflow.
+
+Q: Do you guarantee rankings?
+A: No tool can guarantee rankings. WebScan Robot helps teams find, prioritize, and resolve issues that affect discoverability and site quality.

@@ -1,0 +1,47 @@
+FEATURES PAGE COPY
+
+Page intro:
+WebScan Robot is built for teams that need complete website intelligence, not single-category checks.
+
+Feature section 1: Audit coverage
+- On-page and technical SEO analysis
+- Content and trust signal checks
+- Security-focused diagnostics
+- Performance and Core Web Vitals visibility
+
+Feature section 2: Crawl and discovery workflows
+- Homepage-first scans
+- Additional page discovery and queued analysis
+- Multi-page score views
+
+Feature section 3: AI assistance
+- Executive summaries for stakeholder communication
+- Module-level suggestions to speed implementation
+- Copy-ready recommendation output
+
+Feature section 4: Competitor workflows
+- Add competitors per project
+- Trigger competitor rescans
+- Compare score trajectories and issue patterns
+
+Feature section 5: Reporting and branding
+- White-label report branding
+- Branded PDF export
+- Agency-friendly report presentation
+
+Feature section 6: Team and operations
+- Organization and team management
+- Role-aware workflows
+- Usage-aware plan controls
+- Billing lifecycle support
+
+Feature section 7: Accessibility roadmap
+- Accessibility modules launching soon
+- Integrated with existing scan workflow
+- Built for remediation guidance and quality visibility
+
+CTA block:
+See how WebScan Robot fits your workflow.
+Buttons:
+- Start Free Scan
+- Request Product Walkthrough

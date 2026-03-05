@@ -1,0 +1,121 @@
+TOP 5 COMPETITOR LANDSCAPE (WEBSCAN ROBOT)
+As of: February 23, 2026 (US)
+Purpose: Quick reference for market positioning, services, and pricing model structures.
+
+==================================================
+1) SE RANKING
+==================================================
+Core services:
+- All-in-one SEO platform (site audit, rank tracking, backlink tools, on-page checks)
+- Agency-focused add-ons (Agency Pack, white-label options, lead generation widget)
+- Reporting workflows and API options
+
+Pricing structure:
+- Tiered subscription model by plan and usage limits
+- Publicly shown tiers include Essential, Pro, Business
+- Monthly billing and discounted annual billing
+- Add-ons available (for example: Local Marketing, Agency Pack)
+- Public pricing snapshot observed: Essential starts at $65/mo (monthly) or $52/mo (annual equivalent)
+
+Sources:
+- https://seranking.com/pricing.html
+- https://help.seranking.com/hc/en-us/articles/16333590268572-Agency-Pack-Overview
+- https://help.seranking.com/hc/en-us/articles/16332652286492-White-Label-Overview
+
+==================================================
+2) SITECHECKER
+==================================================
+Core services:
+- Website SEO audits and monitoring
+- Rank tracking and backlink tracking
+- Site change alerts and reporting workflows
+- White-label capability for agencies
+
+Pricing structure:
+- Tiered pricing (Basic, Standard, Premium)
+- Monthly and annual billing options
+- Public pricing snapshot observed:
+  - Basic: $59/mo billed monthly, $49/mo billed annually
+  - Standard: $149/mo billed monthly, $124/mo billed annually
+  - Premium: $349/mo billed monthly, $291/mo billed annually
+
+Sources:
+- https://sitechecker.pro/pricing/
+- https://help.sitechecker.pro/article/166-how-to-set-up-and-use-white-label-features
+
+==================================================
+3) WOORANK
+==================================================
+Core services:
+- Website reviews/audits with SEO and marketing checks
+- Lead generation workflows
+- White-label report/template capabilities (plan dependent)
+
+Pricing structure:
+- Tiered plan model with Pro and Premium
+- Enterprise/custom route for larger needs
+- Monthly and yearly billing available
+- 3-day trial option and no long-term contract language in help docs
+- Public pricing page exists, but exact public price points may vary by region/currency/session
+
+Sources:
+- https://help.woorank.com/hc/en-us/articles/360000037149-WooRank-Pricing
+- https://help.woorank.com/hc/en-us/articles/360000110209-PDF-Templates
+- https://help.woorank.com/hc/en-us/articles/360000136145-LeadGen-Documentation
+
+==================================================
+4) SEOPTIMER
+==================================================
+Core services:
+- SEO audit and reporting tools
+- White-label embeddable audit forms for agencies/leads
+- Agency toolkit focused on client acquisition and reporting
+
+Pricing structure:
+- Tiered plans shown publicly as DIY SEO and White Label SEO
+- Monthly and annual billing options
+- Public pricing snapshot observed:
+  - DIY SEO: $39/mo (monthly) or $29/mo (annual equivalent)
+  - White Label SEO: $59/mo (monthly) or $39/mo (annual equivalent)
+
+Sources:
+- https://www.seoptimer.com/pricing
+- https://www.seoptimer.com/white-label/
+- https://www.seoptimer.com/embeddable-audit-tool/
+
+==================================================
+5) SEMRUSH
+==================================================
+Core services:
+- Broad digital marketing suite (SEO, content, PPC, competitive intelligence)
+- Site audit and reporting in larger toolkit context
+- Agency-focused add-ons and report suites
+
+Pricing structure:
+- Tiered subscriptions (Pro, Guru, Business)
+- Monthly and annual billing options
+- Public pricing snapshot observed:
+  - Pro: $139.95/mo
+  - Guru: $249.95/mo
+  - Business: $499.95/mo
+- Extra users and additional limits typically sold as add-ons
+
+Sources:
+- https://www.semrush.com/kb/1011-subscriptions
+- https://www.semrush.com/kb/1546-agency-growth-kit-sunsetting
+
+==================================================
+POSITIONING TAKEAWAY FOR WEBSCAN ROBOT
+==================================================
+Market gap to emphasize:
+- Most competitors are SEO-first platforms with varying agency/reporting options.
+- WebScan Robot should position as a website intelligence platform that combines:
+  SEO + technical health + security + trust signals + AI recommendations + white-label client delivery in one workflow.
+
+Messaging angle:
+- "Beyond SEO audits" is still valid.
+- Accessibility modules can extend this into "website quality intelligence" rather than pure SEO tooling.
+
+IMPORTANT NOTE:
+- Pricing frequently changes. Re-check competitor pricing pages before publishing comparison pages or paid campaigns.
+- For benchmark averages by tier, see: `MARKETING/16-PRICING-BENCHMARK-AVERAGES.txt`

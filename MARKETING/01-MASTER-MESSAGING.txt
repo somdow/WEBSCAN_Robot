@@ -1,0 +1,43 @@
+WEBSCAN ROBOT - MASTER MESSAGING
+
+Category:
+Website intelligence and client-delivery platform for agencies and consultants.
+
+Core promise:
+Diagnose what matters, prioritize fixes, and deliver client-ready reports without juggling multiple tools.
+
+Positioning sentence:
+WebScan Robot combines SEO, technical health, security, trust signals, AI recommendations, and white-label reporting in one workflow.
+
+Who it is for:
+- SEO agencies
+- Freelance consultants
+- In-house growth teams
+- Web teams managing multiple sites
+
+Top pains we solve:
+- Audit tools that only cover SEO basics
+- Too many disconnected dashboards
+- Reports clients do not understand
+- Slow handoff from findings to action
+- Hard to scale audits across team members
+
+Differentiators:
+- Multi-domain intelligence: SEO + site health + security + trust signals
+- AI layer for executive summaries and module-level suggestions
+- White-label report delivery with branding
+- Competitor scan workflows
+- Team, organization, billing, and usage workflows built in
+
+Tone rules:
+- Lead with outcomes
+- Keep language concrete and plain
+- Avoid hype words and ranking guarantees
+
+Key words to repeat:
+Scan, diagnose, prioritize, fix, report, scale.
+
+Safe claims examples:
+- Helps teams improve website quality and discoverability
+- Supports faster issue triage and delivery
+- Can reduce technical and security blind spots
