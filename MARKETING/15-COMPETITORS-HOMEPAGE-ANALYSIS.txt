@@ -1,0 +1,266 @@
+COMPETITORS HOMEPAGE ANALYSIS
+For: WebScan Robot homepage planning
+Date: February 23, 2026
+
+Scope:
+Top 5 competitors reviewed:
+1) SE Ranking
+2) Sitechecker
+3) WooRank
+4) SEOptimer
+5) Semrush
+
+Note:
+Some competitor sites are highly dynamic/localized, so notes combine homepage captures with closely related official product pages and help docs where messaging and feature priorities are explicitly documented.
+
+==================================================
+A) SE RANKING - HOMEPAGE ANALYSIS
+==================================================
+Observed homepage direction:
+- Positioning leans toward: AI SEO software + agency growth ecosystem.
+- Homepage frames the product as a "family of solutions" rather than a single tool.
+- Heavy emphasis on flexible pricing, add-ons, and agency scaling.
+
+Homepage patterns:
+- Hero focuses on business outcomes (leads, agency growth) rather than technical details.
+- Mid-page introduces multiple products/modules under one brand umbrella.
+- Strong pricing visibility appears early (plan cards + add-ons).
+- Demo and free-trial CTAs are repeated frequently.
+
+Features they highlight most:
+- Rank tracking and research workflows
+- Multi-client/agency workflows
+- Add-ons (Agency Pack, API, AI search-oriented capabilities)
+
+Trust/conversion elements:
+- Global adoption claim (countries)
+- Free trial with no credit card
+- Live demo CTA
+
+What to borrow for WebScan Robot:
+- Outcome-first hero line before technical details
+- Early CTA pair: "Start Free" + "Book Demo"
+- Clear "core plan + add-ons" framing when your product expands
+
+Sources:
+- https://seranking.com/
+- https://seranking.com/pricing.html
+- https://help.seranking.com/hc/en-us/articles/16333590268572-Agency-Pack-Overview
+
+==================================================
+B) SITECHECKER - HOMEPAGE ANALYSIS
+==================================================
+Observed homepage direction:
+- Positioning: SEO control center for agencies/teams.
+- Strong narrative around monitoring + alerts + data integrations (GSC/GA4).
+- Homepage references practical workflows and case-study outcomes.
+
+Homepage patterns:
+- Hero combines trial CTA + demo CTA.
+- Value statement is operations-focused: monitor changes, catch issues early.
+- Tool ecosystem is shown as a suite (crawler, monitoring, rank tracker, on-page checker, etc.).
+- Extensive use of “what’s inside” feature blocks.
+
+Features they highlight most:
+- Technical audit depth (hundreds of checks)
+- Alerts and notifications (email/Slack)
+- Integrations with real data sources (GSC/GA4)
+- White-label options
+
+Trust/conversion elements:
+- Case-study snippets and user quotes on homepage
+- 14-day trial, no credit card
+- Demo booking CTA for sales-assisted conversion
+
+What to borrow for WebScan Robot:
+- Feature clusters by workflow stage (audit -> monitor -> alert -> report)
+- "What’s inside the report" section
+- Real use-case story snippets tied to measurable outcomes
+
+Sources:
+- https://sitechecker.pro/
+- https://sitechecker.pro/seo-site-audit/
+- https://sitechecker.pro/seo-alerts/
+- https://sitechecker.pro/pricing/
+
+==================================================
+C) WOORANK - HOMEPAGE ANALYSIS
+==================================================
+Observed homepage direction:
+- Positioning: digital marketing/SEO sales enablement toolset.
+- Newer homepage copy heavily connects WooRank with lead generation outcomes.
+- Strong emphasis on selling workflows, prospecting, and scalable outreach support.
+
+Homepage patterns:
+- Business-impact messaging above product mechanics.
+- Lead-generation narrative appears prominently.
+- Tooling framed for teams that need to process many sites (indexing/benchmarking/API themes).
+
+Features they highlight most:
+- Website review/audit and reporting
+- LeadGen widget workflows
+- White-label reports for sales
+- API/bulk options for scaled outreach
+
+Trust/conversion elements:
+- Lead and revenue-oriented language
+- Practical “start your review” style CTA
+- Plan-based feature gating (Pro/Premium/Enterprise style)
+
+What to borrow for WebScan Robot:
+- Dedicated "for sales + agency growth" block
+- Clear explanation of how audits become pipeline outcomes
+- Optional lead-capture widget roadmap messaging (if you ship this later)
+
+Sources:
+- https://www.woorank.com/
+- https://help.woorank.com/hc/en-us/articles/360000136145-LeadGen-Documentation
+- https://help.woorank.com/hc/en-us/articles/360000147109-Bulk-Reporting
+
+==================================================
+D) SEOPTIMER - HOMEPAGE ANALYSIS
+==================================================
+Observed homepage direction:
+- Positioning: fast SEO audit + white-label reporting + embeddable lead-gen.
+- Very direct, action-oriented homepage with instant URL input.
+- Broad SEO suite mentioned, but audit/reporting remains the core identity.
+
+Homepage patterns:
+- Above-fold: URL input + free audit promise.
+- Mid-page: repeated sections on white-label PDFs and customization.
+- Strong “affordable complete suite” framing.
+- Frequent testimonials and logos.
+
+Features they highlight most:
+- Fast SEO audits
+- White-label branded PDFs
+- Embeddable audit tool for lead capture
+- Additional SEO tools (crawler, keyword, backlink, API)
+
+Trust/conversion elements:
+- Customer logos
+- User testimonials in large volume
+- "Free" / "start now" style friction reduction
+
+What to borrow for WebScan Robot:
+- Keep a high-visibility URL input in hero area
+- Show one sample report screenshot near the top
+- Repeat white-label value proposition in at least two sections
+
+Sources:
+- https://www.seoptimer.com/
+- https://www.seoptimer.com/pricing
+- https://www.seoptimer.com/white-label/
+
+==================================================
+E) SEMRUSH - HOMEPAGE/ENTRY ANALYSIS
+==================================================
+Observed direction:
+- Semrush operates as a broad AI-powered marketing platform with modular toolkits.
+- For audit-specific entry pages, messaging focuses on technical issue discovery + prioritized to-do lists.
+
+Page patterns (audit-related entries):
+- Clear immediate value proposition: find issues, prioritize fixes.
+- Strong action verbs: analyze, prioritize, improve.
+- Feature depth is communicated with concrete quantities (number of checks/pages/limits).
+
+Features they highlight most (audit context):
+- Large-scale technical checks
+- Severity-based issue prioritization
+- Integrations and page-level diagnostics
+- Project/folder based setup and repeat audits
+
+Trust/conversion elements:
+- "Start for free" and tool-led onboarding
+- Mature pricing tiers with explicit limits
+- Modular expansion via toolkits and add-ons
+
+What to borrow for WebScan Robot:
+- Include concrete numbers for scan depth and checks (where accurate)
+- Make prioritization framework explicit (not just issue list)
+- Create clear path from free checker -> full platform account
+
+Sources:
+- https://www.semrush.com/features/site-audit/
+- https://www.semrush.com/siteaudit/
+- https://www.semrush.com/kb/1547-seo-toolkit-pricing-limits
+- https://www.semrush.com/kb/995-what-is-semrush
+
+==================================================
+CROSS-COMPETITOR HOMEPAGE PATTERNS (WHAT THEY ALL DO)
+==================================================
+1) Immediate action in hero
+- URL input or strong "start trial" CTA appears above the fold.
+
+2) Outcome before mechanics
+- They sell business results (leads, growth, efficiency) before technical module lists.
+
+3) Trust proof early
+- Logos, testimonials, usage stats, or case-study snippets are shown quickly.
+
+4) Feature clusters, not long random lists
+- Tools are grouped by workflow (audit, monitor, report, lead gen, scale).
+
+5) Pricing visibility
+- Plan framing is transparent and usually present on homepage or one click away.
+
+6) Repeated CTA architecture
+- Main CTA repeated at hero, mid-page, and footer.
+
+==================================================
+HOMEPAGE BLUEPRINT FOR WEBSCAN ROBOT (RECOMMENDED)
+==================================================
+Section 1: Hero
+- Headline: Website intelligence beyond SEO
+- Subheadline: SEO + health + security + trust + AI + white-label reporting
+- CTAs: Start Free Scan | View Sample Report
+- Include URL input directly in hero
+
+Section 2: Trust strip
+- Agency/consultant fit
+- No-card trial/free note
+- Branded report capability
+
+Section 3: Problem -> solution
+- Fragmented tool stack problem
+- Unified workflow solution
+
+Section 4: Core outcomes
+- Diagnose broadly
+- Prioritize faster
+- Deliver client-ready outputs
+- Scale team operations
+
+Section 5: Feature pillars
+- Audit engine
+- AI recommendations
+- Competitor workflows
+- White-label reports
+- Team and billing operations
+- Accessibility modules (coming soon)
+
+Section 6: Product proof
+- Sample report screenshot
+- Results dashboard screenshot
+- One mini case-study block
+
+Section 7: Pricing preview
+- 3 plan summary cards + compare CTA
+
+Section 8: FAQ
+- "Not just SEO" question first
+- White-label, team, AI, and accessibility roadmap questions
+
+Section 9: Final CTA
+- Start Free
+- Book Demo
+
+==================================================
+IMPLEMENTATION NOTES FOR COPY STYLE
+==================================================
+- Keep paragraphs short and concrete.
+- Use numbers where possible (checks, pages, limits, response time).
+- Avoid generic "best-in-class" language.
+- Use safety language: "helps improve" instead of guarantees.
+
+End of document.

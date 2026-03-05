@@ -1,0 +1,63 @@
+EMAIL SEQUENCES
+
+Sequence A: New signup onboarding (5 emails)
+
+Email 1 - Subject: Welcome to WebScan Robot
+Goal: Activate first scan
+Body points:
+- What platform does in one sentence
+- Ask user to run first scan now
+CTA: Run First Scan
+
+Email 2 - Subject: Your first quick win framework
+Goal: Teach prioritization
+Body points:
+- Focus on highest-impact issues first
+- Explain score + status quickly
+CTA: Open My Dashboard
+
+Email 3 - Subject: Turn scans into client-ready reports
+Goal: Highlight reporting value
+Body points:
+- Show white-label output concept
+- Explain how to share audit results
+CTA: View Report Features
+
+Email 4 - Subject: Compare your site against competitors
+Goal: Introduce competitor flow
+Body points:
+- Why benchmark context matters
+- How to add first competitor
+CTA: Add Competitor
+
+Email 5 - Subject: Build a repeatable audit workflow
+Goal: Push habit formation
+Body points:
+- Suggested weekly process
+- Team collaboration reminder
+CTA: Invite Team
+
+Sequence B: Trial/upgrade nurture (4 emails)
+
+1) Subject: You are close to your scan limit
+CTA: Upgrade Plan
+
+2) Subject: Unlock white-label delivery
+CTA: Upgrade to Agency
+
+3) Subject: Scale audits across your team
+CTA: Compare Plans
+
+4) Subject: Last day to keep advanced workflows
+CTA: Continue with Pro or Agency
+
+Sequence C: Re-engagement (3 emails)
+
+1) Subject: Your site likely changed since last scan
+CTA: Run New Audit
+
+2) Subject: New issues can appear without warning
+CTA: Check Current Site Health
+
+3) Subject: Need help getting value fast?
+CTA: Book Demo

@@ -1,0 +1,304 @@
+WEBSCAN ROBOT - MARKETING PLAYBOOK
+Version: 1.0
+Purpose: Landing page structure + reusable marketing copy inspired by top SEO/audit SaaS patterns.
+
+==================================================
+1) POSITIONING (USE THIS FIRST)
+==================================================
+Primary category statement:
+WebScan Robot is an agency-ready website intelligence platform for audits, security, performance, AI recommendations, and client reporting.
+
+Short positioning line:
+Beyond SEO audits. Get technical, security, content, and trust insights in one scan.
+
+Differentiation line:
+Most tools stop at SEO checklists. WebScan Robot connects SEO, site health, security, and client-ready reporting in one workflow.
+
+==================================================
+2) HERO SECTION (ABOVE THE FOLD)
+==================================================
+Hero headline options:
+1. Website Intelligence for Agencies That Need More Than SEO
+2. Scan Sites. Find Revenue-Critical Issues. Deliver Branded Reports.
+3. The All-in-One Audit Platform for SEO, Site Health, Security, and Trust
+
+Hero subheadline options:
+1. Run deep audits across SEO, performance, security, and E-E-A-T signals. Turn findings into AI-guided action plans and white-label PDF reports.
+2. WebScan Robot helps agencies and consultants diagnose what matters, prioritize fixes, and present results clients actually understand.
+3. From technical errors to trust and content gaps, get a complete picture in minutes.
+
+Primary CTA text:
+- Start Free Scan
+- Run My First Audit
+- See My Site Score
+
+Secondary CTA text:
+- View Sample Report
+- Explore Features
+- Compare Plans
+
+Trust strip under CTA (example):
+- No credit card for free tier
+- Setup in under 5 minutes
+- Built for agencies and consultants
+
+==================================================
+3) PROBLEM -> SOLUTION BLOCK
+==================================================
+Problem copy:
+Most audit tools overload teams with disconnected checks, shallow recommendations, and reports clients cannot act on.
+
+Solution copy:
+WebScan Robot combines SEO analysis, security checks, performance diagnostics, AI suggestions, and branded reporting in one system so your team can move from scan to action quickly.
+
+==================================================
+4) CORE BENEFITS (OUTCOME-FOCUSED)
+==================================================
+Use these as 3-6 cards:
+
+1. Diagnose More Than SEO
+Catch technical, trust, content, security, and performance issues in one pass.
+
+2. Prioritize What Moves the Needle
+See clear scores, issue impact, and practical next actions your team can execute.
+
+3. Deliver Client-Ready Reports
+Export branded, white-label PDFs with your logo, colors, and company identity.
+
+4. Scale Agency Operations
+Manage projects, team members, usage limits, and billing in one platform.
+
+5. Keep Competitive Context
+Track competitor scans and compare where you win and where you are exposed.
+
+6. Move Faster with AI
+Generate module-level suggestions and executive summaries for faster decision-making.
+
+==================================================
+5) FEATURE PILLARS (LANDING PAGE MID-SECTION)
+==================================================
+Pillar 1: Website Intelligence Engine
+- Multi-module analysis across SEO, content, technical, trust, and security
+- Single-page + crawl workflows
+- Page discovery and additional-page analysis
+
+Pillar 2: SEO + Performance + Security Coverage
+- On-page, technical, schema, links, and crawl health
+- Core Web Vitals and performance diagnostics
+- Security checks (SSL, headers, mixed content, exposed files, blacklist)
+
+Pillar 3: Trust & Quality Signals
+- E-E-A-T style checks (author, trust pages, privacy/terms, business schema)
+- Readability and keyword consistency signals
+
+Pillar 4: AI Action Layer
+- AI executive summaries for stakeholders
+- AI suggestions on key modules
+- Faster handoff from analysis to implementation
+
+Pillar 5: Agency Delivery
+- White-label report branding
+- Branded PDF exports
+- Team collaboration and organization-level controls
+
+Pillar 6: Growth Workflow
+- Competitor scanning and comparison context
+- Usage-based plan controls
+- Billing and subscription lifecycle built in
+
+Upcoming pillar (teaser):
+Accessibility Intelligence (coming soon)
+- Upcoming modules for accessibility diagnostics and remediation guidance
+- Designed to align UX quality, compliance readiness, and search performance
+
+==================================================
+6) “WHY WEBSCAN ROBOT” COMPARISON COPY
+==================================================
+Section headline:
+Why teams choose WebScan Robot over single-purpose audit tools
+
+Suggested bullets:
+- More complete scope: SEO + health + security + trust in one platform
+- Better delivery: built-in white-label outputs for client communication
+- Better workflow: discovery, AI guidance, and competitor context in the same system
+- Better operations: team, org, plans, and billing included from day one
+
+==================================================
+7) SOCIAL PROOF / CREDIBILITY BLOCKS
+==================================================
+Add placeholders now, replace with real metrics later:
+
+Stat block examples:
+- X,XXX audits run
+- XX% faster issue triage
+- X-point average score lift after 30 days
+- X agencies onboarded
+
+Logo/testimonial placeholders:
+- “WebScan Robot helped us turn audits into sales conversations.”
+- “Our clients finally understand what to fix first.”
+- “The white-label reports improved perceived value instantly.”
+
+==================================================
+8) USE CASE SECTIONS
+==================================================
+For Agencies:
+Close more retainers with professional scans, clear priority actions, and branded deliverables.
+
+For Consultants:
+Run deep audits quickly and present strategic recommendations without assembling multiple tools.
+
+For In-House Teams:
+Monitor site quality, track ongoing risks, and align SEO, engineering, and content teams.
+
+==================================================
+9) SAMPLE PAGE FLOW (RECOMMENDED ORDER)
+==================================================
+1. Hero + CTA
+2. Trust strip
+3. Problem/Solution
+4. Benefit cards
+5. Feature pillars
+6. Accessibility coming-soon teaser
+7. Sample report screenshot/video
+8. Comparison “Why us” section
+9. Testimonials / proof
+10. Pricing snapshot
+11. FAQ
+12. Final CTA
+
+==================================================
+10) PRICING PAGE COPY SNIPPETS
+==================================================
+Pricing headline options:
+- Plans that scale from solo consultant to agency team
+- Start free, upgrade when your workflow grows
+
+Pricing support copy:
+- Transparent limits by projects, scans, and team size
+- White-label and advanced workflows for growth-stage agencies
+
+Upgrade prompt copy:
+- You’ve reached this plan’s scan limit. Upgrade to keep audits moving.
+- Unlock white-label branding and higher scan capacity.
+- Add more projects and teammates without changing tools.
+
+==================================================
+11) FAQ COPY STARTERS
+==================================================
+Q: Is WebScan Robot only an SEO tool?
+A: No. It combines SEO, performance, security, trust/content quality, and reporting workflows in one platform.
+
+Q: Who is this built for?
+A: Agencies, consultants, and in-house marketing/web teams that need technical depth plus client-ready outputs.
+
+Q: Can I brand reports for clients?
+A: Yes. White-label branding includes your company name, logo, and visual identity for PDF reports.
+
+Q: Do you support team collaboration?
+A: Yes. Organization-based access with team invitation and role-based workflows.
+
+Q: What is coming next?
+A: Accessibility-focused modules are planned to expand audit coverage and remediation guidance.
+
+==================================================
+12) CTA LIBRARY (REUSE ACROSS SITE)
+==================================================
+Top-of-funnel CTAs:
+- Run Free Audit
+- Analyze My Website
+- Get Instant Site Score
+
+Mid-funnel CTAs:
+- View Feature Tour
+- See Sample White-Label Report
+- Compare Platform Capabilities
+
+Bottom-of-funnel CTAs:
+- Start Free
+- Book a Demo
+- Upgrade to Agency
+
+==================================================
+13) MICROCOPY IDEAS
+==================================================
+On scan form:
+- Enter a URL to get a full website intelligence report.
+
+On results page:
+- Focus on high-impact fixes first.
+
+On AI section:
+- AI suggestions are generated to accelerate implementation, not replace expert review.
+
+On branding page:
+- Your logo and brand colors will be used in exported reports.
+
+On accessibility teaser:
+- Accessibility modules are in development. Join the waitlist for early access.
+
+==================================================
+14) EMAIL / OUTREACH SNIPPETS
+==================================================
+Subject lines:
+- Your website audit is ready
+- 5 high-impact issues found on [domain]
+- Weekly site intelligence summary
+
+Body snippets:
+- We scanned your site and identified the highest-priority issues affecting discoverability, trust, and performance.
+- Your branded report is attached. It includes prioritized recommendations and next steps.
+- This week: X issues resolved, Y new risks detected, score changed by Z points.
+
+==================================================
+15) ACCESSIBILITY MODULE LAUNCH PREP COPY
+==================================================
+Launch teaser headline:
+Accessibility Intelligence, built into your audit workflow.
+
+Teaser subtext:
+Soon you’ll be able to identify accessibility risks alongside SEO, performance, and security in a unified report.
+
+Waitlist CTA:
+Join Accessibility Early Access
+
+Value bullets:
+- Find common accessibility blockers faster
+- Get practical remediation guidance
+- Strengthen UX quality and compliance readiness
+
+==================================================
+16) BRAND VOICE GUIDELINES
+==================================================
+Tone:
+- Expert but clear
+- Practical, not hype-heavy
+- Outcome-focused
+
+Language rules:
+- Lead with business impact, then technical depth
+- Prefer concrete verbs: detect, prioritize, fix, deliver, scale
+- Keep paragraphs short and scannable
+
+Avoid:
+- “Magic AI” claims
+- Vague “best-in-class” filler
+- Overpromising rankings or guaranteed outcomes
+
+==================================================
+17) CLAIMS SAFETY NOTES
+==================================================
+Use careful phrasing:
+- “helps improve” instead of “guarantees”
+- “can reduce risk” instead of “eliminates risk”
+- “supports compliance readiness” instead of “certifies compliance”
+
+==================================================
+18) FINAL ONE-LINERS YOU CAN USE ANYWHERE
+==================================================
+- WebScan Robot: Website intelligence for teams that need more than SEO.
+- Audit deeper. Prioritize faster. Deliver better.
+- One platform for SEO, health, security, trust, and client reporting.
+- Built for agencies that need technical depth and polished delivery.
+
+END OF FILE

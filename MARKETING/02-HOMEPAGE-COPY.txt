@@ -1,0 +1,62 @@
+HOMEPAGE COPY - WEBSCAN ROBOT
+
+SECTION: HERO
+Headline options:
+- Website Intelligence for Teams That Need More Than SEO
+- Scan Sites, Prioritize Fixes, Deliver Branded Reports
+- One Platform for SEO, Site Health, Security, and Trust
+
+Subheadline:
+Run deep website audits across SEO, technical health, security, and trust signals. Use AI guidance and white-label reporting to turn findings into action.
+
+Primary CTA:
+Start Free Scan
+
+Secondary CTA:
+View Sample Report
+
+Support line:
+No credit card required for free tier.
+
+SECTION: TRUST BAR
+- Built for agencies and consultants
+- White-label reporting ready
+- Team and organization workflows included
+
+SECTION: PROBLEM
+Most audit tools stop at checklists. Teams still need to piece together security, performance, trust, and reporting workflows manually.
+
+SECTION: SOLUTION
+WebScan Robot gives you one scan workflow from diagnosis to client delivery.
+
+SECTION: BENEFITS (CARD GRID)
+1) Broader Coverage
+Audit SEO, technical health, performance, security, and trust signals in one place.
+2) Faster Prioritization
+See clear scores, issue severity, and next-step guidance.
+3) Better Delivery
+Export clean, white-label reports your clients can understand.
+4) Team Scale
+Manage projects, members, usage, and billing without duct-taping tools.
+
+SECTION: FEATURE PILLARS
+- Audit Engine: Multi-module checks plus crawl/discovery workflows
+- AI Guidance: Executive summaries and focused module recommendations
+- Competitor Context: Benchmark your site against competitor scans
+- White-Label Output: Branded PDFs with your logo and colors
+- Agency Operations: Team management and plan-based controls
+
+SECTION: COMING SOON
+Accessibility modules are in development. Soon you can evaluate accessibility risk alongside SEO and site health.
+CTA: Join Accessibility Early Access
+
+SECTION: SOCIAL PROOF (PLACEHOLDER)
+- [X] audits completed
+- [X] agencies onboarded
+- [X]-point average score lift in [timeframe]
+
+SECTION: FINAL CTA
+Headline: Ready to audit smarter and deliver faster?
+Buttons:
+- Start Free
+- Book a Demo

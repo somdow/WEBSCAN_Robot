@@ -1,0 +1,39 @@
+LAUNCH CHECKLIST
+
+Website essentials
+- Finalize homepage, features, pricing, FAQ copy
+- Add product screenshots and one sample report
+- Add clear CTA buttons on every key section
+- Add terms, privacy, and acceptable use links
+
+Trust and conversion
+- Add social proof placeholders or early user quotes
+- Add transparent plan limits and billing notes
+- Add contact/demo form
+
+Lifecycle messaging
+- Publish onboarding emails
+- Publish trial/upgrade emails
+- Publish re-engagement emails
+
+Measurement
+- Define activation event (first scan)
+- Define conversion event (upgrade)
+- Define retention event (weekly scan usage)
+- Track top CTA clicks
+
+Sales enablement
+- Publish one-pager
+- Create discovery call script
+- Build objection handling notes
+
+Content and SEO
+- Publish 3 cornerstone comparison pages
+- Publish 2 workflow/how-to pages
+- Publish one accessibility roadmap page
+
+Post-launch
+- Review support tickets weekly
+- Review drop-offs in signup -> first scan flow
+- Tighten copy where users hesitate
+- Add proof metrics monthly

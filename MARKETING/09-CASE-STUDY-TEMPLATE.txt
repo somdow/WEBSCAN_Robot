@@ -1,0 +1,36 @@
+CASE STUDY TEMPLATE
+
+Title:
+How [Company] improved [metric] using WebScan Robot
+
+1. Snapshot
+- Company:
+- Industry:
+- Team size:
+- Primary goal:
+
+2. Challenge
+Describe the main operational and technical problems before using WebScan Robot.
+
+3. Approach
+- What workflows were implemented
+- Which modules/features were used most
+- Team/process changes
+
+4. Results
+Use measurable outcomes:
+- Audit turnaround time: before -> after
+- Priority issue resolution speed
+- Score movement over [time]
+- Client delivery quality feedback
+
+5. Quote
+Add one customer quote focused on practical value.
+
+6. What changed internally
+- Better prioritization
+- Better collaboration
+- Better reporting confidence
+
+7. Next steps
+Describe how the team plans to expand use (for example accessibility modules).

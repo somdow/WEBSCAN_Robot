@@ -1,0 +1,33 @@
+SEO CONTENT PLAN FOR WEBSCAN ROBOT SITE
+
+Pillar topics:
+1) Website audit workflows for agencies
+2) SEO + security + performance integrated operations
+3) Client reporting and white-label delivery
+4) Accessibility and search quality alignment
+
+Suggested article titles:
+- SEO Audit vs Website Intelligence: What Agencies Actually Need
+- How to Prioritize Technical, Security, and Content Fixes After a Site Scan
+- How Agencies Turn Audit Data Into Client Retention
+- White-Label SEO Reports: What Clients Expect in 2026
+- Core Web Vitals, Security, and Trust Signals: Why They Belong Together
+- Accessibility and SEO: Where They Overlap and Why It Matters
+
+Comparison pages:
+- WebScan Robot vs WooRank
+- WebScan Robot vs Sitechecker
+- WebScan Robot vs [Tool]
+
+Each comparison page structure:
+- Who each tool fits best
+- Feature-by-feature table
+- Workflow differences
+- Reporting and delivery differences
+- Honest recommendation by use case
+
+On-page checklist per article:
+- One clear search intent
+- Practical examples and checklists
+- Internal links to features/pricing/demo
+- CTA at top, middle, and end

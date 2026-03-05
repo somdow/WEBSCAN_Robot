@@ -1,0 +1,30 @@
+ACCESSIBILITY MODULE LAUNCH PACK
+
+Announcement headline options:
+- Accessibility Intelligence is coming to WebScan Robot
+- Expand your audits: Accessibility modules arriving soon
+
+Announcement copy:
+WebScan Robot is expanding beyond SEO, performance, and security with upcoming accessibility-focused modules. Teams will be able to detect common accessibility risks and prioritize remediation within the same workflow used for website intelligence and reporting.
+
+Waitlist CTA options:
+- Join Accessibility Early Access
+- Get Launch Updates
+
+Launch email subject ideas:
+- Accessibility modules are now in early access
+- New in WebScan Robot: Accessibility audit coverage
+
+Launch social copy:
+Accessibility is now part of the website intelligence workflow.
+No more disconnected tooling for quality checks.
+Join early access.
+
+Sales talk track:
+- You can now evaluate accessibility risk alongside SEO and site health.
+- This reduces fragmentation and keeps remediation planning in one platform.
+- Useful for agencies that want stronger quality and trust deliverables.
+
+Claims safety:
+- Say: supports accessibility remediation readiness
+- Avoid: guarantees legal compliance

@@ -1,0 +1,47 @@
+PRICING PAGE COPY
+
+Headline:
+Plans that scale from solo consultant to agency team
+
+Subheadline:
+Start with core audit workflows, then unlock higher limits and advanced delivery features as you grow.
+
+Card structure template:
+FREE
+- For getting started
+- Core scans
+- Single user
+CTA: Start Free
+
+PRO
+- For active consultants
+- Higher monthly scan capacity
+- More projects
+- Expanded AI and workflow options
+CTA: Upgrade to Pro
+
+AGENCY
+- For teams serving clients
+- Team seats and higher limits
+- White-label report branding
+- Advanced operational workflows
+CTA: Upgrade to Agency
+
+Feature row labels:
+- Users
+- Projects
+- Scans per month
+- Competitor tracking
+- White-label reports
+- AI features
+- Discovery/additional page workflows
+- Support level
+
+Plan limit UX copy:
+- You reached this plan's scan limit. Upgrade to continue auditing.
+- Need more projects or users? Move to the next tier in one click.
+
+Billing reassurance:
+- Transparent billing
+- Cancel anytime
+- Invoices available in account

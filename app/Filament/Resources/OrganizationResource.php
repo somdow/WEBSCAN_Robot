@@ -295,6 +295,7 @@ class OrganizationResource extends Resource
 	public static function getRelations(): array
 	{
 		return array(
+			RelationManagers\ScansRelationManager::class,
 			RelationManagers\UsersRelationManager::class,
 			RelationManagers\ProjectsRelationManager::class,
 		);
