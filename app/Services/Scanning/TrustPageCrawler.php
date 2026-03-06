@@ -29,26 +29,30 @@ class TrustPageCrawler
 	) {}
 
 	/**
-	 * Crawl the homepage to identify and fetch trust pages.
+	 * Crawl the homepage to identify and fetch trust pages concurrently.
 	 * Returns an array of trust page data structures.
 	 */
 	public function crawl(ScanContext $scanContext): array
 	{
 		$maxPages = (int) config("scanning.thresholds.trustPages.maxPagesToFetch", 6);
+		$timeout = (int) config("scanning.thresholds.trustPages.fetchTimeoutSeconds", 5);
 		$domainRoot = $scanContext->domainRoot();
 		$discoveredLinks = $this->extractAllLinks($scanContext, $domainRoot);
 		$identifiedPages = $this->matchTrustPageLinks($discoveredLinks, $domainRoot);
 
+		$pagesToFetch = array_slice($identifiedPages, 0, $maxPages, true);
+
+		if (empty($pagesToFetch)) {
+			return array();
+		}
+
+		$fetchResults = $this->httpFetcher->fetchResourcesConcurrent($pagesToFetch, $timeout, $maxPages);
+
 		$trustPages = array();
-		$fetchCount = 0;
 
-		foreach ($identifiedPages as $pageType => $pageUrl) {
-			if ($fetchCount >= $maxPages) {
-				break;
-			}
-
-			$trustPages[] = $this->fetchAndAnalyzeTrustPage($pageType, $pageUrl);
-			$fetchCount++;
+		foreach ($pagesToFetch as $pageType => $pageUrl) {
+			$fetchResult = $fetchResults[$pageType] ?? null;
+			$trustPages[] = $this->analyzeTrustPageResult($pageType, $pageUrl, $fetchResult);
 		}
 
 		Log::info("TrustPageCrawler completed", array(
@@ -128,18 +132,15 @@ class TrustPageCrawler
 	}
 
 	/**
-	 * Fetch a trust page and analyze its content.
+	 * Analyze a pre-fetched trust page result.
 	 */
-	private function fetchAndAnalyzeTrustPage(string $pageType, string $url): array
+	private function analyzeTrustPageResult(string $pageType, string $url, ?\App\DataTransferObjects\FetchResult $fetchResult): array
 	{
-		$timeout = (int) config("scanning.thresholds.trustPages.fetchTimeoutSeconds", 5);
-		$fetchResult = $this->httpFetcher->fetchResource($url, $timeout);
-
 		$pageData = array(
 			"type" => $pageType,
 			"url" => $url,
 			"exists" => false,
-			"httpStatus" => $fetchResult->httpStatusCode,
+			"httpStatus" => $fetchResult?->httpStatusCode,
 			"wordCount" => 0,
 			"hasAddress" => false,
 			"hasPhone" => false,
@@ -148,7 +149,7 @@ class TrustPageCrawler
 			"contentSnippet" => "",
 		);
 
-		if (!$fetchResult->successful || $fetchResult->content === null) {
+		if ($fetchResult === null || !$fetchResult->successful || $fetchResult->content === null) {
 			return $pageData;
 		}
 
