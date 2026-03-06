@@ -8,7 +8,6 @@ use App\DataTransferObjects\ScanContext;
 use App\Enums\ModuleStatus;
 use App\Services\Scanning\HttpFetcher;
 use DOMElement;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Probes outbound links on a page and reports broken ones (404, 410, 5xx, unreachable).
@@ -196,7 +195,8 @@ class BrokenLinksAnalyzer implements AnalyzerInterface
 	}
 
 	/**
-	 * Probe each URL and classify the response.
+	 * Probe each URL concurrently and classify the response.
+	 * Uses Guzzle Pool via HttpFetcher for 5-concurrent requests.
 	 *
 	 * @param string[] $urls
 	 * @return array{broken: array, serverErrors: array, unreachable: array, okCount: int}
@@ -208,50 +208,54 @@ class BrokenLinksAnalyzer implements AnalyzerInterface
 		$unreachable = array();
 		$okCount = 0;
 
-		foreach ($urls as $url) {
-			try {
-				$fetchResult = $this->httpFetcher->fetchResource($url, 5);
+		$keyedUrls = array();
+		foreach ($urls as $index => $url) {
+			$keyedUrls["link_{$index}"] = $url;
+		}
 
-				$statusCode = $fetchResult->httpStatusCode;
+		$results = $this->httpFetcher->fetchResourcesConcurrent($keyedUrls, 5, 5);
 
-				if ($statusCode === null) {
-					$unreachable[] = array(
-						"url" => $url,
-						"reason" => $fetchResult->errorMessage ?? "Connection failed",
-					);
-					continue;
-				}
+		foreach ($urls as $index => $url) {
+			$key = "link_{$index}";
+			$fetchResult = $results[$key] ?? null;
 
-				if ($statusCode === 404 || $statusCode === 410) {
-					$broken[] = array(
-						"url" => $url,
-						"statusCode" => $statusCode,
-						"reason" => $statusCode === 404 ? "Not Found" : "Gone",
-					);
-					continue;
-				}
-
-				if ($statusCode >= 500) {
-					$serverErrors[] = array(
-						"url" => $url,
-						"statusCode" => $statusCode,
-						"reason" => "Server Error ({$statusCode})",
-					);
-					continue;
-				}
-
-				$okCount++;
-			} catch (\Throwable $exception) {
-				Log::warning("Broken link probe failed", array(
-					"url" => $url,
-					"error" => $exception->getMessage(),
-				));
-
+			if ($fetchResult === null) {
 				$unreachable[] = array(
 					"url" => $url,
-					"reason" => "Probe failed: " . $exception->getMessage(),
+					"reason" => "Probe failed",
 				);
+				continue;
 			}
+
+			$statusCode = $fetchResult->httpStatusCode;
+
+			if ($statusCode === null) {
+				$unreachable[] = array(
+					"url" => $url,
+					"reason" => $fetchResult->errorMessage ?? "Connection failed",
+				);
+				continue;
+			}
+
+			if ($statusCode === 404 || $statusCode === 410) {
+				$broken[] = array(
+					"url" => $url,
+					"statusCode" => $statusCode,
+					"reason" => $statusCode === 404 ? "Not Found" : "Gone",
+				);
+				continue;
+			}
+
+			if ($statusCode >= 500) {
+				$serverErrors[] = array(
+					"url" => $url,
+					"statusCode" => $statusCode,
+					"reason" => "Server Error ({$statusCode})",
+				);
+				continue;
+			}
+
+			$okCount++;
 		}
 
 		return array(
