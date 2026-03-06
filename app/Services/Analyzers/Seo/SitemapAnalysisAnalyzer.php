@@ -80,10 +80,17 @@ class SitemapAnalysisAnalyzer implements AnalyzerInterface
 		$accessibleCount = 0;
 		$inaccessibleCount = 0;
 
-		foreach ($sitemapUrls as $sitemapUrl) {
-			$fetchResult = $this->httpFetcher->fetchResource($sitemapUrl);
+		$keyedSitemapUrls = array();
+		foreach ($sitemapUrls as $index => $sitemapUrl) {
+			$keyedSitemapUrls["sitemap_{$index}"] = $sitemapUrl;
+		}
 
-			if ($fetchResult->successful) {
+		$fetchResults = $this->httpFetcher->fetchResourcesConcurrent($keyedSitemapUrls, 5, 5);
+
+		foreach ($sitemapUrls as $index => $sitemapUrl) {
+			$fetchResult = $fetchResults["sitemap_{$index}"] ?? null;
+
+			if ($fetchResult !== null && $fetchResult->successful) {
 				$accessibleCount++;
 				$findings[] = array("type" => "ok", "message" => "Sitemap accessible: {$sitemapUrl}");
 
@@ -190,7 +197,7 @@ class SitemapAnalysisAnalyzer implements AnalyzerInterface
 	}
 
 	/**
-	 * Parse a <sitemapindex> element: fetch each child <sitemap><loc> and aggregate URLs.
+	 * Parse a <sitemapindex> element: fetch child sitemaps concurrently and aggregate URLs.
 	 *
 	 * @return array{urls: string[], url_count: int, is_index: bool, child_count: int}
 	 */
@@ -198,17 +205,28 @@ class SitemapAnalysisAnalyzer implements AnalyzerInterface
 	{
 		$childUrls = $this->extractChildSitemapUrls($xml);
 		$childCount = count($childUrls);
-		$allUrls = array();
-
 		$fetchableChildren = array_slice($childUrls, 0, self::MAX_CHILD_SITEMAPS);
 
-		foreach ($fetchableChildren as $childSitemapUrl) {
+		if (empty($fetchableChildren)) {
+			return array("urls" => array(), "url_count" => 0, "is_index" => true, "child_count" => $childCount);
+		}
+
+		$keyedUrls = array();
+		foreach ($fetchableChildren as $index => $childSitemapUrl) {
+			$keyedUrls["child_{$index}"] = $childSitemapUrl;
+		}
+
+		$fetchResults = $this->httpFetcher->fetchResourcesConcurrent($keyedUrls, 5, 5);
+
+		$allUrls = array();
+
+		foreach ($fetchableChildren as $index => $childSitemapUrl) {
 			if (count($allUrls) >= self::MAX_PARSED_URLS) {
 				break;
 			}
 
-			$childFetch = $this->httpFetcher->fetchResource($childSitemapUrl);
-			if (!$childFetch->successful || empty($childFetch->content)) {
+			$childFetch = $fetchResults["child_{$index}"] ?? null;
+			if ($childFetch === null || !$childFetch->successful || empty($childFetch->content)) {
 				continue;
 			}
 
