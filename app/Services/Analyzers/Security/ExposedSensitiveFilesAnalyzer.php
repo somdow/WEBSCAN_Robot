@@ -7,7 +7,6 @@ use App\DataTransferObjects\AnalysisResult;
 use App\DataTransferObjects\ScanContext;
 use App\Enums\ModuleStatus;
 use App\Services\Scanning\HttpFetcher;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Probes for publicly accessible sensitive files that should never be exposed.
@@ -123,34 +122,54 @@ class ExposedSensitiveFilesAnalyzer implements AnalyzerInterface
 	}
 
 	/**
-	 * Probe all applicable sensitive file paths and collect results.
+	 * Probe all applicable sensitive file paths concurrently and collect results.
+	 * All probes fire at once (concurrency 8) since there are only ~8 paths.
 	 *
 	 * @return array{exposedFiles: array, probeCount: int}
 	 */
 	private function probeAllFiles(string $domainRoot, bool $isWordPress): array
 	{
-		$exposedFiles = array();
-		$probeCount = 0;
+		$applicableSpecs = array();
+		$keyedUrls = array();
 
-		foreach (self::SENSITIVE_FILES as $fileSpec) {
+		foreach (self::SENSITIVE_FILES as $index => $fileSpec) {
 			if ($fileSpec["wordpressOnly"] && !$isWordPress) {
 				continue;
 			}
 
-			$probeUrl = $domainRoot . "/" . $fileSpec["path"];
-			$probeCount++;
+			$key = "file_{$index}";
+			$keyedUrls[$key] = $domainRoot . "/" . $fileSpec["path"];
+			$applicableSpecs[$key] = $fileSpec;
+		}
 
-			try {
-				$isExposed = $this->probeFile($probeUrl, $fileSpec["markers"]);
+		$probeCount = count($keyedUrls);
 
-				if ($isExposed) {
+		if ($probeCount === 0) {
+			return array("exposedFiles" => array(), "probeCount" => 0);
+		}
+
+		$fetchResults = $this->httpFetcher->fetchResourcesConcurrent($keyedUrls, 5, 8);
+
+		$exposedFiles = array();
+
+		foreach ($applicableSpecs as $key => $fileSpec) {
+			$fetchResult = $fetchResults[$key] ?? null;
+
+			if ($fetchResult === null || !$fetchResult->successful || $fetchResult->httpStatusCode !== 200) {
+				continue;
+			}
+
+			$body = $fetchResult->content ?? "";
+
+			if (trim($body) === "") {
+				continue;
+			}
+
+			foreach ($fileSpec["markers"] as $marker) {
+				if (stripos($body, $marker) !== false) {
 					$exposedFiles[] = $fileSpec;
+					break;
 				}
-			} catch (\Throwable $exception) {
-				Log::warning("Sensitive file probe failed", array(
-					"path" => $fileSpec["path"],
-					"error" => $exception->getMessage(),
-				));
 			}
 		}
 
@@ -214,31 +233,4 @@ class ExposedSensitiveFilesAnalyzer implements AnalyzerInterface
 		return $recommendations;
 	}
 
-	/**
-	 * Probe a URL and check if the response indicates a real exposed file
-	 * (not a custom 404 page returning HTTP 200).
-	 */
-	private function probeFile(string $url, array $contentMarkers): bool
-	{
-		$fetchResult = $this->httpFetcher->fetchResource($url);
-
-		if (!$fetchResult->successful || $fetchResult->httpStatusCode !== 200) {
-			return false;
-		}
-
-		$body = $fetchResult->content ?? "";
-
-		if (trim($body) === "") {
-			return false;
-		}
-
-		/* Check if any expected content marker is present in the response body */
-		foreach ($contentMarkers as $marker) {
-			if (stripos($body, $marker) !== false) {
-				return true;
-			}
-		}
-
-		return false;
-	}
 }
