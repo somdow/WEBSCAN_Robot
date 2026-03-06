@@ -3,6 +3,10 @@
 namespace App\Services\Scanning;
 
 use App\DataTransferObjects\FetchResult;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Pool;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -159,6 +163,103 @@ class HttpFetcher
 				errorMessage: "Fetch error (insecure fallback): " . $exception->getMessage(),
 			);
 		}
+	}
+
+	/**
+	 * Fetch multiple URLs concurrently, returning keyed FetchResult objects.
+	 * Failed requests return a FetchResult with successful=false and error message.
+	 * Uses Guzzle Pool for concurrent HTTP with configurable parallelism.
+	 *
+	 * @param array<string, string> $urls Keyed array: ["label" => "https://..."]
+	 * @param int $timeoutSeconds Timeout per individual request
+	 * @param int $concurrency Max simultaneous in-flight requests
+	 * @return array<string, FetchResult> Results keyed to match input keys
+	 */
+	public function fetchResourcesConcurrent(array $urls, int $timeoutSeconds = 5, int $concurrency = 5): array
+	{
+		if (empty($urls)) {
+			return array();
+		}
+
+		$userAgent = config("scanning.user_agent");
+		$client = new GuzzleClient(array(
+			"timeout" => $timeoutSeconds,
+			"connect_timeout" => $timeoutSeconds,
+			"verify" => true,
+			"headers" => array(
+				"User-Agent" => $userAgent,
+			),
+			"allow_redirects" => array(
+				"max" => config("scanning.max_redirects", 5),
+				"track_redirects" => true,
+			),
+		));
+
+		$results = array();
+
+		$requests = function () use ($urls) {
+			foreach ($urls as $key => $url) {
+				yield $key => new Request("GET", $url);
+			}
+		};
+
+		$pool = new Pool($client, $requests(), array(
+			"concurrency" => $concurrency,
+			"fulfilled" => function (GuzzleResponse $response, $key) use (&$results, $urls) {
+				$body = (string) $response->getBody();
+				$statusCode = $response->getStatusCode();
+				$headers = $this->normalizeHeaders($response->getHeaders());
+				$effectiveUrl = $this->resolveEffectiveUrlFromHeaders($response, $urls[$key]);
+
+				$successful = $statusCode >= 200 && $statusCode < 300 && !empty($body);
+
+				$results[$key] = new FetchResult(
+					successful: $successful,
+					content: $body,
+					headers: $headers,
+					httpStatusCode: $statusCode,
+					effectiveUrl: $effectiveUrl,
+					timeToFirstByte: null,
+					totalTransferTime: null,
+					errorMessage: $successful ? null : "HTTP {$statusCode}",
+				);
+			},
+			"rejected" => function (\Throwable $exception, $key) use (&$results) {
+				Log::warning("Concurrent fetch failed", array(
+					"key" => $key,
+					"error" => $exception->getMessage(),
+				));
+
+				$results[$key] = new FetchResult(
+					successful: false,
+					content: null,
+					headers: array(),
+					httpStatusCode: null,
+					effectiveUrl: null,
+					timeToFirstByte: null,
+					totalTransferTime: null,
+					errorMessage: "Connection failed: " . $exception->getMessage(),
+				);
+			},
+		));
+
+		$pool->promise()->wait();
+
+		return $results;
+	}
+
+	/**
+	 * Resolve effective URL from Guzzle PSR-7 response redirect tracking headers.
+	 */
+	private function resolveEffectiveUrlFromHeaders(GuzzleResponse $response, string $originalUrl): string
+	{
+		$redirectHistory = $response->getHeader("X-Guzzle-Redirect-History");
+
+		if (!empty($redirectHistory)) {
+			return end($redirectHistory) ?: $originalUrl;
+		}
+
+		return $originalUrl;
 	}
 
 	/**
