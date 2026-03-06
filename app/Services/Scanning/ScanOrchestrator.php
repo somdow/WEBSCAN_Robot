@@ -50,6 +50,7 @@ class ScanOrchestrator
 		private readonly ResponseValidator $responseValidator,
 		private readonly ZyteCrawlerService $zyteCrawlerService,
 		private readonly \App\Services\BillingService $billingService,
+		private readonly PageSpeedInsightsClient $pageSpeedClient,
 	) {}
 
 	/**
@@ -110,10 +111,9 @@ class ScanOrchestrator
 			$this->reportProgress($scan, 40, "Detecting technology stack...");
 			$this->runTechStackDetection($scan, $scanContext);
 
-			$this->reportProgress($scan, 48, "Measuring Core Web Vitals (mobile)...");
+			$this->reportProgress($scan, 48, "Measuring Core Web Vitals...");
+			$this->pageSpeedClient->prefetchStrategies($scanContext->effectiveUrl, array("mobile", "desktop"));
 			$this->runCoreWebVitalsMobile($scan, $scanContext);
-
-			$this->reportProgress($scan, 56, "Measuring Core Web Vitals (desktop)...");
 			$screenshotBase64 = $this->runCoreWebVitalsDesktop($scan, $scanContext);
 			$this->captureHomepageScreenshot($scan, $scanContext->effectiveUrl, $screenshotBase64);
 
@@ -296,6 +296,7 @@ class ScanOrchestrator
 		$this->runTechStackDetection($scan, $scanContext);
 
 		$this->reportProgress($scan, 24, "Measuring performance...");
+		$this->pageSpeedClient->prefetchStrategies($scanContext->effectiveUrl, array("mobile", "desktop"));
 		$this->runCoreWebVitalsMobile($scan, $scanContext);
 		$screenshotBase64 = $this->runCoreWebVitalsDesktop($scan, $scanContext);
 		$this->captureHomepageScreenshot($scan, $scanContext->effectiveUrl, $screenshotBase64);

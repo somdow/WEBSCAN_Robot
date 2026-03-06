@@ -16,6 +16,9 @@ class PageSpeedInsightsClient
 	private const SETTINGS_KEY = "google_web_risk_api_key";
 	private const TIMEOUT_SECONDS = 25;
 
+	/** Pre-fetched API results keyed by "url|strategy". */
+	private array $prefetchedResults = array();
+
 	public function __construct(
 		private readonly HttpFetcher $httpFetcher,
 	) {}
@@ -32,12 +35,60 @@ class PageSpeedInsightsClient
 	}
 
 	/**
+	 * Pre-fetch multiple strategies concurrently for a URL.
+	 * Results are cached and returned by subsequent fetchMetrics() calls.
+	 * This avoids running mobile and desktop API calls back-to-back.
+	 *
+	 * @param string[] $strategies e.g. ["mobile", "desktop"]
+	 */
+	public function prefetchStrategies(string $targetUrl, array $strategies): void
+	{
+		if (!$this->isConfigured() || empty($strategies)) {
+			return;
+		}
+
+		$keyedUrls = array();
+		foreach ($strategies as $strategy) {
+			$keyedUrls[$strategy] = $this->buildApiUrl($targetUrl, $strategy);
+		}
+
+		$fetchResults = $this->httpFetcher->fetchResourcesConcurrent($keyedUrls, self::TIMEOUT_SECONDS, count($strategies));
+
+		foreach ($strategies as $strategy) {
+			$cacheKey = $targetUrl . "|" . $strategy;
+			$fetchResult = $fetchResults[$strategy] ?? null;
+
+			if ($fetchResult === null || !$fetchResult->successful) {
+				$errorContext = $fetchResult?->errorMessage ?? "unknown error";
+				Log::warning("PageSpeedInsightsClient: prefetch failed", array(
+					"url" => $targetUrl,
+					"strategy" => $strategy,
+					"error" => $errorContext,
+				));
+				$this->prefetchedResults[$cacheKey] = $this->buildErrorResult("Prefetch failed: {$errorContext}");
+				continue;
+			}
+
+			$this->prefetchedResults[$cacheKey] = $this->parseApiResponse($fetchResult->content);
+		}
+	}
+
+	/**
 	 * Fetch Core Web Vitals and performance metrics for a URL.
+	 * If prefetchStrategies() was called first, returns the cached result.
 	 *
 	 * @return array{success: bool, hasFieldData: bool, fieldMetrics: array, labMetrics: array, performanceScore: ?float, error: ?string}
 	 */
 	public function fetchMetrics(string $targetUrl, string $strategy = "mobile"): array
 	{
+		$cacheKey = $targetUrl . "|" . $strategy;
+
+		if (isset($this->prefetchedResults[$cacheKey])) {
+			$result = $this->prefetchedResults[$cacheKey];
+			unset($this->prefetchedResults[$cacheKey]);
+			return $result;
+		}
+
 		if (!$this->isConfigured()) {
 			Log::info("PageSpeedInsightsClient: no API key configured — skipping request", array(
 				"url" => $targetUrl,
