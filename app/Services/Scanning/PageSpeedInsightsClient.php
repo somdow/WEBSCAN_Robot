@@ -38,6 +38,15 @@ class PageSpeedInsightsClient
 	 */
 	public function fetchMetrics(string $targetUrl, string $strategy = "mobile"): array
 	{
+		if (!$this->isConfigured()) {
+			Log::info("PageSpeedInsightsClient: no API key configured — skipping request", array(
+				"url" => $targetUrl,
+				"strategy" => $strategy,
+			));
+
+			return $this->buildErrorResult("No PageSpeed Insights API key configured.");
+		}
+
 		$apiUrl = $this->buildApiUrl($targetUrl, $strategy);
 
 		try {

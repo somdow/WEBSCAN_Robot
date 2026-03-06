@@ -40,22 +40,26 @@ Your job: generate specific, SEO-optimized alt text for each image provided.
 SEO rules (2025/2026 Google guidelines):
 - LENGTH: Keep each alt text between 80 and 125 characters. Most screen readers stop reading after ~125 characters. Too short (<30 chars) is vague; too long is truncated.
 - DESCRIPTION FIRST: Describe what the image actually shows. Google uses alt text + computer vision + page content to understand images. Start with the visual content, then weave in context.
-- KEYWORD INTEGRATION: Naturally incorporate one relevant keyword from the page topic per alt text. Google explicitly warns that keyword-stuffing in alt attributes "results in a negative user experience and may cause your site to be seen as spam."
+- KEYWORD INTEGRATION: If the page context includes "Target Keywords" set by the site owner, you MUST naturally weave at least one of those keywords into each non-decorative alt text. This is a priority — the site owner chose these keywords for SEO. If no target keywords are provided, infer relevant keywords from the page title, headings, and content. Google warns that keyword-stuffing "results in a negative user experience and may cause your site to be seen as spam" — integrate keywords naturally, not forced.
 - DECORATIVE IMAGES: If the image is clearly decorative (spacer, divider, icon, background pattern), suggest empty alt="" per W3C accessibility guidelines. Do NOT describe decorative images.
 - ACCESSIBILITY FRAMEWORK: Think "what information would a visually impaired user miss if they couldn't see this image?" — answer that question first, then add SEO value naturally.
 - GOOGLE IMAGE SEARCH: Alt text is a primary signal for Google Image Search ranking. Well-described images can drive significant traffic from image search.
 - If you can see the image (vision mode), describe what you actually see. If you cannot, infer from the filename, URL path, and page context.
 
-Output format — for EACH image, output exactly:
+Output format — for EACH image, output exactly these two lines with NO markdown, NO bold, NO backticks, NO code formatting:
 IMAGE: [filename]
-ALT: [your suggested alt text]
+ALT: [your suggested alt text as plain readable text]
 
-Then after all images, add a brief 1-2 sentence overall tip about the site's image SEO strategy.
+Separate each image pair with a blank line. After all images, add a brief 1-2 sentence overall tip about the site's image SEO strategy as plain text.
+
+CRITICAL formatting rules:
+- The IMAGE: and ALT: lines MUST be plain text only — never wrap them in bold (**), code backticks (`), or any other formatting.
+- The alt text value must be the actual descriptive text, NOT an HTML attribute like alt="...". Just the text itself.
+- For decorative images, write: ALT: [empty — decorative image, use alt=""]
 
 General rules:
 - Be specific to this website and its industry. Never give generic alt text like "image" or "photo".
 - Write for a marketing manager — knowledgeable but not a developer.
-- You may use markdown formatting (bold, bullet lists, numbered lists) to improve readability.
 PROMPT;
 	}
 

@@ -10,9 +10,10 @@ use App\Services\Analyzers\Concerns\DetectsKeywordPresence;
 use App\Services\Analyzers\Concerns\ExtractsPageContent;
 
 /**
- * Checks target keyword presence across 5 scored page elements:
- * title tag, H1, body (first paragraph), URL, meta description.
- * Uses user-defined keywords or auto-detects from page content.
+ * Checks target keyword presence across 5 page elements:
+ * title tag, H1, body, URL, meta description.
+ * Only runs when the user has set target keywords in project settings.
+ * Info-only module (weight 0) — does not affect the scan score.
  */
 class ContentKeywordsAnalyzer implements AnalyzerInterface
 {
@@ -36,28 +37,20 @@ class ContentKeywordsAnalyzer implements AnalyzerInterface
 
 	public function weight(): int
 	{
-		return (int) config("scanning.weights.contentKeywords", 5);
+		return (int) config("scanning.weights.contentKeywords", 0);
 	}
 
 	public function analyze(ScanContext $scanContext): AnalysisResult
 	{
 		$keyword = $scanContext->targetKeywords[0] ?? null;
-		$keywordSource = "user-defined";
-
-		if ($keyword === null || trim($keyword) === "") {
-			$keyword = $this->autoDetectKeyword($scanContext);
-			$keywordSource = "auto-detected";
-		}
 
 		if ($keyword === null || trim($keyword) === "") {
 			return new AnalysisResult(
 				status: ModuleStatus::Info,
 				findings: array(
-					array("type" => "info", "message" => "No target keyword set and none could be auto-detected from the page content."),
+					array("type" => "info", "message" => "No target keywords set. Add keywords in your project settings to see where they appear across your page."),
 				),
-				recommendations: array(
-					"Set a target keyword in your project settings for keyword presence analysis.",
-				),
+				recommendations: array(),
 			);
 		}
 
@@ -66,16 +59,11 @@ class ContentKeywordsAnalyzer implements AnalyzerInterface
 		$recommendations = array();
 		$presenceCount = 0;
 
-		/** Pre-compute reusable text extractions */
 		$h1Text = $this->extractH1Text($scanContext);
 		$bodyText = $this->extractVisibleBodyText($scanContext->htmlContent);
 		$urlPath = strtolower(parse_url($scanContext->effectiveUrl, PHP_URL_PATH) ?? "");
 
-		if ($keywordSource === "user-defined") {
-			$findings[] = array("type" => "info", "message" => "Analyzing target keyword: \"{$keyword}\".");
-		} else {
-			$findings[] = array("type" => "info", "message" => "Auto-detected keyword: \"{$keyword}\". Set a target keyword in project settings for more accurate results.");
-		}
+		$findings[] = array("type" => "info", "message" => "Analyzing target keyword: \"{$keyword}\".");
 
 		/** Scored check 1: Title tag */
 		$inTitle = $this->textContainsKeyword($scanContext->titleContent, $keyword);

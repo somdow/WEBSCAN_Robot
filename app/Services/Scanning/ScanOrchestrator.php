@@ -1222,14 +1222,20 @@ class ScanOrchestrator
 	 */
 	private function captureHomepageScreenshot(Scan $scan, string $url, ?string $screenshotBase64): void
 	{
+		$screenshotSource = "pagespeed";
+
 		if ($screenshotBase64 === null && $this->zyteFetcher->isAvailable()) {
 			Log::debug("ScanOrchestrator PageSpeed screenshot unavailable, trying Zyte fallback", array(
 				"scan_id" => $scan->id,
 			));
 			$screenshotBase64 = $this->zyteFetcher->fetchScreenshot($url);
+			$screenshotSource = "zyte";
 		}
 
 		if ($screenshotBase64 === null) {
+			Log::info("ScanOrchestrator no screenshot captured — no source available", array(
+				"scan_id" => $scan->id,
+			));
 			return;
 		}
 
@@ -1247,6 +1253,7 @@ class ScanOrchestrator
 
 			Log::debug("ScanOrchestrator homepage screenshot saved", array(
 				"scan_id" => $scan->id,
+				"source" => $screenshotSource,
 				"path" => $relativePath,
 				"size_bytes" => strlen($imageData),
 			));

@@ -10,11 +10,18 @@ class ScoreCalculator
 {
 	/**
 	 * Status-to-multiplier mapping for score calculation.
-	 * ok = full points, warning = half, bad = zero, info = excluded
+	 *
+	 * ok = full points, warning = quarter credit, bad = zero, info = excluded.
+	 *
+	 * Warning at 0.25 is calibrated against industry tools (Feb 2026):
+	 * Ahrefs gives warnings 0.0, Sitechecker caps them at 40% of a smaller
+	 * deduction budget, SEMrush weights errors "significantly" more than warnings.
+	 * At 0.25, a mediocre site scores ~55 (vs WooRank avg 54.7 for eCommerce).
+	 * See documentation/scoring-research.md for full methodology and sources.
 	 */
 	private const STATUS_MULTIPLIERS = array(
 		"ok" => 1.0,
-		"warning" => 0.5,
+		"warning" => 0.25,
 		"bad" => 0.0,
 	);
 

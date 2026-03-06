@@ -421,6 +421,11 @@ PROMPT;
 			return $this->assembleSocialTagsResponse($suggestion, $pageType);
 		}
 
+		/* imageAnalysis: keep raw text so the Alpine parser can extract IMAGE:/ALT: pairs */
+		if ($moduleKey === "imageAnalysis") {
+			return $suggestion;
+		}
+
 		/* Default: convert everything to HTML, prepend PAGE_TYPE */
 		$htmlContent = MarkdownService::toHtml($suggestion);
 

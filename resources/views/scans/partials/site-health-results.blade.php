@@ -91,7 +91,7 @@
 						</div>
 						<div class="space-y-3">
 							@foreach($moduleResults as $moduleResult)
-								<x-scan.module-card :moduleResult="$moduleResult" :moduleLabels="$moduleLabels":hasApiKey="$hasApiKey" :scan="$scan" />
+								<x-scan.module-card :moduleResult="$moduleResult" :moduleLabels="$moduleLabels" :hasApiKey="$hasApiKey" :scan="$scan" />
 							@endforeach
 						</div>
 					</div>

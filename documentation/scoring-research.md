@@ -232,59 +232,113 @@ Research conducted across SEMrush, Ahrefs, Screaming Frog, Google Lighthouse, Wo
 
 ---
 
-## Current vs Proposed Weights
+## Industry Tool Scoring Approaches (Mar 2026 Deep Research)
 
-| Module | Current | Proposed | Evidence |
-|--------|---------|----------|----------|
-| `titleTag` | 12 | **15** | ERROR in SEMrush + Ahrefs + SF HIGH — universally critical |
-| `contentKeywords` | 10 | **12** | Our differentiator; relevance is Google's #1 ranking factor |
-| `h1Tag` | 9 | **10** | WARNING in SEMrush/Ahrefs, MEDIUM in SF — important but not critical |
-| `metaDescription` | 5 | **8** | Ahrefs=ERROR, SEMrush=WARNING, SF=LOW — split signals, affects CTR |
-| `contentReadability` | 8 | **9** | SEMrush WARNING; content quality = 23% of algo (First Page Sage) |
-| `contentDuplicate` | 7 | **8** | SEMrush=ERROR for duplicates — indexation confusion |
-| `canonicalTag` | 8 | **8** | ERROR in SEMrush/Ahrefs — keep as-is |
-| `redirectChain` | 8 | **7** | ERROR everywhere — slight reduction, still high |
-| `sitemapAnalysis` | 5 | **6** | SEMrush=ERROR for sitemap issues — active SEO effort |
-| `schemaOrg` | 3 | **5** | SEMrush=ERROR, SF=HIGH — currently underweighted |
-| `imageAnalysis` | 6 | **6** | WARNING across tools — keep as-is |
-| `linkAnalysis` | 6 | **7** | Internal linking is Tier 2-3 industry consensus |
-| `h2h6Tags` | 4 | **5** | Content structure signal, heading hierarchy |
-| `urlStructure` | 4 | **5** | SF=MEDIUM, clean URLs matter for crawlability |
-| `performanceHints` | 8 | **6** | CWV is a "tiebreaker" per Google, not primary factor |
-| `eatTrustPages` | 7 | **8** | Real effort signal, E-E-A-T for YMYL |
-| `noindexCheck` | 12 | **4** | WARNING in SEMrush + Ahrefs — not having noindex is baseline |
-| `blacklistCheck` | 10 | **3** | Not checked by any major tool — not being malware is baseline |
-| `viewportTag` | 8 | **5** | SEMrush=ERROR but every modern template has this |
-| `robotsMeta` | 7 | **3** | WARNING — not blocking crawlers is default state |
-| `htmlLang` | 4 | **2** | Basic HTML attribute, rarely missing |
-| `doctypeCharset` | 3 | **2** | HTML5 boilerplate, nearly universal |
-| `httpHeaders` | 5 | **5** | No change |
-| `robotsTxt` | 6 | **5** | Slight reduction |
-| `eatAuthor` | 7 | **7** | No change |
-| `eatBusinessSchema` | 5 | **5** | No change |
-| `eatPrivacyTerms` | 4 | **4** | No change |
-| `breadcrumbs` | 3 | **3** | No change |
-| `semanticHtml` | 3 | **3** | No change |
-| `hreflang` | 3 | **3** | No change |
-| `wpPlugins` | 7 | **7** | No change |
-| `wpTheme` | 5 | **5** | No change |
+### Scoring Formula Comparison
 
-### Score Impact
+| Tool | Approach | Mediocre Score |
+|------|----------|---------------|
+| WooRank | Proprietary additive, ~70 data points, 3 pillars | 40-65 (eCommerce avg: 54.7) |
+| SEMrush | Weighted ratio, errors >> warnings, notices=0 | ~70-80 |
+| Ahrefs | Binary: URLs without errors / total × 100 | 50-70 |
+| Sitechecker | Deduction: start 100, subtract (60pt critical / 40pt warning budget) | 30-59 |
+| Seobility | Deduction: start 100, subtract per issue, 200+ signals | 50-65 |
+| Ubersuggest | Proprietary, critical >> warning >> recommendation | 55-70 |
+| SE Ranking | Category weight × severity × page coverage | 60-79 |
+| Raven Tools | Proprietary 0-100, severity-ordered | 40-60 |
+| Lighthouse SEO | Equal-weight binary, ~14 audits (~7% each) | ~85 |
+| Moz | No composite score — issue triage only | N/A |
 
-**Old total weight:** 159 (non-WP)
-**New total weight:** ~175 (non-WP)
+### Warning/Error Treatment
 
-**"Free points" (pass by default):**
-- Old: ~60 points (37.7% of total) — terrible sites score 60-75
-- New: ~28 points (16% of total) — terrible sites score ~30-35
+| Tool | Errors | Warnings | Notices |
+|------|--------|----------|---------|
+| Sitechecker | Share 60-point budget | Share 40-point budget | Zero |
+| SEMrush | Heavy (undisclosed multiplier) | Medium | Zero |
+| Ahrefs | Only thing counted | **Zero** | Zero |
+| SE Ranking | Highest multiplier | Medium | Lowest |
+| Ubersuggest | Critical — outsized impact | "Won't make or break" | Zero |
 
-**Score distribution shift:**
-| Site Quality | Old Score | New Score |
-|-------------|----------|-----------|
-| Terrible (no H1, no meta, weak title) | 60-75 | ~30-35 |
-| Mediocre (basics exist, not optimized) | 75-85 | ~50-55 |
-| Good (optimized but gaps remain) | 85-90 | ~70-83 |
-| Excellent (fully optimized) | 95-100 | ~88-97 |
+### Key Benchmarks (WooRank Index)
+
+- All eCommerce websites: **54.7**
+- Shopify websites (global): **66.0**
+- Managed SMB sites (Pronto): **61.3**
+- Small business best: **low 70s** (none over 75)
+- Score bands: 0-40 (poor), 41-69 (improve), 70-100 (good)
+
+---
+
+## Recalibration (Mar 2026)
+
+### Two-Lever Fix
+
+**Lever 1: Warning multiplier 0.50 → 0.25**
+Industry evidence: Ahrefs gives warnings 0.0, Sitechecker caps at 40% of smaller budget,
+SEMrush weights errors "significantly" more. Our old 0.5 was the most generous in the industry.
+
+**Lever 2: Slash easy-pass module weights**
+Modules where default state = pass (redirectChain, httpsRedirect, viewportTag, etc.)
+had inflated weights from Round 2 redistribution. Reduced to reflect low differentiation value.
+
+### Final Weights (active in config/scanning.php)
+
+| Module | Weight | Rationale |
+|--------|--------|-----------|
+| titleTag | 15 | #1 on-page signal, 68% have issues |
+| h1Tag | 12 | 59% missing per Ahrefs |
+| contentReadability | 12 | Content quality differentiator |
+| metaDescription | 10 | 72% missing per Ahrefs |
+| contentDuplicate | 8 | Only 5% true duplicates — most pass |
+| canonicalTag | 8 | ERROR-level but CMSes auto-add |
+| redirectChain | 5 | Default state = no chains |
+| httpsRedirect | 5 | Default in 2026 |
+| sitemapAnalysis | 6 | CMSes auto-generate |
+| duplicateUrl | 4 | Default state fine |
+| httpHeaders | 3 | Basic HTTPS default |
+| robotsTxt | 4 | Most have basic one |
+| urlStructure | 5 | Requires intentional effort |
+| eatTrustPages | 4 | Indirect trust signal |
+| eatAuthor | 3 | YMYL-dependent |
+| eatBusinessSchema | 3 | Not required |
+| eatPrivacyTerms | 2 | Indirect only |
+| breadcrumbs | 2 | Not for all site types |
+| linkAnalysis | 7 | Google-confirmed signal |
+| brokenLinks | 8 | ERROR across tools |
+| imageAnalysis | 8 | 80% fail (Ahrefs) |
+| coreWebVitalsMobile | 6 | Google tiebreaker |
+| coreWebVitalsDesktop | 5 | Complements mobile |
+| performanceHints | 6 | Tiebreaker, not primary |
+| h2h6Tags | 5 | Most CMS sites have headings |
+| schemaOrg | 5 | Enables rich results |
+| schemaValidation | 5 | Google rich result reqs |
+| viewportTag | 3 | Every template has this |
+| compressionCheck | 4 | Server optimization |
+| accessibilityCheck | 3 | Form labels, ARIA |
+| semanticHtml | 3 | Landmarks |
+| hreflang | 3 | International only |
+| sslCertificate | 4 | Most sites valid; score_cap if broken |
+| securityHeaders | 4 | Many sites fail |
+| mixedContent | 4 | Most modern sites pass |
+| exposedSensitiveFiles | 5 | Compromise risk |
+| noindexCheck | 3 | Baseline expectation |
+| blacklistCheck | 2 | Not being malware = baseline |
+| robotsMeta | 2 | Default state |
+| htmlLang | 2 | Rarely missing |
+| doctypeCharset | 2 | Nearly universal |
+| wpPlugins | 7 | Security liability |
+| wpTheme | 5 | Security advisories |
+
+### Modeled Score Distribution
+
+| Site Quality | Score |
+|-------------|-------|
+| Terrible (broken basics) | ~34% |
+| Mediocre (basics exist, not optimized) | ~55% |
+| Good (optimized, some gaps) | ~70% |
+| Excellent (fully optimized, few warnings) | ~90% |
+
+Target alignment: WooRank mediocre ~55 ✓, Raven mediocre ~50 ✓, Seobility mediocre ~57 ✓
 
 ---
 
@@ -320,9 +374,31 @@ Research conducted across SEMrush, Ahrefs, Screaming Frog, Google Lighthouse, Wo
 - https://moz.com/site-crawl
 - https://marketingtoolpro.com/2025/07/moz-site-crawl-review/
 
+### Sitechecker
+- https://help.sitechecker.pro/article/81-how-is-website-score-calculated
+- https://help.sitechecker.pro/article/18-how-is-page-score-calculated
+
+### Seobility
+- https://www.seobility.net/en/seocheck/
+- https://www.seobility.net/en/blog/how-to-do-an-seo-audit/
+
+### Ubersuggest
+- https://ubersuggest.zendesk.com/hc/en-us/articles/4405452089115
+- https://ubersuggest.zendesk.com/hc/en-us/articles/4405452107803
+
+### SE Ranking
+- https://seranking.com/blog/new-website-audit/
+- https://help.seranking.com/hc/en-us/articles/16332611958044
+
+### Raven Tools
+- https://raventools.com/site-auditor/
+- https://raven.zendesk.com/hc/en-us/articles/202346870
+
 ### Industry Studies
 - https://seranking.com/blog/seo-issues/ (418K domain audit study)
 - Google API leak (14,000+ ranking attributes, 2024)
 - First Page Sage 15-year algorithm study
 - Semrush 2024 correlation study (300K SERPs)
 - Backlinko 11.8M results study
+- WooRank Index: https://index.woorank.com/en/reviews (live score averages)
+- Pronto Marketing SMB study: https://www.prontomarketing.com/blog/how-does-your-site-score/

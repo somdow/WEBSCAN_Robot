@@ -11,11 +11,11 @@ class ExecutiveSummaryPrompt implements AiPromptInterface
 
 	/**
 	 * Status-to-multiplier mapping, mirroring ScoreCalculator logic.
-	 * ok = full credit, warning = half, bad = zero, info = excluded.
+	 * ok = full credit, warning = quarter credit, bad = zero, info = excluded.
 	 */
 	private const STATUS_MULTIPLIERS = array(
 		"ok" => 1.0,
-		"warning" => 0.5,
+		"warning" => 0.25,
 		"bad" => 0.0,
 	);
 
