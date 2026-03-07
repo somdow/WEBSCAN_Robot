@@ -17,24 +17,6 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
 	use HasApiTokens, HasFactory, Notifiable;
 
-	/**
-	 * Guard against duplicate verification emails.
-	 * Laravel 12 registers the SendEmailVerificationNotification listener
-	 * multiple times due to auto-discovery + explicit registration + configureEmailVerification().
-	 */
-	private bool $verificationEmailSent = false;
-
-	public function sendEmailVerificationNotification(): void
-	{
-		if ($this->verificationEmailSent) {
-			return;
-		}
-
-		$this->verificationEmailSent = true;
-
-		parent::sendEmailVerificationNotification();
-	}
-
 	protected $fillable = array(
 		"name",
 		"email",

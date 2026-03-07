@@ -4,36 +4,41 @@ namespace App\Providers;
 
 use App\Listeners\CreateOrganizationForNewUser;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {
 	/**
-	 * Explicit listener registration — single source of truth.
+	 * Explicit listener registration.
+	 *
+	 * SendEmailVerificationNotification is NOT listed here — the framework's
+	 * base EventServiceProvider (auto-registered by Application::configure())
+	 * adds it via configureEmailVerification(). Listing it here would cause a
+	 * duplicate because both this subclass and the base instance boot independently.
 	 */
 	protected $listen = array(
 		Registered::class => array(
-			SendEmailVerificationNotification::class,
 			CreateOrganizationForNewUser::class,
 		),
 	);
 
 	/**
-	 * Override: prevent the base class from adding a duplicate
-	 * SendEmailVerificationNotification listener (it's already in $listen).
+	 * Disable auto-discovery so listeners are only registered via $listen above.
+	 * Laravel 12 discovers listeners in app/Listeners by convention, which causes
+	 * duplicates when the same listener is also in the explicit $listen array.
 	 */
-	protected function configureEmailVerification(): void
+	public function shouldDiscoverEvents(): bool
 	{
-		// Already registered above — do not add again.
+		return false;
 	}
 
 	/**
-	 * Override: prevent auto-discovery from finding listeners in app/Listeners
-	 * and double-registering them alongside the explicit $listen array.
+	 * Prevent this subclass from adding SendEmailVerificationNotification again.
+	 * The framework's base EventServiceProvider instance already adds it via
+	 * its own configureEmailVerification() during boot.
 	 */
-	protected function discoveredEvents(): array
+	protected function configureEmailVerification(): void
 	{
-		return array();
+		// Intentionally empty — base class instance handles this.
 	}
 }
