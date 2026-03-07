@@ -7,6 +7,7 @@ use App\Http\Requests\CreateCheckoutRequest;
 use App\Models\Organization;
 use App\Services\BillingService;
 use App\Services\OrganizationProvisioningService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -65,28 +66,31 @@ class BillingController extends Controller
 	}
 
 	/**
-	 * Create a Stripe Checkout session and redirect to Stripe.
+	 * Create a Stripe Embedded Checkout session and return the client secret.
+	 * The frontend uses this to mount the Stripe checkout iframe in a modal.
 	 */
-	public function checkout(CreateCheckoutRequest $request): RedirectResponse
+	public function checkout(CreateCheckoutRequest $request): JsonResponse
 	{
 		$this->authorizeOwner($request);
 
-		if ($redirect = $this->ensureStripeConfigured()) {
-			return $redirect;
+		if (!$this->billingService->isStripeConfigured()) {
+			return response()->json(array(
+				"error" => "Stripe is not configured yet. Please contact support.",
+			), 503);
 		}
 
 		$plan = \App\Models\Plan::findOrFail($request->validated("plan_id"));
 		$organization = $request->user()->currentOrganization();
 
 		try {
-			$checkoutUrl = $this->billingService->createCheckoutSession(
+			$clientSecret = $this->billingService->createCheckoutSession(
 				$organization,
 				$plan,
 				$request->validated("billing_cycle"),
 				$request->validated("coupon_code"),
 			);
 
-			return redirect($checkoutUrl);
+			return response()->json(array("clientSecret" => $clientSecret));
 		} catch (\Exception $exception) {
 			Log::error("Checkout session creation failed", array(
 				"organization_id" => $organization->id,
@@ -94,8 +98,9 @@ class BillingController extends Controller
 				"error" => $exception->getMessage(),
 			));
 
-			return redirect()->route("billing.index")
-				->with("error", "Unable to start checkout. Please try again or contact support.");
+			return response()->json(array(
+				"error" => "Unable to start checkout. Please try again or contact support.",
+			), 500);
 		}
 	}
 

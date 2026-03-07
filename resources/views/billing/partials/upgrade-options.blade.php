@@ -71,14 +71,14 @@
 							</x-primary-button>
 						</form>
 					@else
-						<form method="POST" action="{{ route("billing.checkout") }}" class="mt-5">
-							@csrf
-							<input type="hidden" name="plan_id" value="{{ $availablePlan->id }}">
-							<input type="hidden" name="billing_cycle" x-bind:value="billingCycle">
-							<x-primary-button type="submit" class="w-full justify-center">
+						<div class="mt-5">
+							<x-primary-button
+								@click="$dispatch('open-stripe-checkout', { planId: {{ $availablePlan->id }}, billingCycle: billingCycle })"
+								class="w-full justify-center"
+							>
 								Subscribe
 							</x-primary-button>
-						</form>
+						</div>
 					@endif
 				@endif
 			</div>

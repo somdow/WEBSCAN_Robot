@@ -110,14 +110,12 @@
 								Get Started
 							</a>
 						@elseif(auth()->check())
-							<form method="POST" action="{{ route("billing.checkout") }}">
-								@csrf
-								<input type="hidden" name="plan_id" value="{{ $planItem->id }}">
-								<input type="hidden" name="billing_cycle" x-bind:value="billingCycle">
-								<button type="submit" class="w-full cursor-pointer rounded-md {{ $isHighlighted ? 'bg-accent text-white hover:bg-accent-hover' : 'bg-text-primary text-white hover:bg-gray-800' }} py-2.5 text-sm font-semibold shadow-sm transition">
-									Start {{ $trialDays }}-Day Trial
-								</button>
-							</form>
+							<button
+								@click="$dispatch('open-stripe-checkout', { planId: {{ $planItem->id }}, billingCycle: billingCycle })"
+								class="w-full cursor-pointer rounded-md {{ $isHighlighted ? 'bg-accent text-white hover:bg-accent-hover' : 'bg-text-primary text-white hover:bg-gray-800' }} py-2.5 text-sm font-semibold shadow-sm transition"
+							>
+								Start {{ $trialDays }}-Day Trial
+							</button>
 						@else
 							<a href="{{ \App\Models\Setting::getValue("registration_enabled", "0") === "1" ? route("register") : route("login") }}" class="block w-full rounded-md {{ $isHighlighted ? 'bg-accent text-white hover:bg-accent-hover' : 'bg-text-primary text-white hover:bg-gray-800' }} py-2.5 text-center text-sm font-semibold shadow-sm transition">
 								Start {{ $trialDays }}-Day Trial

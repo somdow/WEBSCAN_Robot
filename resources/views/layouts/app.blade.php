@@ -8,6 +8,9 @@
 		<title>{{ config("app.name", "HELLO WEB_SCANS") }}</title>
 
 		@vite(["resources/css/app.css", "resources/js/app.js"])
+		@auth
+			<script src="https://js.stripe.com/v3/" defer></script>
+		@endauth
 	</head>
 	<body class="font-sans antialiased" x-data="{ sidebarOpen: false }">
 		<div class="min-h-screen bg-background">
@@ -77,5 +80,6 @@
 			</div>
 		</div>
 		<x-toast-container />
+		<x-stripe-checkout-modal />
 	</body>
 </html>

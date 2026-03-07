@@ -21,7 +21,9 @@ class BillingService
 	}
 
 	/**
-	 * Create a Stripe Checkout session and return the redirect URL.
+	 * Create a Stripe Embedded Checkout session and return the client secret.
+	 * Uses Stripe's embedded UI mode so checkout renders in an iframe modal
+	 * instead of redirecting to stripe.com.
 	 *
 	 * @throws \RuntimeException When Stripe is not configured
 	 */
@@ -47,11 +49,11 @@ class BillingService
 		}
 
 		$checkout = $checkoutBuilder->checkout(array(
-			"success_url" => route("billing.success") . "?session_id={CHECKOUT_SESSION_ID}",
-			"cancel_url" => route("billing.index"),
+			"ui_mode" => "embedded",
+			"return_url" => route("billing.success") . "?session_id={CHECKOUT_SESSION_ID}",
 		));
 
-		return $checkout->url;
+		return $checkout->asStripeCheckoutSession()->client_secret;
 	}
 
 	/**

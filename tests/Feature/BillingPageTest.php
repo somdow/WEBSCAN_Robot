@@ -123,13 +123,13 @@ class BillingPageTest extends TestCase
 	{
 		$proPlan = Plan::where("slug", "pro")->first();
 
-		$response = $this->actingAs($this->ownerUser)->post("/billing/checkout", array(
+		$response = $this->actingAs($this->ownerUser)->postJson("/billing/checkout", array(
 			"plan_id" => $proPlan->id,
 			"billing_cycle" => "monthly",
 		));
 
-		$response->assertRedirect(route("billing.index"));
-		$response->assertSessionHas("error", "Stripe is not configured yet. Please add your Stripe API keys to the .env file.");
+		$response->assertStatus(503);
+		$response->assertJson(array("error" => "Stripe is not configured yet. Please contact support."));
 	}
 
 	public function test_checkout_validates_required_fields(): void
