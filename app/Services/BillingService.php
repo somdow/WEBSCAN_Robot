@@ -131,6 +131,67 @@ class BillingService
 	}
 
 	/**
+	 * Sync the organization's plan from a completed Stripe Checkout session.
+	 * Called on the success page to provide immediate plan activation
+	 * without waiting for webhooks (critical for localhost/dev environments).
+	 */
+	public function syncPlanFromCheckoutSession(Organization $organization, string $sessionId): void
+	{
+		try {
+			$stripe = new \Stripe\StripeClient(config("cashier.secret"));
+			$session = $stripe->checkout->sessions->retrieve($sessionId);
+
+			if ($session->payment_status !== "paid" && $session->payment_status !== "no_payment_required") {
+				Log::warning("Checkout session not paid", array(
+					"session_id" => $sessionId,
+					"payment_status" => $session->payment_status,
+				));
+				return;
+			}
+
+			$subscriptionId = $session->subscription;
+
+			if ($subscriptionId === null) {
+				Log::warning("Checkout session has no subscription", array(
+					"session_id" => $sessionId,
+				));
+				return;
+			}
+
+			$stripeSubscription = $stripe->subscriptions->retrieve($subscriptionId);
+			$stripePrice = $stripeSubscription->items->data[0]->price->id ?? null;
+
+			if ($stripePrice === null) {
+				return;
+			}
+
+			$matchedPlan = Plan::where("stripe_monthly_price_id", $stripePrice)
+				->orWhere("stripe_annual_price_id", $stripePrice)
+				->first();
+
+			if ($matchedPlan !== null) {
+				$organization->update(array("plan_id" => $matchedPlan->id));
+
+				Log::info("Plan synced from checkout session", array(
+					"organization_id" => $organization->id,
+					"plan" => $matchedPlan->name,
+					"session_id" => $sessionId,
+				));
+			} else {
+				Log::warning("Could not match Stripe price to local plan", array(
+					"stripe_price" => $stripePrice,
+					"session_id" => $sessionId,
+				));
+			}
+		} catch (\Exception $exception) {
+			Log::error("Failed to sync plan from checkout session", array(
+				"session_id" => $sessionId,
+				"error" => $exception->getMessage(),
+			));
+		}
+	}
+
+	/**
 	 * Downgrade the organization to the Free plan.
 	 */
 	public function downgradeToFree(Organization $organization): void

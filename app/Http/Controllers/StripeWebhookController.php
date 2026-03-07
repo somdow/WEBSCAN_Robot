@@ -55,6 +55,29 @@ class StripeWebhookController extends WebhookController
 	}
 
 	/**
+	 * Handle checkout.session.completed — sync plan on initial subscription creation.
+	 * This is the primary webhook for new subscriptions (complements the success page sync).
+	 */
+	protected function handleCheckoutSessionCompleted(array $payload): Response
+	{
+		$stripeId = $payload["data"]["object"]["customer"] ?? null;
+
+		if ($stripeId !== null) {
+			$organization = Organization::where("stripe_id", $stripeId)->first();
+
+			if ($organization !== null) {
+				app(BillingService::class)->syncPlanFromStripe($organization);
+
+				Log::info("Plan synced via checkout.session.completed webhook", array(
+					"organization_id" => $organization->id,
+				));
+			}
+		}
+
+		return $this->successMethod();
+	}
+
+	/**
 	 * Handle payment failure events — log for now, notifications deferred to Sprint 8.
 	 */
 	protected function handleInvoicePaymentFailed(array $payload): Response

@@ -106,12 +106,21 @@ class BillingController extends Controller
 
 	/**
 	 * Display the post-checkout success page.
+	 * Uses the session_id from Stripe's return URL to sync the plan immediately,
+	 * so the user sees their new plan without waiting for webhooks.
 	 */
 	public function success(Request $request): View|RedirectResponse
 	{
 		$organization = $this->resolveOrganization($request);
 		if ($organization instanceof RedirectResponse) {
 			return $organization;
+		}
+
+		$sessionId = $request->query("session_id");
+
+		if ($sessionId !== null && $this->billingService->isStripeConfigured()) {
+			$this->billingService->syncPlanFromCheckoutSession($organization, $sessionId);
+			$organization->refresh();
 		}
 
 		$plan = $organization->plan;
