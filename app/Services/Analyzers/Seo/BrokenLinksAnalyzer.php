@@ -312,9 +312,9 @@ class BrokenLinksAnalyzer implements AnalyzerInterface
 
 		/* Structured data for potential UI rendering */
 		$allIssues = array_merge(
-			array_map(fn($link) => array("url" => $link["url"], "statusCode" => $link["statusCode"], "reason" => $link["reason"], "severity" => "broken"), $probeResults["broken"]),
-			array_map(fn($link) => array("url" => $link["url"], "statusCode" => $link["statusCode"], "reason" => $link["reason"], "severity" => "serverError"), $probeResults["serverErrors"]),
-			array_map(fn($link) => array("url" => $link["url"], "statusCode" => null, "reason" => $link["reason"], "severity" => "unreachable"), $probeResults["unreachable"]),
+			array_map(fn($probedLink) => array("url" => $probedLink["url"], "statusCode" => $probedLink["statusCode"], "reason" => $probedLink["reason"], "severity" => "broken"), $probeResults["broken"]),
+			array_map(fn($probedLink) => array("url" => $probedLink["url"], "statusCode" => $probedLink["statusCode"], "reason" => $probedLink["reason"], "severity" => "serverError"), $probeResults["serverErrors"]),
+			array_map(fn($probedLink) => array("url" => $probedLink["url"], "statusCode" => null, "reason" => $probedLink["reason"], "severity" => "unreachable"), $probeResults["unreachable"]),
 		);
 
 		if (!empty($allIssues)) {

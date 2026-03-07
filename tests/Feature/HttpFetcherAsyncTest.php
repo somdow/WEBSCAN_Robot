@@ -1,14 +1,20 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
 use App\DataTransferObjects\FetchResult;
 use App\Services\Scanning\HttpFetcher;
+use PHPUnit\Framework\Attributes\Group;
 use Tests\TestCase;
 
+/**
+ * Integration tests for HttpFetcher::fetchResourcesConcurrent().
+ * These make live network calls and require outbound internet access.
+ */
+#[Group("network")]
 class HttpFetcherAsyncTest extends TestCase
 {
-	public function test_fetch_resources_concurrent_returns_keyed_results(): void
+	public function test_concurrent_fetch_returns_keyed_results(): void
 	{
 		$fetcher = app(HttpFetcher::class);
 
@@ -22,7 +28,7 @@ class HttpFetcherAsyncTest extends TestCase
 		$this->assertInstanceOf(FetchResult::class, $results["google"]);
 	}
 
-	public function test_fetch_resources_concurrent_handles_empty_array(): void
+	public function test_concurrent_fetch_handles_empty_array(): void
 	{
 		$fetcher = app(HttpFetcher::class);
 
@@ -53,7 +59,7 @@ class HttpFetcherAsyncTest extends TestCase
 		$this->assertNotNull($results["invalid"]->errorMessage);
 	}
 
-	public function test_concurrent_fetch_respects_concurrency_limit(): void
+	public function test_concurrent_fetch_returns_all_results_with_concurrency_cap(): void
 	{
 		$fetcher = app(HttpFetcher::class);
 

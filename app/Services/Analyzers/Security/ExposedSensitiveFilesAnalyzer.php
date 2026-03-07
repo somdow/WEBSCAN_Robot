@@ -221,7 +221,7 @@ class ExposedSensitiveFilesAnalyzer implements AnalyzerInterface
 		}
 
 		$recommendations = array();
-		$hasCritical = collect($exposedFiles)->contains(fn($fileSpec) => $fileSpec["severity"] === "critical");
+		$hasCritical = collect($exposedFiles)->contains(fn($exposedFile) => $exposedFile["severity"] === "critical");
 
 		if ($hasCritical) {
 			$recommendations[] = "URGENT: Critical files containing credentials or secrets are publicly accessible. Immediately restrict access to these files via your web server configuration, then rotate any exposed credentials (database passwords, API keys, etc.).";
@@ -232,5 +232,4 @@ class ExposedSensitiveFilesAnalyzer implements AnalyzerInterface
 
 		return $recommendations;
 	}
-
 }

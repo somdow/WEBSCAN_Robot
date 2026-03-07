@@ -76,13 +76,17 @@ class AppServiceProvider extends ServiceProvider
 {
 	public function register(): void
 	{
+		$this->app->singleton(PageSpeedInsightsClient::class, function ($app) {
+			return new PageSpeedInsightsClient($app->make(HttpFetcher::class));
+		});
+
 		$this->app->singleton(ModuleRegistry::class, function ($app) {
 			$registry = new ModuleRegistry();
 			$httpFetcher = $app->make(HttpFetcher::class);
 			$wpApiClient = $app->make(WordPressApiClient::class);
 			$whatCmsClient = $app->make(WhatCmsClient::class);
 			$webRiskClient = $app->make(WebRiskClient::class);
-			$pageSpeedClient = new PageSpeedInsightsClient($httpFetcher);
+			$pageSpeedClient = $app->make(PageSpeedInsightsClient::class);
 
 			$analyzers = $this->buildAnalyzerList($httpFetcher, $wpApiClient, $whatCmsClient, $webRiskClient, $pageSpeedClient);
 

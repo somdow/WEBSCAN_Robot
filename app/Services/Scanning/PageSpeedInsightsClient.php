@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 class PageSpeedInsightsClient
 {
 	private const API_ENDPOINT = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed";
-	private const SETTINGS_KEY = "google_web_risk_api_key";
+	private const SETTINGS_KEY = GoogleApiSettings::SHARED_API_KEY;
 	private const TIMEOUT_SECONDS = 25;
 
 	/** Pre-fetched API results keyed by "url|strategy". */
@@ -43,6 +43,8 @@ class PageSpeedInsightsClient
 	 */
 	public function prefetchStrategies(string $targetUrl, array $strategies): void
 	{
+		$this->prefetchedResults = array();
+
 		if (!$this->isConfigured() || empty($strategies)) {
 			return;
 		}

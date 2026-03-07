@@ -23,7 +23,7 @@ class WebRiskClient
 	private const SAFE_BROWSING_ENDPOINT = "https://safebrowsing.googleapis.com/v4/threatMatches:find";
 	private const WEB_RISK_ENDPOINT = "https://webrisk.googleapis.com/v1/uris:search";
 
-	private const API_KEY_SETTING = "google_web_risk_api_key";
+	private const API_KEY_SETTING = GoogleApiSettings::SHARED_API_KEY;
 	private const COMMERCIAL_MODE_SETTING = "google_threat_commercial_mode";
 	private const TIMEOUT_SECONDS = 10;
 
