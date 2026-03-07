@@ -153,7 +153,7 @@
 				@click="scoreTab = 'seo'; statusFilter = ''; $dispatch('score-tab-changed', { slide: 1 })"
 				:class="scoreTab === 'seo' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 				class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
-			>SEO &amp; Content <span x-show="liveSeoScore !== null" class="ml-0.5 text-[10px] opacity-75">&middot; <span x-text="liveSeoScore"></span></span></button>
+			>SEO Analysis <span x-show="liveSeoScore !== null" class="ml-0.5 text-[10px] opacity-75">&middot; <span x-text="liveSeoScore"></span></span></button>
 			<button
 				@click="scoreTab = 'technical'; statusFilter = ''; $dispatch('score-tab-changed', { slide: 2 })"
 				:class="scoreTab === 'technical' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
@@ -215,7 +215,7 @@
 			@endif
 		</div>
 
-		{{-- Tab: SEO & Content --}}
+		{{-- Tab: SEO Analysis --}}
 		<div x-show="scoreTab === 'seo'" x-cloak>
 			@include("scans.partials.seo-content-results", array(
 				"scan" => $scan,

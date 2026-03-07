@@ -1,4 +1,4 @@
-{{-- SEO & Content tab — filtered to SEO/content/trust categories only --}}
+{{-- SEO Analysis tab — filtered to SEO/content/trust categories only --}}
 {{-- Expects parent x-data scope with: seoSection --}}
 {{-- Expects variables: $scan, $scanViewData, $hasApiKey --}}
 
@@ -27,7 +27,7 @@
 
 @if($seoGrouped->isEmpty())
 	<div class="rounded-lg border border-border bg-surface px-6 py-12 text-center shadow-card">
-		<p class="text-sm text-text-secondary">No SEO & content modules found for this scan.</p>
+		<p class="text-sm text-text-secondary">No SEO analysis modules found for this scan.</p>
 	</div>
 @else
 	<div x-init="if (!seoSection) seoSection = '{{ $defaultSeoSection }}'">
