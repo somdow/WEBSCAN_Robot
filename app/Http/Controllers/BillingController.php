@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChangePlanRequest;
 use App\Http\Requests\CreateCheckoutRequest;
 use App\Models\Organization;
+use App\Models\Plan;
 use App\Services\BillingService;
 use App\Services\OrganizationProvisioningService;
 use Illuminate\Http\JsonResponse;
@@ -36,7 +37,7 @@ class BillingController extends Controller
 
 		$usage = $this->billingService->resolveCurrentUsage($organization);
 
-		$availablePlans = \App\Models\Plan::public()
+		$availablePlans = Plan::public()
 			->ordered()
 			->where("id", "!=", $plan?->id)
 			->get();
@@ -79,7 +80,7 @@ class BillingController extends Controller
 			), 503);
 		}
 
-		$plan = \App\Models\Plan::findOrFail($request->validated("plan_id"));
+		$plan = Plan::findOrFail($request->validated("plan_id"));
 		$organization = $request->user()->currentOrganization();
 
 		try {
@@ -132,6 +133,44 @@ class BillingController extends Controller
 	}
 
 	/**
+	 * Preview the proration amount for a plan change.
+	 * Returns the amount due (or credit) so the confirmation modal can show real numbers.
+	 */
+	public function previewProration(ChangePlanRequest $request): JsonResponse
+	{
+		$this->authorizeOwner($request);
+
+		if (!$this->billingService->isStripeConfigured()) {
+			return response()->json(array("error" => "Stripe is not configured."), 503);
+		}
+
+		$targetPlan = Plan::findOrFail($request->validated("plan_id"));
+		$organization = $request->user()->currentOrganization();
+
+		if (!$organization->subscribed("default")) {
+			return response()->json(array("error" => "No active subscription."), 422);
+		}
+
+		try {
+			$preview = $this->billingService->previewPlanChange(
+				$organization,
+				$targetPlan,
+				$request->validated("billing_cycle"),
+			);
+
+			return response()->json($preview);
+		} catch (\Exception $exception) {
+			Log::error("Proration preview failed", array(
+				"organization_id" => $organization->id,
+				"target_plan_id" => $targetPlan->id,
+				"error" => $exception->getMessage(),
+			));
+
+			return response()->json(array("error" => "Unable to preview plan change."), 500);
+		}
+	}
+
+	/**
 	 * Swap to a different plan (upgrade or downgrade).
 	 */
 	public function changePlan(ChangePlanRequest $request): RedirectResponse
@@ -142,7 +181,7 @@ class BillingController extends Controller
 			return $redirect;
 		}
 
-		$targetPlan = \App\Models\Plan::findOrFail($request->validated("plan_id"));
+		$targetPlan = Plan::findOrFail($request->validated("plan_id"));
 		$organization = $request->user()->currentOrganization();
 
 		if (!$organization->subscribed("default")) {
@@ -159,6 +198,15 @@ class BillingController extends Controller
 
 			return redirect()->route("billing.index")
 				->with("success", "Your plan has been changed to {$targetPlan->name}.");
+		} catch (\Laravel\Cashier\Exceptions\IncompletePayment $paymentException) {
+			Log::warning("Plan change payment failed", array(
+				"organization_id" => $organization->id,
+				"target_plan_id" => $targetPlan->id,
+				"payment_id" => $paymentException->payment->id,
+			));
+
+			return redirect()->route("billing.index")
+				->with("error", "Payment failed. Please update your payment method and try again.");
 		} catch (\Exception $exception) {
 			Log::error("Plan change failed", array(
 				"organization_id" => $organization->id,

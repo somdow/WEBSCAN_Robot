@@ -119,10 +119,11 @@ Route::middleware(["auth", "verified", "ensure.active"])->group(function () {
 		Route::get("/", [BillingController::class, "index"])->name("index");
 		Route::post("/checkout", [BillingController::class, "checkout"])->name("checkout");
 		Route::get("/success", [BillingController::class, "success"])->name("success");
+		Route::post("/preview-proration", [BillingController::class, "previewProration"])->middleware("throttle:10,1")->name("preview-proration");
 		Route::post("/change-plan", [BillingController::class, "changePlan"])->name("change-plan");
 		Route::post("/cancel", [BillingController::class, "cancel"])->name("cancel");
 		Route::post("/resume", [BillingController::class, "resume"])->name("resume");
-		Route::get("/portal", [BillingController::class, "redirectToCustomerPortal"])->name("portal");
+		Route::post("/portal", [BillingController::class, "redirectToCustomerPortal"])->name("portal");
 		Route::get("/invoices/{invoiceId}", [BillingController::class, "downloadInvoice"])->name("invoice.download");
 	});
 });

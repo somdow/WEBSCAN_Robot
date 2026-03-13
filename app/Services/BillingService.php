@@ -9,6 +9,7 @@ use App\Models\Plan;
 use App\Models\SubscriptionUsage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Stripe\StripeClient;
 
 class BillingService
 {
@@ -57,6 +58,33 @@ class BillingService
 	}
 
 	/**
+	 * Preview the proration cost for switching to a different plan.
+	 * Uses Stripe's upcoming invoice API to calculate the exact amount due.
+	 */
+	public function previewPlanChange(
+		Organization $organization,
+		Plan $targetPlan,
+		string $billingCycle,
+	): array {
+		$this->ensureStripeConfigured();
+
+		$priceId = $this->resolvePriceId($targetPlan, $billingCycle);
+		$subscription = $organization->subscription("default");
+
+		$currentPriceId = $subscription->stripe_price;
+		$isUpgrade = $this->isPriceUpgrade($organization, $priceId, $currentPriceId);
+
+		$previewInvoice = $subscription->previewInvoice($priceId);
+		$amountDue = $previewInvoice?->rawAmountDue() ?? 0;
+
+		return array(
+			"amountDue" => $amountDue,
+			"formatted" => "$" . number_format($amountDue / 100, 2),
+			"isUpgrade" => $isUpgrade,
+		);
+	}
+
+	/**
 	 * Swap the organization's subscription to a different plan.
 	 */
 	public function swapSubscription(
@@ -67,10 +95,37 @@ class BillingService
 		$this->ensureStripeConfigured();
 
 		$priceId = $this->resolvePriceId($targetPlan, $billingCycle);
+		$subscription = $organization->subscription("default");
+		$currentPriceId = $subscription->stripe_price;
 
-		$organization->subscription("default")->swap($priceId);
+		if ($this->isPriceUpgrade($organization, $priceId, $currentPriceId)) {
+			$subscription->errorIfPaymentFails()->swapAndInvoice($priceId);
+		} else {
+			$subscription->swap($priceId);
+		}
 
 		$this->syncPlanFromStripe($organization);
+	}
+
+	/**
+	 * Determine whether switching from one Stripe price to another is an upgrade.
+	 * Compares the unit amounts of both prices via the local plans table.
+	 */
+	private function isPriceUpgrade(Organization $organization, string $newPriceId, string $currentPriceId): bool
+	{
+		$currentPlan = Plan::where("stripe_monthly_price_id", $currentPriceId)
+			->orWhere("stripe_annual_price_id", $currentPriceId)
+			->first();
+
+		$newPlan = Plan::where("stripe_monthly_price_id", $newPriceId)
+			->orWhere("stripe_annual_price_id", $newPriceId)
+			->first();
+
+		if ($currentPlan === null || $newPlan === null) {
+			return true;
+		}
+
+		return $newPlan->price_monthly > $currentPlan->price_monthly;
 	}
 
 	/**
@@ -138,7 +193,7 @@ class BillingService
 	public function syncPlanFromCheckoutSession(Organization $organization, string $sessionId): void
 	{
 		try {
-			$stripe = new \Stripe\StripeClient(config("cashier.secret"));
+			$stripe = new StripeClient(config("cashier.secret"));
 			$session = $stripe->checkout->sessions->retrieve($sessionId);
 
 			if ($session->payment_status !== "paid" && $session->payment_status !== "no_payment_required") {

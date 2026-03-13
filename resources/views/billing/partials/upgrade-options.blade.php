@@ -6,13 +6,46 @@
 	confirmPriceMonthly: '',
 	confirmPriceAnnual: '',
 	confirmFormEl: null,
-	requestChange(formEl, planName, action, priceMonthly, priceAnnual) {
+	prorationLoading: false,
+	prorationAmount: '',
+	prorationIsUpgrade: true,
+	prorationError: false,
+	async requestChange(formEl, planId, planName, action, priceMonthly, priceAnnual) {
 		this.confirmFormEl = formEl;
 		this.confirmPlanName = planName;
 		this.confirmAction = action;
 		this.confirmPriceMonthly = priceMonthly;
 		this.confirmPriceAnnual = priceAnnual;
+		this.prorationLoading = true;
+		this.prorationAmount = '';
+		this.prorationIsUpgrade = true;
+		this.prorationError = false;
 		this.confirmOpen = true;
+
+		try {
+			const response = await fetch('{{ route("billing.preview-proration") }}', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRF-TOKEN': '{{ csrf_token() }}',
+					'Accept': 'application/json',
+				},
+				body: JSON.stringify({
+					plan_id: planId,
+					billing_cycle: this.billingCycle,
+				}),
+			});
+
+			if (!response.ok) throw new Error('Preview failed');
+
+			const data = await response.json();
+			this.prorationAmount = data.formatted;
+			this.prorationIsUpgrade = data.isUpgrade;
+		} catch (error) {
+			this.prorationError = true;
+		} finally {
+			this.prorationLoading = false;
+		}
 	},
 	submitChange() {
 		if (this.confirmFormEl) this.confirmFormEl.submit();
@@ -57,19 +90,19 @@
 
 				<ul class="mt-4 space-y-2 text-sm text-text-secondary">
 					<li class="flex items-center gap-2">
-						<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+						<x-icon-checkmark />
 						<strong>{{ $availablePlan->max_scans_per_month }}</strong>&nbsp;scans/month
 					</li>
 					<li class="flex items-center gap-2">
-						<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+						<x-icon-checkmark />
 						<strong>{{ $availablePlan->max_projects }}</strong>&nbsp;project{{ $availablePlan->max_projects > 1 ? "s" : "" }}
 					</li>
 					<li class="flex items-center gap-2">
-						<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+						<x-icon-checkmark />
 						<strong>{{ $availablePlan->max_users }}</strong>&nbsp;team member{{ $availablePlan->max_users > 1 ? "s" : "" }}
 					</li>
 					<li class="flex items-center gap-2">
-						<svg class="h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+						<x-icon-checkmark />
 						{{ $historyLabel }}
 					</li>
 				</ul>
@@ -90,7 +123,7 @@
 							<input type="hidden" name="billing_cycle" x-bind:value="billingCycle">
 							<button
 								type="button"
-								@click="requestChange($refs.changePlanForm{{ $availablePlan->id }}, '{{ $availablePlan->name }}', '{{ $changeLabel }}', '{{ $monthlyPrice }}', '{{ $annualPerMonth }}')"
+								@click="requestChange($refs.changePlanForm{{ $availablePlan->id }}, {{ $availablePlan->id }}, '{{ $availablePlan->name }}', '{{ $changeLabel }}', '{{ $monthlyPrice }}', '{{ $annualPerMonth }}')"
 								class="inline-flex w-full cursor-pointer items-center justify-center rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-hover"
 							>
 								{{ $changeLabel }}
@@ -110,6 +143,7 @@
 			</div>
 		@endforeach
 	</div>
+
 	{{-- Plan change confirmation modal --}}
 	<div
 		x-show="confirmOpen"
@@ -151,10 +185,35 @@
 				</div>
 			</div>
 
-			<p class="mt-3 text-xs text-text-tertiary">
-				<span x-show="confirmAction === 'Upgrade'">You will be charged the prorated difference immediately.</span>
-				<span x-show="confirmAction === 'Downgrade'">The change takes effect at your next billing cycle. You keep current plan access until then.</span>
-			</p>
+			{{-- Proration amount from Stripe --}}
+			<div class="mt-3 rounded-lg border border-border bg-white p-4">
+				{{-- Loading state --}}
+				<div x-show="prorationLoading" class="flex items-center gap-2 text-sm text-text-secondary">
+					<svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+						<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+					</svg>
+					Calculating amount...
+				</div>
+
+				{{-- Error state --}}
+				<p x-show="prorationError && !prorationLoading" class="text-sm text-red-600">
+					Could not calculate the exact amount. You will be charged the prorated difference.
+				</p>
+
+				{{-- Upgrade: charge amount --}}
+				<div x-show="!prorationLoading && !prorationError && prorationIsUpgrade">
+					<p class="text-sm text-text-secondary">Due today (prorated):</p>
+					<p class="mt-1 text-xl font-bold text-text-primary" x-text="prorationAmount"></p>
+					<p class="mt-1 text-xs text-text-tertiary">Charged to your card on file immediately.</p>
+				</div>
+
+				{{-- Downgrade: no charge --}}
+				<div x-show="!prorationLoading && !prorationError && !prorationIsUpgrade">
+					<p class="text-sm text-text-secondary">Nothing due today. Your unused balance will be credited toward future invoices.</p>
+					<p class="mt-1 text-xs text-text-tertiary">The new plan takes effect at your next billing cycle.</p>
+				</div>
+			</div>
 
 			<div class="mt-5 flex gap-3">
 				<button
@@ -163,7 +222,9 @@
 				>Cancel</button>
 				<button
 					@click="submitChange()"
-					class="flex-1 cursor-pointer rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-hover"
+					:disabled="prorationLoading"
+					:class="prorationLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent-hover'"
+					class="flex-1 cursor-pointer rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-white transition"
 					x-text="'Confirm ' + confirmAction"
 				></button>
 			</div>

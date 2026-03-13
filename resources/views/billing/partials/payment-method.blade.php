@@ -21,14 +21,15 @@
 		@endif
 
 		@if($isOwner && $isStripeConfigured)
-			<div class="mt-4">
-				<a href="{{ route("billing.portal") }}" class="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-text-primary shadow-sm transition hover:bg-gray-50">
+			<form method="POST" action="{{ route("billing.portal") }}" class="mt-4">
+				@csrf
+				<button type="submit" class="inline-flex cursor-pointer items-center gap-2 rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-text-primary shadow-sm transition hover:bg-gray-50">
 					<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
 					</svg>
 					Update Payment Method
-				</a>
-			</div>
+				</button>
+			</form>
 		@endif
 	</div>
 </section>
