@@ -1,4 +1,23 @@
-<section x-data="{ billingCycle: 'monthly' }">
+<section x-data="{
+	billingCycle: 'monthly',
+	confirmOpen: false,
+	confirmPlanName: '',
+	confirmAction: '',
+	confirmPriceMonthly: '',
+	confirmPriceAnnual: '',
+	confirmFormEl: null,
+	requestChange(formEl, planName, action, priceMonthly, priceAnnual) {
+		this.confirmFormEl = formEl;
+		this.confirmPlanName = planName;
+		this.confirmAction = action;
+		this.confirmPriceMonthly = priceMonthly;
+		this.confirmPriceAnnual = priceAnnual;
+		this.confirmOpen = true;
+	},
+	submitChange() {
+		if (this.confirmFormEl) this.confirmFormEl.submit();
+	},
+}">
 	<header>
 		<h2 class="text-lg font-semibold text-text-primary">Change Plan</h2>
 		<p class="mt-1 text-sm text-text-secondary">Upgrade or downgrade your subscription.</p>
@@ -59,16 +78,23 @@
 					@php
 						$isCurrent = $plan && $availablePlan->id === $plan->id;
 						$isUpgrade = $plan && $availablePlan->price_monthly > $plan->price_monthly;
+						$changeLabel = $isUpgrade ? "Upgrade" : "Downgrade";
+						$monthlyPrice = number_format($availablePlan->price_monthly, 0);
+						$annualPerMonth = number_format(($availablePlan->price_annual ?? 0) / 12, 0);
 					@endphp
 
 					@if($organization->subscribed("default"))
-						<form method="POST" action="{{ route("billing.change-plan") }}" class="mt-5">
+						<form x-ref="changePlanForm{{ $availablePlan->id }}" method="POST" action="{{ route("billing.change-plan") }}" class="mt-5">
 							@csrf
 							<input type="hidden" name="plan_id" value="{{ $availablePlan->id }}">
 							<input type="hidden" name="billing_cycle" x-bind:value="billingCycle">
-							<x-primary-button type="submit" class="w-full justify-center">
-								{{ $isUpgrade ? "Upgrade" : "Downgrade" }}
-							</x-primary-button>
+							<button
+								type="button"
+								@click="requestChange($refs.changePlanForm{{ $availablePlan->id }}, '{{ $availablePlan->name }}', '{{ $changeLabel }}', '{{ $monthlyPrice }}', '{{ $annualPerMonth }}')"
+								class="inline-flex w-full cursor-pointer items-center justify-center rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-hover"
+							>
+								{{ $changeLabel }}
+							</button>
 						</form>
 					@else
 						<div class="mt-5">
@@ -83,5 +109,64 @@
 				@endif
 			</div>
 		@endforeach
+	</div>
+	{{-- Plan change confirmation modal --}}
+	<div
+		x-show="confirmOpen"
+		x-cloak
+		class="fixed inset-0 z-50 flex items-center justify-center"
+	>
+		<div
+			x-show="confirmOpen"
+			x-transition:enter="transition-opacity duration-200"
+			x-transition:enter-start="opacity-0"
+			x-transition:enter-end="opacity-100"
+			x-transition:leave="transition-opacity duration-150"
+			x-transition:leave-start="opacity-100"
+			x-transition:leave-end="opacity-0"
+			class="absolute inset-0 bg-black/50"
+			@click="confirmOpen = false"
+		></div>
+
+		<div
+			x-show="confirmOpen"
+			x-transition:enter="transition duration-200 ease-out"
+			x-transition:enter-start="scale-95 opacity-0"
+			x-transition:enter-end="scale-100 opacity-100"
+			x-transition:leave="transition duration-150 ease-in"
+			x-transition:leave-start="scale-100 opacity-100"
+			x-transition:leave-end="scale-95 opacity-0"
+			class="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl"
+			@click.stop
+		>
+			<h3 class="text-lg font-semibold text-text-primary" x-text="confirmAction + ' to ' + confirmPlanName"></h3>
+
+			<div class="mt-3 rounded-lg border border-border bg-gray-50 p-4">
+				<p class="text-sm text-text-secondary">New price:</p>
+				<div class="mt-1">
+					<span class="text-2xl font-bold text-text-primary" x-show="billingCycle === 'monthly'">$<span x-text="confirmPriceMonthly"></span></span>
+					<span class="text-2xl font-bold text-text-primary" x-show="billingCycle === 'annual'">$<span x-text="confirmPriceAnnual"></span></span>
+					<span class="text-sm text-text-secondary">/month</span>
+					<span class="text-sm text-text-tertiary" x-show="billingCycle === 'annual'">(billed annually)</span>
+				</div>
+			</div>
+
+			<p class="mt-3 text-xs text-text-tertiary">
+				<span x-show="confirmAction === 'Upgrade'">You will be charged the prorated difference immediately.</span>
+				<span x-show="confirmAction === 'Downgrade'">The change takes effect at your next billing cycle. You keep current plan access until then.</span>
+			</p>
+
+			<div class="mt-5 flex gap-3">
+				<button
+					@click="confirmOpen = false"
+					class="flex-1 cursor-pointer rounded-md border border-border bg-white px-4 py-2.5 text-sm font-medium text-text-primary transition hover:bg-gray-50"
+				>Cancel</button>
+				<button
+					@click="submitChange()"
+					class="flex-1 cursor-pointer rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-hover"
+					x-text="'Confirm ' + confirmAction"
+				></button>
+			</div>
+		</div>
 	</div>
 </section>
