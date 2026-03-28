@@ -127,20 +127,9 @@
 	@endphp
 	<div
 		x-data="scanResultsManager()"
+		x-on:toolkit-tab-change.window="scoreTab = $event.detail.tab; statusFilter = ''"
 	>
-		{{-- Floating cards: score + pass/warn/fail --}}
-		<div class="mb-8">
-			@include("projects.partials.site-statistics", array(
-				"scan" => $scan,
-				"scanViewData" => $scanViewData,
-			))
-		</div>
-
-		{{-- AI Executive Summary --}}
-		@if($scanViewData)
-			@include("scans.partials.ai-executive-summary", array("scan" => $scan))
-		@endif
-
+		@if(!($hideToolkitNav ?? false))
 		{{-- Score category tabs — pill/segment control --}}
 		<p class="mb-1.5 text-xs font-medium uppercase tracking-wider text-text-tertiary" x-cloak>Webscan Toolkit</p>
 		<div class="mb-6 flex flex-wrap items-center gap-1.5 rounded-xl bg-gray-300 p-1.5" x-cloak>
@@ -180,6 +169,15 @@
 				>Add Pages</button>
 			@endif
 		</div>
+		@endif
+
+		{{-- Floating cards: score + pass/warn/fail --}}
+		<div class="mb-8">
+			@include("projects.partials.site-statistics", array(
+				"scan" => $scan,
+				"scanViewData" => $scanViewData,
+			))
+		</div>
 
 		{{-- Tab description --}}
 		<div class="mb-8 flex justify-center" x-cloak>
@@ -202,6 +200,11 @@
 			</p>
 		</div>
 		</div>
+
+		{{-- AI Executive Summary --}}
+		@if($scanViewData)
+			@include("scans.partials.ai-executive-summary", array("scan" => $scan))
+		@endif
 
 		{{-- Tab: All (Overview) --}}
 		<div x-show="scoreTab === 'all'">
