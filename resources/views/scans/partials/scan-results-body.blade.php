@@ -156,18 +156,19 @@
 				>Competitors</button>
 			@endif
 			@if($showPagesTab)
-				<span class="ml-auto"></span>
 				<button
 					@click="scoreTab = 'pagesList'; statusFilter = ''"
 					:class="scoreTab === 'pagesList' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 					class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 				>Page Explorer</button>
 			@endif
+			<span class="ml-auto"></span>
+			@include("scans.partials.ai-summary-header-button", array("scan" => $scan))
 		</div>
 		@endif
 
-		{{-- Floating cards: score + pass/warn/fail --}}
-		<div class="mb-8">
+		{{-- Floating cards: score + pass/warn/fail (Overview tab only) --}}
+		<div class="mb-8" x-show="scoreTab === 'all'" x-cloak>
 			@include("projects.partials.site-statistics", array(
 				"scan" => $scan,
 				"scanViewData" => $scanViewData,
@@ -195,10 +196,12 @@
 		</div>
 		</div>
 
-		{{-- AI Executive Summary --}}
-		@if($scanViewData)
-			@include("scans.partials.ai-executive-summary", array("scan" => $scan))
-		@endif
+		{{-- AI Executive Summary (Overview tab only) --}}
+		<div x-show="scoreTab === 'all'" x-cloak>
+			@if($scanViewData)
+				@include("scans.partials.ai-executive-summary", array("scan" => $scan))
+			@endif
+		</div>
 
 		{{-- Tab: All (Overview) --}}
 		<div x-show="scoreTab === 'all'">
@@ -263,6 +266,7 @@
 			<script>
 			function scanResultsManager() {
 				return {
+					scanning: false,
 					activeCategory: @json($isSinglePage ? ($scanViewData["groupedResults"]->keys()->first() ?? "") : ""),
 					statusFilter: '',
 					activeSection: '',

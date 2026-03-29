@@ -18,6 +18,8 @@
 		<div
 			x-data="{
 				scanning: {{ $scanRunning ? 'true' : 'false' }},
+				subtitle: '{{ $subtitle }}',
+				tabLabels: { all: 'Account Overview', seo: 'SEO Analysis', technical: 'Site Health', competitors: 'Competitors', pagesList: 'Page Explorer' },
 				scansUsed: {{ $scansUsed ?? 0 }},
 				scansMax: {{ $scansMax ?? 10 }},
 				triggerScan() {
@@ -50,16 +52,16 @@
 					});
 				}
 			}"
+			x-on:toolkit-tab-change.window="subtitle = tabLabels[$event.detail.tab] || 'Account Overview'"
 		>
 			{{-- Row 1: Title + Action buttons --}}
 			<div class="flex items-center justify-between gap-6">
 				<h1 class="font-bold tracking-tight text-text-primary break-words" style="font-size: 2.5rem" x-bind:class="scanning && 'pointer-events-none opacity-40'">
 					<a href="{{ $project->url }}" target="_blank" rel="noopener noreferrer">{{ $project->name }}</a>
-					<span class="font-normal">{{ $subtitle }}</span>
+					<span class="font-normal" x-text="subtitle"></span>
 				</h1>
 				<div class="shrink-0" x-bind:class="scanning && 'pointer-events-none opacity-40'">
 					<div class="flex items-center gap-2">
-					@include("scans.partials.ai-summary-header-button", array("scan" => $latestScan))
 					<a
 						href="{{ route("projects.edit", $project) }}"
 						class="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-3 py-2 text-sm font-medium text-text-secondary transition hover:bg-gray-50 hover:text-text-primary"
@@ -164,13 +166,14 @@
 							>Competitors</button>
 						@endif
 						@if($showPagesTabHeader)
-							<span class="ml-auto"></span>
 							<button
 								@click="activeTab = 'pagesList'; $dispatch('toolkit-tab-change', { tab: 'pagesList' })"
 								:class="activeTab === 'pagesList' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 								class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 							>Page Explorer</button>
 						@endif
+						<span class="ml-auto"></span>
+						@include("scans.partials.ai-summary-header-button", array("scan" => $latestScan))
 					</div>
 				</div>
 			@endif

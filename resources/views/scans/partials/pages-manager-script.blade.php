@@ -7,6 +7,7 @@ function scanResultsManager() {
 	const projectKey = @json($project->getRouteKey());
 
 	return {
+		scanning: false,
 		activeCategory: @json($isSinglePage ? ($scanViewData["groupedResults"]->keys()->first() ?? "") : ""),
 		statusFilter: '',
 		activeSection: '',
