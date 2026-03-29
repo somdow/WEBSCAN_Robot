@@ -134,30 +134,30 @@
 		<p class="mb-1.5 text-xs font-medium uppercase tracking-wider text-text-tertiary" x-cloak>Webscan Toolkit</p>
 		<div class="mb-6 flex flex-wrap items-center gap-1.5 rounded-xl bg-gray-300 p-1.5" x-cloak>
 			<button
-				@click="scoreTab = 'all'; statusFilter = ''; $dispatch('score-tab-changed', { slide: 0 })"
+				@click="scoreTab = 'all'; statusFilter = ''; $dispatch('score-tab-changed', { slide: 0 }); (() => { const u = new URL(window.location); u.searchParams.delete('tab'); history.pushState(null, '', u); })()"
 				:class="scoreTab === 'all' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 				class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 			>Overview <span x-show="liveOverallScore !== null" class="ml-0.5 text-[10px] opacity-75">&middot; <span x-text="liveOverallScore"></span></span></button>
 			<button
-				@click="scoreTab = 'seo'; statusFilter = ''; $dispatch('score-tab-changed', { slide: 1 })"
+				@click="scoreTab = 'seo'; statusFilter = ''; $dispatch('score-tab-changed', { slide: 1 }); (() => { const u = new URL(window.location); u.searchParams.set('tab', 'seo'); history.pushState(null, '', u); })()"
 				:class="scoreTab === 'seo' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 				class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 			>SEO Analysis <span x-show="liveSeoScore !== null" class="ml-0.5 text-[10px] opacity-75">&middot; <span x-text="liveSeoScore"></span></span></button>
 			<button
-				@click="scoreTab = 'technical'; statusFilter = ''; $dispatch('score-tab-changed', { slide: 2 })"
+				@click="scoreTab = 'technical'; statusFilter = ''; $dispatch('score-tab-changed', { slide: 2 }); (() => { const u = new URL(window.location); u.searchParams.set('tab', 'technical'); history.pushState(null, '', u); })()"
 				:class="scoreTab === 'technical' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 				class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 			>Site Health <span x-show="liveHealthScore !== null" class="ml-0.5 text-[10px] opacity-75">&middot; <span x-text="liveHealthScore"></span></span></button>
 			@if($showCompetitorsTab)
 				<button
-					@click="scoreTab = 'competitors'; statusFilter = ''"
+					@click="scoreTab = 'competitors'; statusFilter = ''; (() => { const u = new URL(window.location); u.searchParams.set('tab', 'competitors'); history.pushState(null, '', u); })()"
 					:class="scoreTab === 'competitors' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 					class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 				>Competitors</button>
 			@endif
 			@if($showPagesTab)
 				<button
-					@click="scoreTab = 'pagesList'; statusFilter = ''"
+					@click="scoreTab = 'pagesList'; statusFilter = ''; (() => { const u = new URL(window.location); u.searchParams.set('tab', 'pagesList'); history.pushState(null, '', u); })()"
 					:class="scoreTab === 'pagesList' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 					class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 				>Page Explorer</button>
@@ -271,7 +271,7 @@
 					statusFilter: '',
 					activeSection: '',
 					searchQuery: '',
-					scoreTab: 'all',
+					scoreTab: new URLSearchParams(window.location.search).get('tab') || 'all',
 					healthSection: '',
 					seoSection: '',
 					pages: [],

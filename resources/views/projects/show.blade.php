@@ -140,34 +140,62 @@
 					$showPagesTabHeader = ($canAddPages ?? false) && $project && $project->ownScans()->where("status", \App\Enums\ScanStatus::Completed->value)->exists();
 					$showCompetitorsTabHeader = $showCompetitorsTab ?? false;
 				@endphp
-				<div style="margin-top: 80px;" x-data="{ activeTab: 'all' }">
+				<div style="margin-top: 80px;" x-data="{
+						activeTab: new URLSearchParams(window.location.search).get('tab') || 'all',
+						init() {
+							if (this.activeTab !== 'all') {
+								$dispatch('toolkit-tab-change', { tab: this.activeTab });
+								const slideMap = { all: 0, seo: 1, technical: 2 };
+								if (slideMap[this.activeTab] !== undefined) {
+									$dispatch('score-tab-changed', { slide: slideMap[this.activeTab] });
+								}
+							}
+							window.addEventListener('popstate', () => {
+								const tab = new URLSearchParams(window.location.search).get('tab') || 'all';
+								this.activeTab = tab;
+								$dispatch('toolkit-tab-change', { tab: tab });
+								const slideMap = { all: 0, seo: 1, technical: 2 };
+								if (slideMap[tab] !== undefined) {
+									$dispatch('score-tab-changed', { slide: slideMap[tab] });
+								}
+							});
+						},
+						navigateTab(tab, slide) {
+							this.activeTab = tab;
+							const url = new URL(window.location);
+							if (tab === 'all') { url.searchParams.delete('tab'); } else { url.searchParams.set('tab', tab); }
+							history.pushState(null, '', url);
+							$dispatch('toolkit-tab-change', { tab: tab });
+							if (slide !== undefined) { $dispatch('score-tab-changed', { slide: slide }); }
+						},
+					}">
 					<p class="mb-1.5 text-xs font-medium uppercase tracking-wider text-text-tertiary">Webscan Toolkit</p>
 					<div class="flex flex-wrap items-center gap-1.5 rounded-xl bg-gray-300 p-1.5">
 						<button
-							@click="activeTab = 'all'; $dispatch('toolkit-tab-change', { tab: 'all' }); $dispatch('score-tab-changed', { slide: 0 })"
+							@click="navigateTab('all', 0)"
 							:class="activeTab === 'all' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 							class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 						>Overview @if($latestScan->overall_score !== null)<span class="ml-0.5 text-[10px] opacity-75">&middot; {{ $latestScan->overall_score }}</span>@endif</button>
 						<button
-							@click="activeTab = 'seo'; $dispatch('toolkit-tab-change', { tab: 'seo' }); $dispatch('score-tab-changed', { slide: 1 })"
+							@click="navigateTab('seo', 1)"
 							:class="activeTab === 'seo' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 							class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 						>SEO Analysis @if($latestScan->seo_score !== null)<span class="ml-0.5 text-[10px] opacity-75">&middot; {{ $latestScan->seo_score }}</span>@endif</button>
 						<button
-							@click="activeTab = 'technical'; $dispatch('toolkit-tab-change', { tab: 'technical' }); $dispatch('score-tab-changed', { slide: 2 })"
+							@click="navigateTab('technical', 2)"
 							:class="activeTab === 'technical' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 							class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 						>Site Health @if($latestScan->health_score !== null)<span class="ml-0.5 text-[10px] opacity-75">&middot; {{ $latestScan->health_score }}</span>@endif</button>
 						@if($showCompetitorsTabHeader)
 							<button
-								@click="activeTab = 'competitors'; $dispatch('toolkit-tab-change', { tab: 'competitors' })"
+								@click="navigateTab('competitors')"
 								:class="activeTab === 'competitors' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 								class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 							>Competitors</button>
 						@endif
 						@if($showPagesTabHeader)
 							<button
-								@click="activeTab = 'pagesList'; $dispatch('toolkit-tab-change', { tab: 'pagesList' })"
+								@click="navigateTab('pagesList')"
 								:class="activeTab === 'pagesList' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 								class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
 							>Page Explorer</button>

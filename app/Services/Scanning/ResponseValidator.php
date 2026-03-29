@@ -7,7 +7,7 @@ namespace App\Services\Scanning;
  * or a bot-protection challenge page (SiteGround, Cloudflare, Sucuri, etc.).
  *
  * Used by ScanOrchestrator to detect blocked responses before wasting
- * resources running 48 analyzers against a captcha redirect page.
+ * resources running 52 analyzers against a captcha redirect page.
  */
 class ResponseValidator
 {

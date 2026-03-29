@@ -12,7 +12,7 @@ function scanResultsManager() {
 		statusFilter: '',
 		activeSection: '',
 		searchQuery: '',
-		scoreTab: 'all',
+		scoreTab: new URLSearchParams(window.location.search).get('tab') || 'all',
 		healthSection: '',
 		seoSection: '',
 		liveOverallScore: @json($scan->overall_score ?? null),
@@ -62,6 +62,11 @@ function scanResultsManager() {
 				if (competitor.scan_status === 'pending' || competitor.scan_status === 'running') {
 					this.startCompetitorPolling(competitor);
 				}
+			});
+
+			window.addEventListener('popstate', () => {
+				this.scoreTab = new URLSearchParams(window.location.search).get('tab') || 'all';
+				this.statusFilter = '';
 			});
 		},
 

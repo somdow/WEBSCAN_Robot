@@ -248,7 +248,7 @@
 								</td>
 								<td>
 									<div style="font-size: 12px; color: #6B7280; line-height: 1.8;">
-										This report is a comprehensive audit of example.com, analyzing 48 key factors across SEO, security, performance, content quality, and technical health.
+										This report is a comprehensive audit of example.com, analyzing 52 key factors across SEO, security, performance, content quality, and technical health.
 									</div>
 								</td>
 							</tr>

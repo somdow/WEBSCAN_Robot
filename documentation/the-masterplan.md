@@ -1114,7 +1114,7 @@ Reusable UI components built with Tailwind + Alpine:
 
 | Phase | Name | Core Value | Plans | Key Deliverables |
 |---|---|---|---|---|
-| **1** | MVP | Sign up, scan, report | Free + Pro | Laravel foundation, 48 modules, AI Tier 1+2, billing, admin panel, bot protection, homepage-first scanning |
+| **1** | MVP | Sign up, scan, report | Free + Pro | Laravel foundation, 52 modules, AI Tier 1+2, billing, admin panel, bot protection, homepage-first scanning |
 | **Final** | Ship It | Teams, competitors, polish | + Agency | Competitor analysis, team system, white-label PDF, broken links + schema validation modules, transactional emails |
 
 > **Phases 3 & 4 from original roadmap removed.** Features like public API, LeadGen widget, SSO/SAML, third-party integrations, and full site crawler are deferred to post-launch — build when demand proves it.
