@@ -2,7 +2,7 @@
 @props(["projectName", "subtitle", "url", "urlDisplay" => null, "keywords" => array(), "breadcrumbItems" => array()])
 
 <div class="min-w-0 flex-1">
-	<h1 class="font-bold tracking-tight text-text-primary break-words" style="font-size: 2.5rem"><a href="{{ $url }}" target="_blank" rel="noopener noreferrer">{{ $projectName }}</a> <span class="font-normal">&mdash; {{ $subtitle }}</span></h1>
+	<h1 class="font-bold tracking-tight text-text-primary break-words" style="font-size: 2.5rem"><a href="{{ $url }}" target="_blank" rel="noopener noreferrer">{{ $projectName }}</a> <span class="font-normal">{{ $subtitle }}</span></h1>
 	<x-breadcrumb :items="$breadcrumbItems" />
 	@if(!empty($keywords))
 		<div class="mt-3 flex items-start gap-2.5">

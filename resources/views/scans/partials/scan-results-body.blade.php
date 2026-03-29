@@ -161,12 +161,7 @@
 					@click="scoreTab = 'pagesList'; statusFilter = ''"
 					:class="scoreTab === 'pagesList' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 					class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
-				>Pages</button>
-				<button
-					@click="scoreTab = 'addPages'; statusFilter = ''"
-					:class="scoreTab === 'addPages' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
-					class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
-				>Add Pages</button>
+				>Page Explorer</button>
 			@endif
 		</div>
 		@endif
@@ -186,16 +181,15 @@
 				<path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
 			</svg>
 			<p class="text-[13px] leading-relaxed text-amber-900">
-				<span x-show="scoreTab === 'all' && (!pages || pages.length === 0)">Here's your overall health check based on a homepage-only analysis.@if($showPagesTab) This is a great starting point, <a @click.prevent="scoreTab = 'addPages'; statusFilter = ''" href="#" class="font-bold text-amber-700 underline underline-offset-2 hover:text-amber-900">add more pages</a> to broaden your sample size and get a more accurate, site-wide picture.@else This is a great starting point for understanding your site's SEO health.@endif</span>
-				<span x-show="scoreTab === 'all' && pages && pages.length > 0">Your scores are based on the homepage plus <strong x-text="pages.length"></strong> additional <span x-text="pages.length === 1 ? 'page' : 'pages'"></span>. The more pages you analyze, the more reliable your scores become. @if($showPagesTab)<a @click.prevent="scoreTab = 'addPages'; statusFilter = ''" href="#" class="font-bold text-amber-700 underline underline-offset-2 hover:text-amber-900">Add more pages</a> for even better accuracy.@endif</span>
+				<span x-show="scoreTab === 'all' && (!pages || pages.length === 0)">Here's your overall health check based on a homepage-only analysis.@if($showPagesTab) This is a great starting point, <a @click.prevent="scoreTab = 'pagesList'; statusFilter = ''" href="#" class="font-bold text-amber-700 underline underline-offset-2 hover:text-amber-900">add more pages</a> to broaden your sample size and get a more accurate, site-wide picture.@else This is a great starting point for understanding your site's SEO health.@endif</span>
+				<span x-show="scoreTab === 'all' && pages && pages.length > 0">Your scores are based on the homepage plus <strong x-text="pages.length"></strong> additional <span x-text="pages.length === 1 ? 'page' : 'pages'"></span>. The more pages you analyze, the more reliable your scores become. @if($showPagesTab)<a @click.prevent="scoreTab = 'pagesList'; statusFilter = ''" href="#" class="font-bold text-amber-700 underline underline-offset-2 hover:text-amber-900">Add more pages</a> for even better accuracy.@endif</span>
 				<span x-show="scoreTab === 'seo'">Everything that shapes how search engines see your site — page titles, content quality, linking structure, and trust signals like E-E-A-T. Address these areas to boost your organic visibility.</span>
 				<span x-show="scoreTab === 'technical'">The technical foundation behind your site — page speed, security headers, mobile-friendliness, and server reliability. A strong technical base helps both rankings and user experience.</span>
 				@if($showCompetitorsTab)
 					<span x-show="scoreTab === 'competitors'">See how your site stacks up against the competition. Compare overall scores, category breakdowns, and individual checks to find where you're winning — and where there's room to pull ahead.</span>
 				@endif
 				@if($showPagesTab)
-					<span x-show="scoreTab === 'pagesList'">All the pages you've analyzed so far, with individual scores and statuses. Rescan any page to track progress after making changes.</span>
-					<span x-show="scoreTab === 'addPages'">Grow your analysis by adding specific URLs or letting us discover pages on your site automatically. Each page analyzed gives you a deeper, more complete picture.</span>
+					<span x-show="scoreTab === 'pagesList'">All the pages you've analyzed so far, with individual scores and statuses. Add pages manually or discover them automatically to broaden your analysis.</span>
 				@endif
 			</p>
 		</div>
@@ -248,15 +242,10 @@
 			</div>
 		@endif
 
-		{{-- Tab: Pages list --}}
+		{{-- Tab: Pages (combined list + add/discover) --}}
 		@if($showPagesTab)
 			<div x-show="scoreTab === 'pagesList'" x-cloak>
-				@include("scans.partials.pages-list")
-			</div>
-
-			{{-- Tab: Analyze Additional Pages --}}
-			<div x-show="scoreTab === 'addPages'" x-cloak>
-				@include("scans.partials.pages-section", array(
+				@include("scans.partials.pages-list", array(
 					"project" => $project,
 					"maxAdditionalPages" => $maxAdditionalPages,
 				))

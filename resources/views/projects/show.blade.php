@@ -55,7 +55,7 @@
 			<div class="flex items-center justify-between gap-6">
 				<h1 class="font-bold tracking-tight text-text-primary break-words" style="font-size: 2.5rem" x-bind:class="scanning && 'pointer-events-none opacity-40'">
 					<a href="{{ $project->url }}" target="_blank" rel="noopener noreferrer">{{ $project->name }}</a>
-					<span class="font-normal">&mdash; {{ $subtitle }}</span>
+					<span class="font-normal">{{ $subtitle }}</span>
 				</h1>
 				<div class="shrink-0" x-bind:class="scanning && 'pointer-events-none opacity-40'">
 					<div class="flex items-center gap-2">
@@ -140,46 +140,36 @@
 				@endphp
 				<div style="margin-top: 80px;" x-data="{ activeTab: 'all' }">
 					<p class="mb-1.5 text-xs font-medium uppercase tracking-wider text-text-tertiary">Webscan Toolkit</p>
-					<div class="flex items-center justify-between">
-						{{-- Analysis tabs --}}
-						<div class="flex flex-wrap items-center gap-1.5 rounded-xl bg-gray-300 p-1.5">
+					<div class="flex flex-wrap items-center gap-1.5 rounded-xl bg-gray-300 p-1.5">
+						<button
+							@click="activeTab = 'all'; $dispatch('toolkit-tab-change', { tab: 'all' }); $dispatch('score-tab-changed', { slide: 0 })"
+							:class="activeTab === 'all' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
+							class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
+						>Overview @if($latestScan->overall_score !== null)<span class="ml-0.5 text-[10px] opacity-75">&middot; {{ $latestScan->overall_score }}</span>@endif</button>
+						<button
+							@click="activeTab = 'seo'; $dispatch('toolkit-tab-change', { tab: 'seo' }); $dispatch('score-tab-changed', { slide: 1 })"
+							:class="activeTab === 'seo' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
+							class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
+						>SEO Analysis @if($latestScan->seo_score !== null)<span class="ml-0.5 text-[10px] opacity-75">&middot; {{ $latestScan->seo_score }}</span>@endif</button>
+						<button
+							@click="activeTab = 'technical'; $dispatch('toolkit-tab-change', { tab: 'technical' }); $dispatch('score-tab-changed', { slide: 2 })"
+							:class="activeTab === 'technical' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
+							class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
+						>Site Health @if($latestScan->health_score !== null)<span class="ml-0.5 text-[10px] opacity-75">&middot; {{ $latestScan->health_score }}</span>@endif</button>
+						@if($showCompetitorsTabHeader)
 							<button
-								@click="activeTab = 'all'; $dispatch('toolkit-tab-change', { tab: 'all' }); $dispatch('score-tab-changed', { slide: 0 })"
-								:class="activeTab === 'all' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
+								@click="activeTab = 'competitors'; $dispatch('toolkit-tab-change', { tab: 'competitors' })"
+								:class="activeTab === 'competitors' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
 								class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
-							>Overview @if($latestScan->overall_score !== null)<span class="ml-0.5 text-[10px] opacity-75">&middot; {{ $latestScan->overall_score }}</span>@endif</button>
-							<button
-								@click="activeTab = 'seo'; $dispatch('toolkit-tab-change', { tab: 'seo' }); $dispatch('score-tab-changed', { slide: 1 })"
-								:class="activeTab === 'seo' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
-								class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
-							>SEO Analysis @if($latestScan->seo_score !== null)<span class="ml-0.5 text-[10px] opacity-75">&middot; {{ $latestScan->seo_score }}</span>@endif</button>
-							<button
-								@click="activeTab = 'technical'; $dispatch('toolkit-tab-change', { tab: 'technical' }); $dispatch('score-tab-changed', { slide: 2 })"
-								:class="activeTab === 'technical' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
-								class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
-							>Site Health @if($latestScan->health_score !== null)<span class="ml-0.5 text-[10px] opacity-75">&middot; {{ $latestScan->health_score }}</span>@endif</button>
-							@if($showCompetitorsTabHeader)
-								<button
-									@click="activeTab = 'competitors'; $dispatch('toolkit-tab-change', { tab: 'competitors' })"
-									:class="activeTab === 'competitors' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
-									class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
-								>Competitors</button>
-							@endif
-						</div>
-						{{-- Pages tabs --}}
+							>Competitors</button>
+						@endif
 						@if($showPagesTabHeader)
-							<div class="flex items-center gap-1.5 rounded-xl bg-gray-300 p-1.5">
-								<button
-									@click="activeTab = 'pagesList'; $dispatch('toolkit-tab-change', { tab: 'pagesList' })"
-									:class="activeTab === 'pagesList' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
-									class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
-								>Pages</button>
-								<button
-									@click="activeTab = 'addPages'; $dispatch('toolkit-tab-change', { tab: 'addPages' })"
-									:class="activeTab === 'addPages' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
-									class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
-								>Add Pages</button>
-							</div>
+							<span class="ml-auto"></span>
+							<button
+								@click="activeTab = 'pagesList'; $dispatch('toolkit-tab-change', { tab: 'pagesList' })"
+								:class="activeTab === 'pagesList' ? 'bg-orange-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'"
+								class="rounded-lg px-5 py-2 text-sm outline-none transition-all"
+							>Page Explorer</button>
 						@endif
 					</div>
 				</div>
