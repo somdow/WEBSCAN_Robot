@@ -1,12 +1,15 @@
 <x-app-layout>
 	<x-slot name="header">
-		<div>
-			<h1 class="text-[2.5rem] font-bold leading-tight tracking-tight text-text-primary">Scans</h1>
-			<p class="mt-1 text-sm text-text-secondary">All scan results across your projects</p>
-			<x-breadcrumb :items="array(
-				array('label' => 'Home', 'url' => route('dashboard')),
-				array('label' => 'Scans'),
-			)" />
+		<div class="flex items-start justify-between">
+			<div>
+				<h1 class="text-[2.5rem] font-bold leading-tight tracking-tight text-text-primary">Scans</h1>
+				<p class="mt-1 text-sm text-text-secondary">All scan results across your projects</p>
+				<x-breadcrumb :items="array(
+					array('label' => 'Home', 'url' => route('dashboard')),
+					array('label' => 'Scans'),
+				)" />
+			</div>
+			<x-new-project-button class="mt-6" />
 		</div>
 	</x-slot>
 

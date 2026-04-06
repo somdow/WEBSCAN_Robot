@@ -29,7 +29,7 @@
 					<p class="mt-1.5 text-xs text-text-tertiary">https:// will be added automatically if omitted</p>
 				</div>
 
-				<div class="mt-5">
+				<div class="mt-5" style="display: none;">
 					<x-input-label for="target_keywords">
 						Target Keywords <span class="font-normal text-text-tertiary">(Optional)</span>
 					</x-input-label>
