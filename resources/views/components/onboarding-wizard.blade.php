@@ -76,7 +76,7 @@
 	class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
 	style="display: none;"
 >
-	<div @click.outside="dismiss()" class="w-full max-w-lg rounded-xl border border-border bg-surface shadow-xl">
+	<div class="w-full max-w-lg rounded-xl border border-border bg-surface shadow-xl">
 		{{-- Header with progress --}}
 		<div class="flex items-center justify-between border-b border-border px-6 py-4">
 			<h2 class="text-base font-semibold text-text-primary">Welcome to {{ $siteName }}</h2>
