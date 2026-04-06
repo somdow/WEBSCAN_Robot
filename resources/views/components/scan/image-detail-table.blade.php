@@ -99,6 +99,22 @@
 
 						$urlPath = parse_url($imageSrc, PHP_URL_PATH);
 						$fileName = $urlPath ? basename($urlPath) : $imageSrc;
+						/* Handle CDN/image optimizer URLs (Next.js /_next/image, etc.) */
+						if (!str_contains($fileName, ".") || $fileName === "image") {
+							$cdnQuery = parse_url($imageSrc, PHP_URL_QUERY);
+							if ($cdnQuery) {
+								parse_str($cdnQuery, $cdnParams);
+								foreach (array("url", "src", "source", "img") as $cdnKey) {
+									if (!empty($cdnParams[$cdnKey])) {
+										$innerPath = parse_url(urldecode($cdnParams[$cdnKey]), PHP_URL_PATH);
+										if ($innerPath && str_contains(basename($innerPath), ".")) {
+											$fileName = basename($innerPath);
+											break;
+										}
+									}
+								}
+							}
+						}
 						$fileNameKey = Js::from(strtolower($fileName));
 					@endphp
 

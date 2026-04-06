@@ -41,10 +41,10 @@ SEO rules (2025/2026 Google guidelines):
 - LENGTH: Keep each alt text between 80 and 125 characters. Most screen readers stop reading after ~125 characters. Too short (<30 chars) is vague; too long is truncated.
 - DESCRIPTION FIRST: Describe what the image actually shows. Google uses alt text + computer vision + page content to understand images. Start with the visual content, then weave in context.
 - KEYWORD INTEGRATION: If the page context includes "Target Keywords" set by the site owner, you MUST naturally weave at least one of those keywords into each non-decorative alt text. This is a priority — the site owner chose these keywords for SEO. If no target keywords are provided, infer relevant keywords from the page title, headings, and content. Google warns that keyword-stuffing "results in a negative user experience and may cause your site to be seen as spam" — integrate keywords naturally, not forced.
-- DECORATIVE IMAGES: If the image is clearly decorative (spacer, divider, icon, background pattern), suggest empty alt="" per W3C accessibility guidelines. Do NOT describe decorative images.
+- DECORATIVE IMAGES: Only mark an image as decorative if the filename explicitly proves it (spacer.gif, divider.png, 1x1.png, bg-pattern.svg). If the filename contains words like hero, banner, team, photo, logo, person, product, slide, or any content-related term, it is NOT decorative. When you cannot see an image, NEVER guess it is decorative.
 - ACCESSIBILITY FRAMEWORK: Think "what information would a visually impaired user miss if they couldn't see this image?" — answer that question first, then add SEO value naturally.
 - GOOGLE IMAGE SEARCH: Alt text is a primary signal for Google Image Search ranking. Well-described images can drive significant traffic from image search.
-- If you can see the image (vision mode), describe what you actually see. If you cannot, infer from the filename, URL path, and page context.
+- VISION FALLBACK: If you cannot see the image, you MUST still write descriptive alt text. Use every available signal: the filename (hero-01 suggests a hero banner), the URL path, the page title and headings, target keywords, and the alt text of OTHER images on the same page (provided in the context) to understand the page topic and write contextually appropriate alt text. Never output empty/decorative alt for an image you cannot see unless the filename explicitly proves it is a spacer or divider.
 
 Output format — for EACH image, output exactly these two lines with NO markdown, NO bold, NO backticks, NO code formatting:
 IMAGE: [filename]
@@ -55,7 +55,7 @@ Separate each image pair with a blank line. After all images, add a brief 1-2 se
 CRITICAL formatting rules:
 - The IMAGE: and ALT: lines MUST be plain text only — never wrap them in bold (**), code backticks (`), or any other formatting.
 - The alt text value must be the actual descriptive text, NOT an HTML attribute like alt="...". Just the text itself.
-- For decorative images, write: ALT: [empty — decorative image, use alt=""]
+- Only for CONFIRMED decorative images (filename contains spacer/divider/separator/1x1): ALT: [empty — decorative image, use alt=""]
 
 General rules:
 - Be specific to this website and its industry. Never give generic alt text like "image" or "photo".
@@ -87,8 +87,9 @@ PROMPT;
 	public function buildImageUrls(): array
 	{
 		$urls = array();
+		$sourceImages = !empty($this->imagesNeedingAlt) ? $this->imagesNeedingAlt : $this->imagesWithAlt;
 
-		foreach ($this->imagesNeedingAlt as $image) {
+		foreach ($sourceImages as $image) {
 			if (count($urls) >= self::MAX_IMAGES_FOR_VISION) {
 				break;
 			}
@@ -180,7 +181,24 @@ PROMPT;
 	private function formatImageList(): string
 	{
 		if (empty($this->imagesNeedingAlt)) {
-			return "All images already have alt text. Suggest improvements for existing alt attributes.";
+			/* All images have alt text — list them so the AI suggests improvements in IMAGE:/ALT: format */
+			if (empty($this->imagesWithAlt)) {
+				return "No images found on this page.";
+			}
+
+			$lines = array("All images already have alt text. Review each and suggest improved, SEO-optimized alt text using the IMAGE:/ALT: format.");
+			$lines[] = "";
+
+			foreach (array_slice($this->imagesWithAlt, 0, self::MAX_IMAGES_FOR_VISION) as $index => $image) {
+				$src = $image["src"] ?? "unknown";
+				$fileName = $this->extractFileName($src);
+				$currentAlt = $image["alt"] ?? "";
+				$number = $index + 1;
+
+				$lines[] = "{$number}. [ok] {$fileName} — current alt: \"{$currentAlt}\" — {$src}";
+			}
+
+			return implode("\n", $lines);
 		}
 
 		$lines = array();
@@ -203,8 +221,26 @@ PROMPT;
 	private function extractFileName(string $src): string
 	{
 		$urlPath = parse_url($src, PHP_URL_PATH);
+		$fileName = $urlPath ? basename($urlPath) : $src;
 
-		return $urlPath ? basename($urlPath) : $src;
+		/* Handle CDN/image optimizer URLs (Next.js /_next/image, Cloudinary, etc.)
+		   where the real filename is in a query parameter */
+		if (!str_contains($fileName, ".") || $fileName === "image") {
+			$query = parse_url($src, PHP_URL_QUERY);
+			if ($query) {
+				parse_str($query, $params);
+				foreach (array("url", "src", "source", "img") as $paramKey) {
+					if (!empty($params[$paramKey])) {
+						$innerPath = parse_url(urldecode($params[$paramKey]), PHP_URL_PATH);
+						if ($innerPath && str_contains(basename($innerPath), ".")) {
+							return basename($innerPath);
+						}
+					}
+				}
+			}
+		}
+
+		return $fileName;
 	}
 
 	private function countImagesNeedingAlt(): int
