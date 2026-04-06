@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ScanStatus;
+use App\Enums\CreditState;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use App\Jobs\ProcessScanJob;
 use App\Models\Scan;
 use App\Models\ScanPage;
 use App\Services\Ai\AiGatewayFactory;
@@ -48,6 +50,34 @@ class ProjectController extends Controller
 	{
 		$organization = $request->user()->currentOrganization();
 		$project = $this->projectService->createProject($organization, $request->validated());
+
+		/* Auto-trigger first scan if the user has credits available */
+		if ($this->billingService->claimScanCredit($organization)) {
+			try {
+				$scan = Scan::create(array(
+					"project_id" => $project->id,
+					"triggered_by" => $request->user()->id,
+					"status" => ScanStatus::Pending,
+					"scan_type" => "single",
+					"max_pages_requested" => 1,
+					"crawl_depth_limit" => 0,
+					"credit_state" => CreditState::Claimed->value,
+				));
+
+				ProcessScanJob::dispatch($scan);
+
+				return redirect()
+					->route("projects.show", $project)
+					->with("success", "Project created! Scan started automatically.");
+			} catch (\Exception $exception) {
+				$this->billingService->releaseScanCredit($organization);
+
+				Log::error("Failed to auto-trigger scan for new project", array(
+					"project_id" => $project->id,
+					"error" => $exception->getMessage(),
+				));
+			}
+		}
 
 		return redirect()
 			->route("projects.show", $project)
