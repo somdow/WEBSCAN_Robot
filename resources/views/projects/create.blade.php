@@ -18,7 +18,7 @@
 
 				<div>
 					<x-input-label for="name" value="Project Name" />
-					<x-text-input id="name" name="name" type="text" class="mt-1.5 block w-full" :value="old('name')" required autofocus placeholder="My Website" />
+					<x-text-input id="name" name="name" type="text" class="mt-1.5 block w-full" :value="old('name')" required autofocus placeholder="Enter client / project name" />
 					<x-input-error :messages="$errors->get('name')" class="mt-2" />
 				</div>
 
