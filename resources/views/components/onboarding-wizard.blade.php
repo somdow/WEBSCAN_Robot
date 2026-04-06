@@ -136,12 +136,13 @@
 						<label for="onboard-url" class="block text-sm font-medium text-text-primary">Website URL</label>
 						<input
 							id="onboard-url"
-							type="url"
+							type="text"
 							x-model="form.url"
-							placeholder="https://example.com"
+							placeholder="example.com"
 							class="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-text-primary shadow-sm transition placeholder:text-text-tertiary focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
 						>
 						<p x-show="errors.url" x-text="errors.url" class="mt-1 text-xs text-red-500"></p>
+						<p class="mt-1.5 text-xs text-text-tertiary">https:// will be added automatically if omitted</p>
 					</div>
 				</div>
 			</div>

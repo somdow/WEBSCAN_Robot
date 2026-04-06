@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ScanStatus;
 use App\Jobs\ProcessScanJob;
 use App\Models\Scan;
+use App\Rules\SafeExternalUrl;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,9 +15,15 @@ class OnboardingController extends Controller
 {
 	public function store(Request $request, ProjectService $projectService): JsonResponse
 	{
+		/* Auto-prepend https:// for bare domains (matches ProjectFormRequest behavior) */
+		$rawUrl = trim($request->input("url", ""));
+		if ($rawUrl !== "" && !preg_match("#^https?://#i", $rawUrl)) {
+			$request->merge(array("url" => "https://" . $rawUrl));
+		}
+
 		$validated = $request->validate(array(
 			"name" => "required|string|max:255",
-			"url" => "required|string|url:http,https|max:2048",
+			"url" => array("required", "string", "url:http,https", "max:2048", new SafeExternalUrl()),
 			"target_keywords" => "nullable|string|max:1000",
 			"trigger_scan" => "boolean",
 		));
