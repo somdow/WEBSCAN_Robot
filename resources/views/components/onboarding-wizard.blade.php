@@ -2,7 +2,7 @@
 	x-data="{
 		open: !localStorage.getItem('onboardingDismissed'),
 		step: 1,
-		totalSteps: 4,
+		totalSteps: 3,
 		loading: false,
 		form: {
 			name: '',
@@ -147,8 +147,8 @@
 				</div>
 			</div>
 
-			{{-- Step 3: Keywords (optional) --}}
-			<div x-show="step === 3">
+			{{-- Step 3: Keywords (optional) — hidden but preserved --}}
+			<div x-show="false">
 				<h3 class="text-base font-semibold text-text-primary">Target keywords <span class="font-normal text-text-tertiary">(optional)</span></h3>
 				<p class="mt-1 text-sm text-text-secondary">Add keywords you want to rank for. We'll check if your content is optimized for them.</p>
 
@@ -166,7 +166,7 @@
 			</div>
 
 			{{-- Step 4: Confirm --}}
-			<div x-show="step === 4">
+			<div x-show="step === 3">
 				<h3 class="text-base font-semibold text-text-primary">Ready to go!</h3>
 				<p class="mt-1 text-sm text-text-secondary">Review your project details and launch your first scan.</p>
 
