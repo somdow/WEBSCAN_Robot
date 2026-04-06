@@ -196,12 +196,10 @@
 		</div>
 		</div>
 
-		{{-- AI Executive Summary (Overview tab only) --}}
-		<div x-show="scoreTab === 'all'" x-cloak>
-			@if($scanViewData)
-				@include("scans.partials.ai-executive-summary", array("scan" => $scan))
-			@endif
-		</div>
+		{{-- AI Executive Summary (slide-over panel, visible on all tabs) --}}
+		@if($scanViewData)
+			@include("scans.partials.ai-executive-summary", array("scan" => $scan))
+		@endif
 
 		{{-- Tab: All (Overview) --}}
 		<div x-show="scoreTab === 'all'">

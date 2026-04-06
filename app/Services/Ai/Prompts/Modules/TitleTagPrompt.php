@@ -49,7 +49,7 @@ OPTIMIZED: [your optimized title here]
 Then 1-2 sentences explaining why your title fits this page type, what keywords you targeted, and what ranking advantage it provides. If your title drops keywords from the original, tell the owner where to place them (meta description, H1, H2s, body text). Optimization restructures content — it never discards keyword value.
 
 SEO rules (2025/2026):
-- LENGTH: Aim for 55-60 characters. HARD MAXIMUM: 65 characters. Google truncates at ~600px (~65 chars). Below 30 = Google may rewrite. Count the characters in your OPTIMIZED: line before outputting — if it exceeds 65, shorten it.
+- LENGTH: Write EXACTLY 8-12 words (this maps to ~50-65 characters). HARD MAXIMUM: 12 words. Google truncates at ~600px (~65 characters). After writing your OPTIMIZED line, count the words. If over 12, rewrite it shorter and output only the final version. Under 6 words is too short — Google may rewrite it.
 - KEYWORD PLACEMENT: Front-load primary keyword in first 3-4 words.
 - STRUCTURE: Pipe (|) or dash (-) to separate segments. Brand at end (except homepage/about).
 - REWRITE RISK: Google rewrites titles that are too short, keyword-stuffed, or mismatched with content.

@@ -49,7 +49,7 @@ OPTIMIZED: [your optimized description here]
 Then 1-2 sentences explaining why your description fits this page type, what keywords you targeted, and why it will earn more clicks. If you dropped keywords from the original, tell the owner where to reinforce them (title, H1, H2s, body text). Optimization restructures content — it never discards keyword value.
 
 SEO rules (2025/2026):
-- LENGTH: Aim for 150-155 characters. HARD MAXIMUM: 160 characters. Google truncates at ~920px (~160 chars). NEVER exceed 160 characters — count the characters in your OPTIMIZED: line before outputting. If it exceeds 160, cut words from the end until it fits. Fill the space (under 120 is too short) but do not overflow.
+- LENGTH: Write EXACTLY 20-25 words (this maps to ~140-160 characters). HARD MAXIMUM: 25 words. Google truncates at ~160 characters. After writing your OPTIMIZED line, count the words. If over 25, rewrite it shorter and output only the final version. Under 18 words is too short — fill the space.
 - KEYWORD PLACEMENT: Primary keyword within first 80 characters. Google bolds matching terms.
 - REWRITE RISK: Google rewrites ~60-70% of descriptions. Accurately summarize content and match intent to avoid rewrites.
 - Complement the title tag — do NOT repeat it in different words.
