@@ -121,7 +121,7 @@
 
 				<div class="mt-5 space-y-4">
 					<div>
-						<label for="onboard-name" class="block text-sm font-medium text-text-primary">Project Name</label>
+						<label for="onboard-name" class="block text-sm font-medium text-text-primary">Project / Client Name</label>
 						<input
 							id="onboard-name"
 							type="text"
@@ -138,7 +138,7 @@
 							id="onboard-url"
 							type="text"
 							x-model="form.url"
-							placeholder="example.com"
+							placeholder="Website you want to scan"
 							class="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-text-primary shadow-sm transition placeholder:text-text-tertiary focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
 						>
 						<p x-show="errors.url" x-text="errors.url" class="mt-1 text-xs text-red-500"></p>
