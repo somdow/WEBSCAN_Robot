@@ -109,7 +109,7 @@
 						</svg>
 					</div>
 					<h3 class="mt-4 text-lg font-semibold text-text-primary">Let's set up your first project</h3>
-					<p class="mt-2 text-sm text-text-secondary">We'll analyze {{ $analyzerCount }} SEO factors across your website including technical health, content quality, E-E-A-T signals, and more.</p>
+					<p class="mt-2 text-sm text-text-secondary">We'll run {{ $analyzerCount }} checks across your website covering SEO, performance, security, content quality, and more.</p>
 					<p class="mt-3 text-sm text-text-secondary">It only takes a minute to get started.</p>
 				</div>
 			</div>

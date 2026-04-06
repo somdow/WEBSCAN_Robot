@@ -27,7 +27,7 @@ class WelcomeNotification extends Notification implements ShouldQueue
 			->subject("Welcome to " . $siteName)
 			->greeting("Hello " . $notifiable->name . "!")
 			->line("Welcome to " . $siteName . " — " . $siteTagline . ".")
-			->line("Get started by creating a project and running your first scan. Our " . $analyzerCount . " analyzers will audit your site across technical SEO, content quality, performance, and more.")
+			->line("Get started by creating a project and running your first scan. Our " . $analyzerCount . " checks cover SEO, performance, security, content quality, and more.")
 			->action("Go to Dashboard", url("/dashboard"))
 			->line("If you have any questions, reply to this email and we'll be happy to help.");
 	}

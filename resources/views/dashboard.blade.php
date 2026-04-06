@@ -159,7 +159,7 @@
 					</svg>
 				</div>
 				<h3 class="mt-3 text-sm font-medium text-text-primary">2. Run a Scan</h3>
-				<p class="mt-1 text-xs text-text-secondary">Analyze {{ $analyzerCount }} SEO factors including E-E-A-T signals and technical health.</p>
+				<p class="mt-1 text-xs text-text-secondary">Run {{ $analyzerCount }} checks covering SEO, performance, security, content quality, and more.</p>
 				@if($gettingStarted["hasProject"] && !$gettingStarted["hasCompletedScan"])
 					<a href="{{ route("projects.index") }}" class="mt-3 inline-flex text-xs font-semibold text-accent hover:text-accent-hover">Run your first scan &rarr;</a>
 				@endif
