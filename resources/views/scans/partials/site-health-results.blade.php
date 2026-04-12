@@ -8,17 +8,18 @@
 		"Usability & Performance",
 		"Security",
 		"Analytics",
-		"Technology Stack",
 		"Utility",
-		"Extras",
 		"WordPress",
+		"Technology Stack",
+		"Extras",
 	);
 
 	$allGrouped = $scanViewData["groupedResults"] ?? collect();
 
+	$categoryOrder = array_flip($siteHealthCategories);
 	$healthGrouped = $allGrouped->filter(
 		fn($modules, $categoryName) => in_array($categoryName, $siteHealthCategories, true)
-	);
+	)->sortBy(fn($modules, $categoryName) => $categoryOrder[$categoryName] ?? 999);
 
 	$categoryIcons = config("scan-ui.category_icons");
 	$categoryDescriptions = config("scan-ui.category_descriptions");

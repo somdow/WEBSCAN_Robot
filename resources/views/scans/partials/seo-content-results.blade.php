@@ -14,9 +14,10 @@
 
 	$allGrouped = $scanViewData["groupedResults"] ?? collect();
 
+	$seoCategoryOrder = array_flip($seoCategories);
 	$seoGrouped = $allGrouped->filter(
 		fn($modules, $categoryName) => in_array($categoryName, $seoCategories, true)
-	);
+	)->sortBy(fn($modules, $categoryName) => $seoCategoryOrder[$categoryName] ?? 999);
 
 	$categoryIcons = config("scan-ui.category_icons");
 	$categoryDescriptions = config("scan-ui.category_descriptions");
