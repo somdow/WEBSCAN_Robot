@@ -14,7 +14,7 @@ class PageSpeedInsightsClient
 {
 	private const API_ENDPOINT = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed";
 	private const SETTINGS_KEY = GoogleApiSettings::SHARED_API_KEY;
-	private const TIMEOUT_SECONDS = 25;
+	private const TIMEOUT_SECONDS = 45;
 
 	/** Pre-fetched API results keyed by "url|strategy". */
 	private array $prefetchedResults = array();

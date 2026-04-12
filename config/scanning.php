@@ -166,7 +166,7 @@ return array(
 		"socialTags" => 0,         // Open Graph is for social platforms, not Google
 		"favicon" => 0,            // Cosmetic only
 		"googleMapEmbed" => 0,     // Local SEO display, not a ranking signal
-		"analyticsDetection" => 0, // Operational concern, not a ranking signal
+		"analyticsDetection" => 3, // Analytics presence — scored, rebalance later
 		"wpDetection" => 0,        // Detection only, informational
 		"techStackDetection" => 0, // Full technology inventory, informational
 		"keywordConsistency" => 0, // Visual keyword presence matrix, informational

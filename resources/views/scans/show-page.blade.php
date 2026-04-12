@@ -114,7 +114,7 @@
 											$categoryTotal = $categoryModules->count();
 											$categoryPassed = $categoryModules->filter(fn($r) => $r->status->value === "ok")->count();
 											$categoryIcon = $categoryIcons[$categoryName] ?? "";
-											$isInfoOnly = in_array($categoryName, array("Extras", "Technology Stack", "Analytics"), true);
+											$isInfoOnly = in_array($categoryName, array("Extras", "Technology Stack"), true);
 											$passRate = $categoryTotal > 0 ? $categoryPassed / $categoryTotal : 0;
 											$scoreColor = $isInfoOnly
 												? "bg-blue-50 text-blue-600"
