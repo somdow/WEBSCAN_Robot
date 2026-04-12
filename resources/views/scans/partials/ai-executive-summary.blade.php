@@ -90,6 +90,7 @@
 
 			{{-- Summary content --}}
 			<div x-show="summaryState === 'loaded' && summaryData" x-cloak class="p-5">
+				<h3 class="mb-3 text-xs font-bold uppercase tracking-wider text-ai">Overview</h3>
 				<p class="text-sm leading-relaxed text-text-secondary" x-text="summaryData?.summary"></p>
 
 				<template x-if="summaryData?.topIssues?.length > 0">
