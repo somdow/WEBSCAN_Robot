@@ -53,6 +53,7 @@ use App\Services\Analyzers\Utility\GoogleMapEmbedAnalyzer;
 use App\Services\Analyzers\Utility\TechStackDetectionAnalyzer;
 use App\Services\Analyzers\Utility\SerpPreviewAnalyzer;
 use App\Services\Analyzers\WordPress\WpDetectionAnalyzer;
+use App\Services\Analyzers\WordPress\WpPluginResultsBuilder;
 use App\Services\Analyzers\WordPress\WpPluginsAnalyzer;
 use App\Services\Analyzers\WordPress\WpThemeAnalyzer;
 use App\Services\Ai\AiGatewayFactory;
@@ -191,7 +192,7 @@ class AppServiceProvider extends ServiceProvider
 			new ContentKeywordsAnalyzer(),
 			new KeywordConsistencyAnalyzer(),
 			new ContentDuplicateAnalyzer(),
-			new WpPluginsAnalyzer($wpApiClient),
+			new WpPluginsAnalyzer(new WpPluginResultsBuilder($httpFetcher, $wpApiClient)),
 			new WpThemeAnalyzer($httpFetcher, $wpApiClient),
 			new TechStackDetectionAnalyzer(),
 			new GoogleMapEmbedAnalyzer(),

@@ -6,13 +6,14 @@ use App\Contracts\AnalyzerInterface;
 use App\DataTransferObjects\AnalysisResult;
 use App\DataTransferObjects\ScanContext;
 use App\Enums\ModuleStatus;
-use App\Services\Scanning\WordPressApiClient;
 use DOMElement;
 
 class WpPluginsAnalyzer implements AnalyzerInterface
 {
+	private const PLUGIN_PATH_PATTERN = "/\/wp-content\/plugins\/([a-zA-Z0-9_-]+)\//";
+
 	public function __construct(
-		private readonly WordPressApiClient $wordPressApiClient,
+		private readonly WpPluginResultsBuilder $resultsBuilder,
 	) {}
 
 	public function moduleKey(): string
@@ -44,31 +45,34 @@ class WpPluginsAnalyzer implements AnalyzerInterface
 		$maxApiLookups = (int) config("scanning.max_plugin_api_lookups", 15);
 
 		$pluginRegistry = array();
+		$unresolvedHandles = array();
 		$this->collectPluginsFromUrlAttributes($xpath, $pluginRegistry);
-		$this->collectYoastFromHtmlComment($htmlContent, $pluginRegistry);
+		$this->collectPluginsFromScriptHandles($xpath, $pluginRegistry, $unresolvedHandles);
+		$this->collectPluginsFromHtmlComments($htmlContent, $pluginRegistry);
 		$this->collectPluginsFromMetaGenerators($xpath, $pluginRegistry);
+		$this->collectPluginsFromInlineScripts($xpath, $pluginRegistry);
+		$this->collectPluginsFromHtmlFingerprints($htmlContent, $pluginRegistry);
+		$this->resultsBuilder->discoverPluginsFromRestApi($scanContext->domainRoot(), $pluginRegistry);
+		$this->resultsBuilder->discoverPluginsFromHandles($unresolvedHandles, $pluginRegistry);
 
-		$detectedPlugins = $this->buildDetectedPlugins($pluginRegistry);
+		$detectedPlugins = $this->resultsBuilder->buildDetectedPlugins($pluginRegistry);
 		$pluginCount = count($detectedPlugins);
 
 		if ($pluginCount === 0) {
 			$findings[] = array("type" => "info", "message" => "No WordPress plugins could be detected from the page source.");
-
 			return new AnalysisResult(status: ModuleStatus::Info, findings: $findings, recommendations: $recommendations);
 		}
 
-		$lookupMetrics = $this->performApiLookups($detectedPlugins, $maxApiLookups);
-
+		$lookupMetrics = $this->resultsBuilder->performApiLookups($detectedPlugins, $maxApiLookups);
 		$findings[] = array("type" => "info", "message" => "Detected {$pluginCount} plugin(s) from the page source.");
 		$findings[] = array("type" => "data", "key" => "detectedPlugins", "value" => array_values($detectedPlugins));
-
-		$status = $this->buildStatusFindings($detectedPlugins, $lookupMetrics, $findings, $recommendations);
+		$status = $this->resultsBuilder->classifyPluginHealth($detectedPlugins, $lookupMetrics, $findings, $recommendations);
 
 		return new AnalysisResult(status: $status, findings: $findings, recommendations: $recommendations);
 	}
 
 	/**
-	 * Scan link/script/img attributes for /wp-content/plugins/SLUG/ paths and extract versions.
+	 * Scan link/script/img attributes for /wp-content/plugins/SLUG/ paths.
 	 */
 	private function collectPluginsFromUrlAttributes(\DOMXPath $xpath, array &$pluginRegistry): void
 	{
@@ -91,48 +95,106 @@ class WpPluginsAnalyzer implements AnalyzerInterface
 				}
 
 				$url = $node->getAttribute($queryDef["attr"]);
-				if (!preg_match("/\/wp-content\/plugins\/([a-zA-Z0-9_-]+)\//", $url, $slugMatch)) {
+				if (!preg_match(self::PLUGIN_PATH_PATTERN, $url, $slugMatch)) {
 					continue;
 				}
 
 				$slug = strtolower($slugMatch[1]);
-				$this->ensureRegistryEntry($pluginRegistry, $slug, "url-path");
+				$this->registerPlugin($pluginRegistry, $slug, "url-path");
+				$this->extractVersionFromUrl($url, $pluginRegistry[$slug]);
+			}
+		}
+	}
 
-				if (preg_match("/[?&]ver=([\d.]+)/", $url, $verMatch)) {
-					$pluginRegistry[$slug]["versions"][] = $verMatch[1];
+	/**
+	 * Extract plugin slugs from WordPress script/style handle IDs.
+	 * WordPress enqueues assets as <script id="{handle}-js"> and <link id="{handle}-css">.
+	 */
+	private function collectPluginsFromScriptHandles(\DOMXPath $xpath, array &$pluginRegistry, array &$unresolvedHandles): void
+	{
+		$handleSlugMap = config("wp-fingerprints.handle_to_slug", array());
+		$coreHandleSet = array_flip(config("wp-fingerprints.core_handles", array()));
+
+		$handleQueries = array(
+			array("query" => "//script[@id]", "attr" => "id", "suffix" => "-js"),
+			array("query" => "//link[@id]", "attr" => "id", "suffix" => "-css"),
+		);
+
+		foreach ($handleQueries as $queryDef) {
+			$nodes = $xpath->query($queryDef["query"]);
+			if (!$nodes) {
+				continue;
+			}
+
+			for ($nodeIndex = 0; $nodeIndex < $nodes->length; $nodeIndex++) {
+				$node = $nodes->item($nodeIndex);
+				if (!($node instanceof DOMElement)) {
+					continue;
+				}
+
+				$resolveResult = $this->resolveSlugFromHandle($node, $queryDef, $handleSlugMap, $coreHandleSet);
+				if ($resolveResult["slug"] !== null) {
+					$this->registerPlugin($pluginRegistry, $resolveResult["slug"], "script-handle");
+					$this->extractVersionFromElement($node, $pluginRegistry[$resolveResult["slug"]]);
+				} elseif ($resolveResult["handle"] !== null) {
+					$unresolvedHandles[] = $resolveResult["handle"];
 				}
 			}
 		}
 	}
 
 	/**
-	 * Detect Yoast SEO from its HTML comment signature.
+	 * Resolve a plugin slug from a script/style element's handle ID.
 	 */
-	private function collectYoastFromHtmlComment(string $htmlContent, array &$pluginRegistry): void
+	private function resolveSlugFromHandle(DOMElement $node, array $queryDef, array $handleSlugMap, array $coreHandleSet): array
 	{
-		if (preg_match("/<!--\s*This site is optimized with the Yoast SEO.*?v([\d.]+)/i", $htmlContent, $yoastMatch)) {
-			$this->ensureRegistryEntry($pluginRegistry, "wordpress-seo", "html-comment");
-			$pluginRegistry["wordpress-seo"]["versions"][] = $yoastMatch[1];
+		$handle = $this->parseHandleFromId($node->getAttribute($queryDef["attr"]), $queryDef["suffix"]);
+		if ($handle === null || isset($coreHandleSet[$handle])) {
+			return array("slug" => null, "handle" => null);
+		}
+
+		if (str_starts_with($handle, "theme-") || $handle === "style" || $handle === "main") {
+			return array("slug" => null, "handle" => null);
+		}
+
+		if (isset($handleSlugMap[$handle])) {
+			return array("slug" => $handleSlugMap[$handle], "handle" => $handle);
+		}
+
+		$srcAttr = $node->getAttribute("src") ?: $node->getAttribute("href");
+		if (!empty($srcAttr) && preg_match(self::PLUGIN_PATH_PATTERN, $srcAttr, $slugMatch)) {
+			return array("slug" => strtolower($slugMatch[1]), "handle" => $handle);
+		}
+
+		return array("slug" => null, "handle" => $handle);
+	}
+
+	/**
+	 * Detect plugins from HTML comments left in page source.
+	 */
+	private function collectPluginsFromHtmlComments(string $htmlContent, array &$pluginRegistry): void
+	{
+		foreach (config("wp-fingerprints.comment_patterns", array()) as $fingerprint) {
+			if (preg_match($fingerprint["pattern"], $htmlContent, $commentMatch)) {
+				$this->registerPlugin($pluginRegistry, $fingerprint["slug"], "html-comment");
+				if (!empty($commentMatch[1])) {
+					$pluginRegistry[$fingerprint["slug"]]["versions"][] = $commentMatch[1];
+				}
+			}
 		}
 	}
 
 	/**
-	 * Check meta generator tags for known plugin-specific patterns.
+	 * Check <meta name="generator"> tags for known plugin signatures.
 	 */
 	private function collectPluginsFromMetaGenerators(\DOMXPath $xpath, array &$pluginRegistry): void
 	{
-		$generatorNodes = $xpath->query("//meta[@name='generator']");
+		$generatorNodes = $xpath->query("//meta[translate(@name,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='generator']");
 		if (!$generatorNodes) {
 			return;
 		}
 
-		$generatorPatterns = array(
-			"/Powered by Slider Revolution\s+([\d.]+)/i" => "revslider",
-			"/Starter Templates\s*v([\d.]+)/i" => "starter-templates",
-			"/Starter Sites\s*v([\d.]+)/i" => "starter-sites",
-			"/Site Kit by Google\s+([\d.]+)/i" => "google-site-kit",
-			"/Flavor\s+([\d.]+)/i" => "flavor",
-		);
+		$generatorPatterns = config("wp-fingerprints.generator_patterns", array());
 
 		for ($nodeIndex = 0; $nodeIndex < $generatorNodes->length; $nodeIndex++) {
 			$genNode = $generatorNodes->item($nodeIndex);
@@ -147,8 +209,10 @@ class WpPluginsAnalyzer implements AnalyzerInterface
 
 			foreach ($generatorPatterns as $pattern => $slug) {
 				if (preg_match($pattern, $genContent, $genMatch)) {
-					$this->ensureRegistryEntry($pluginRegistry, $slug, "meta-generator");
-					$pluginRegistry[$slug]["versions"][] = $genMatch[1];
+					$this->registerPlugin($pluginRegistry, $slug, "meta-generator");
+					if (!empty($genMatch[1])) {
+						$pluginRegistry[$slug]["versions"][] = $genMatch[1];
+					}
 					break;
 				}
 			}
@@ -156,9 +220,50 @@ class WpPluginsAnalyzer implements AnalyzerInterface
 	}
 
 	/**
-	 * Initialize a plugin registry entry if it does not already exist.
+	 * Scan inline <script> content for known plugin JS globals.
 	 */
-	private function ensureRegistryEntry(array &$pluginRegistry, string $slug, string $source): void
+	private function collectPluginsFromInlineScripts(\DOMXPath $xpath, array &$pluginRegistry): void
+	{
+		$inlineScripts = $xpath->query("//script[not(@src)]");
+		if (!$inlineScripts || $inlineScripts->length === 0) {
+			return;
+		}
+
+		$concatenatedScripts = "";
+		for ($nodeIndex = 0; $nodeIndex < $inlineScripts->length; $nodeIndex++) {
+			$concatenatedScripts .= " " . $inlineScripts->item($nodeIndex)->textContent;
+		}
+
+		if (strlen($concatenatedScripts) < 10) {
+			return;
+		}
+
+		foreach (config("wp-fingerprints.script_globals", array()) as $marker => $slug) {
+			if (stripos($concatenatedScripts, $marker) !== false) {
+				$this->registerPlugin($pluginRegistry, $slug, "inline-script");
+			}
+		}
+	}
+
+	/**
+	 * Detect plugins from CSS classes, data attributes, and structural HTML patterns.
+	 */
+	private function collectPluginsFromHtmlFingerprints(string $htmlContent, array &$pluginRegistry): void
+	{
+		foreach (config("wp-fingerprints.html_patterns", array()) as $fingerprint) {
+			$detected = match ($fingerprint["type"]) {
+				"regex" => (bool) preg_match($fingerprint["pattern"], $htmlContent),
+				"string" => stripos($htmlContent, $fingerprint["pattern"]) !== false,
+				default => false,
+			};
+
+			if ($detected) {
+				$this->registerPlugin($pluginRegistry, $fingerprint["slug"], "html-fingerprint");
+			}
+		}
+	}
+
+	private function registerPlugin(array &$pluginRegistry, string $slug, string $source): void
 	{
 		if (!isset($pluginRegistry[$slug])) {
 			$pluginRegistry[$slug] = array("versions" => array(), "sources" => array());
@@ -169,163 +274,29 @@ class WpPluginsAnalyzer implements AnalyzerInterface
 		}
 	}
 
-	/**
-	 * Transform the raw registry into a structured detected plugins array.
-	 */
-	private function buildDetectedPlugins(array $pluginRegistry): array
+	private function parseHandleFromId(string $elementId, string $suffix): ?string
 	{
-		$detectedPlugins = array();
-
-		foreach ($pluginRegistry as $slug => $registryEntry) {
-			$detectedVersion = $this->determineBestVersion($registryEntry["versions"]);
-
-			$detectedPlugins[$slug] = array(
-				"slug" => $slug,
-				"name" => $this->formatSlugAsName($slug),
-				"detected_version" => $detectedVersion,
-				"latest_version" => null,
-				"version_status" => "unknown",
-				"is_premium" => false,
-				"vulnerabilities_count" => 0,
-				"vulnerabilities" => array(),
-			);
-		}
-
-		return $detectedPlugins;
-	}
-
-	/**
-	 * Perform WordPress.org API and vulnerability lookups for each detected plugin.
-	 */
-	private function performApiLookups(array &$detectedPlugins, int $maxLookups): array
-	{
-		$lookupCount = 0;
-		$skippedLookups = 0;
-
-		foreach ($detectedPlugins as $slug => &$pluginData) {
-			if ($lookupCount >= $maxLookups) {
-				$skippedLookups++;
-				continue;
-			}
-
-			$apiResult = $this->wordPressApiClient->fetchPluginInfo($slug);
-			$lookupCount++;
-
-			if ($apiResult["success"]) {
-				$pluginData["name"] = $apiResult["name"] ?? $pluginData["name"];
-				$pluginData["latest_version"] = $apiResult["latest_version"];
-
-				if ($pluginData["detected_version"] !== null && $apiResult["latest_version"] !== null) {
-					$pluginData["version_status"] = version_compare($pluginData["detected_version"], $apiResult["latest_version"]) >= 0
-						? "current"
-						: "outdated";
-				}
-			} else {
-				$pluginData["is_premium"] = true;
-			}
-
-			$vulnResult = $this->wordPressApiClient->fetchPluginVulnerabilities($slug, $pluginData["detected_version"]);
-			if ($vulnResult["success"] && $vulnResult["affecting_version"] > 0) {
-				$pluginData["vulnerabilities_count"] = $vulnResult["affecting_version"];
-				$pluginData["vulnerabilities"] = $vulnResult["vulnerabilities"];
-			}
-		}
-		unset($pluginData);
-
-		return array("skipped" => $skippedLookups);
-	}
-
-	/**
-	 * Build findings and recommendations based on plugin analysis results.
-	 */
-	private function buildStatusFindings(array $detectedPlugins, array $lookupMetrics, array &$findings, array &$recommendations): ModuleStatus
-	{
-		$vulnerablePlugins = array();
-		$outdatedOnlyPlugins = array();
-		$premiumCount = 0;
-		$unknownVersionCount = 0;
-
-		foreach ($detectedPlugins as $pluginData) {
-			if ($pluginData["vulnerabilities_count"] > 0) {
-				$vulnerablePlugins[] = $pluginData;
-			} elseif ($pluginData["version_status"] === "outdated") {
-				$outdatedOnlyPlugins[] = $pluginData;
-			}
-
-			if ($pluginData["is_premium"]) {
-				$premiumCount++;
-			}
-			if ($pluginData["detected_version"] === null) {
-				$unknownVersionCount++;
-			}
-		}
-
-		$status = ModuleStatus::Ok;
-
-		if (!empty($vulnerablePlugins)) {
-			$status = ModuleStatus::Bad;
-			$vulnerableNames = array_map(
-				fn(array $pluginEntry) => "{$pluginEntry["name"]} ({$pluginEntry["vulnerabilities_count"]} CVE(s))",
-				$vulnerablePlugins,
-			);
-			$findings[] = array(
-				"type" => "bad",
-				"message" => count($vulnerablePlugins) . " plugin(s) have known security vulnerabilities: " . implode(", ", $vulnerableNames) . ".",
-			);
-			$recommendations[] = "Security Alert: Update vulnerable plugins immediately: " . implode(", ", $vulnerableNames) . ".";
-		}
-
-		if (!empty($outdatedOnlyPlugins)) {
-			if ($status !== ModuleStatus::Bad) {
-				$status = ModuleStatus::Warning;
-			}
-			$outdatedNames = array_map(fn(array $pluginEntry) => $pluginEntry["name"], $outdatedOnlyPlugins);
-			$findings[] = array(
-				"type" => "warning",
-				"message" => count($outdatedOnlyPlugins) . " plugin(s) appear to be outdated: " . implode(", ", $outdatedNames) . ".",
-			);
-			$recommendations[] = "Update outdated plugins: " . implode(", ", $outdatedNames) . ".";
-		}
-
-		if (empty($vulnerablePlugins) && empty($outdatedOnlyPlugins)) {
-			$findings[] = array("type" => "ok", "message" => "No outdated or vulnerable plugins detected.");
-		}
-
-		if ($premiumCount > 0) {
-			$findings[] = array("type" => "info", "message" => "{$premiumCount} plugin(s) not listed on WordPress.org (likely premium or custom).");
-		}
-
-		if ($unknownVersionCount > 0) {
-			$findings[] = array("type" => "info", "message" => "Version could not be determined for {$unknownVersionCount} plugin(s).");
-		}
-
-		if ($lookupMetrics["skipped"] > 0) {
-			$findings[] = array("type" => "info", "message" => "{$lookupMetrics["skipped"]} additional plugin(s) detected but not looked up to keep scan time reasonable.");
-		}
-
-		return $status;
-	}
-
-	/**
-	 * Return the most commonly occurring version from an array of detected versions.
-	 */
-	private function determineBestVersion(array $versions): ?string
-	{
-		if (empty($versions)) {
+		$cleanId = preg_replace("/-(extra|before|after|inline)$/", "", $elementId);
+		if (!str_ends_with($cleanId, $suffix)) {
 			return null;
 		}
 
-		$versionCounts = array_count_values($versions);
-		arsort($versionCounts);
-
-		return array_key_first($versionCounts);
+		$handle = substr($cleanId, 0, -strlen($suffix));
+		return (strlen($handle) >= 2) ? strtolower($handle) : null;
 	}
 
-	/**
-	 * Convert a plugin slug to a human-readable name.
-	 */
-	private function formatSlugAsName(string $slug): string
+	private function extractVersionFromUrl(string $url, array &$registryEntry): void
 	{
-		return ucwords(str_replace(array("-", "_"), " ", $slug));
+		if (preg_match("/[?&]ver=([\d.]+)/", $url, $verMatch)) {
+			$registryEntry["versions"][] = $verMatch[1];
+		}
+	}
+
+	private function extractVersionFromElement(DOMElement $node, array &$registryEntry): void
+	{
+		$url = $node->getAttribute("src") ?: $node->getAttribute("href");
+		if (!empty($url)) {
+			$this->extractVersionFromUrl($url, $registryEntry);
+		}
 	}
 }

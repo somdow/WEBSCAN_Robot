@@ -115,7 +115,7 @@ class WordPressApiClient
 	private function fetchWordPressOrgInfo(string $apiUrl, string $slug, string $type): array
 	{
 		$result = array(
-			"success" => false, "name" => null, "slug" => $slug,
+			"success" => false, "not_found" => false, "name" => null, "slug" => $slug,
 			"latest_version" => null, "last_updated" => null, "author" => null,
 			"homepage" => null, "error" => null,
 		);
@@ -125,6 +125,7 @@ class WordPressApiClient
 
 			if (!$fetchResponse->successful) {
 				$isNotFound = $fetchResponse->httpStatusCode === 404;
+				$result["not_found"] = $isNotFound;
 				$result["error"] = $isNotFound
 					? ucfirst($type) . " not found on WordPress.org (likely premium or custom)."
 					: "WordPress.org {$type} API request failed: " . $fetchResponse->errorMessage;
