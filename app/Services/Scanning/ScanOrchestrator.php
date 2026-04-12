@@ -731,12 +731,12 @@ class ScanOrchestrator
 	 */
 	private function executeAnalyzer(AnalyzerInterface $analyzer, ScanContext $scanContext, Scan $scan): ?AnalysisResult
 	{
+		$resultKey = array("scan_id" => $scan->id, "module_key" => $analyzer->moduleKey());
+
 		try {
 			$result = $analyzer->analyze($scanContext);
 
-			ScanModuleResult::create(array(
-				"scan_id" => $scan->id,
-				"module_key" => $analyzer->moduleKey(),
+			ScanModuleResult::updateOrCreate($resultKey, array(
 				"status" => $result->status,
 				"findings" => $result->findings,
 				"recommendations" => $result->recommendations,
@@ -749,9 +749,7 @@ class ScanOrchestrator
 				"error" => $exception->getMessage(),
 			));
 
-			ScanModuleResult::create(array(
-				"scan_id" => $scan->id,
-				"module_key" => $analyzer->moduleKey(),
+			ScanModuleResult::updateOrCreate($resultKey, array(
 				"status" => ModuleStatus::Info,
 				"findings" => array(
 					array("type" => "info", "message" => "This module encountered an error during analysis."),

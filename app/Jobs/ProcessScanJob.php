@@ -45,6 +45,15 @@ class ProcessScanJob implements ShouldQueue
 	{
 		ini_set("memory_limit", "512M");
 
+		$this->scan->refresh();
+
+		if ($this->scan->status !== ScanStatus::Pending) {
+			Log::info("ProcessScanJob skipped — scan already in {$this->scan->status->value} state", array(
+				"scan_id" => $this->scan->id,
+			));
+			return;
+		}
+
 		$orchestrator->executeScan($this->scan);
 	}
 
