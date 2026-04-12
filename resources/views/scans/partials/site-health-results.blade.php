@@ -42,9 +42,9 @@
 							$categoryTotal = $categoryModules->count();
 							$categoryPassed = $categoryModules->filter(fn($r) => $r->status->value === "ok")->count();
 							$categoryIcon = $categoryIcons[$categoryName] ?? "";
-							$isExtras = $categoryName === "Extras";
+							$isInfoOnly = in_array($categoryName, array("Extras", "Technology Stack", "Analytics"), true);
 							$passRate = $categoryTotal > 0 ? $categoryPassed / $categoryTotal : 0;
-							$scoreColor = $isExtras
+							$scoreColor = $isInfoOnly
 								? "bg-blue-50 text-blue-600"
 								: match (true) {
 									$passRate >= 1.0 => "bg-emerald-100 text-emerald-700",
@@ -69,7 +69,7 @@
 									</svg>
 								@endif
 							</div>
-							<span class="shrink-0 rounded-full {{ $scoreColor }} px-2 py-0.5 text-[11px] font-medium transition-colors">{{ $isExtras ? "Info" : "{$categoryPassed}/{$categoryTotal}" }}</span>
+							<span class="shrink-0 rounded-full {{ $scoreColor }} px-2 py-0.5 text-[11px] font-medium transition-colors">{{ $isInfoOnly ? "Info" : "{$categoryPassed}/{$categoryTotal}" }}</span>
 						</button>
 					@endforeach
 				</nav>

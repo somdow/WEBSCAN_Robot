@@ -39,5 +39,6 @@
 			</svg>
 			<span class="truncate">SERP Preview</span>
 		</div>
+		<span class="shrink-0 rounded-full bg-blue-50 text-blue-600 px-2 py-0.5 text-[11px] font-medium transition-colors">Info</span>
 	</button>
 @endif
