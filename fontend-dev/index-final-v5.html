@@ -136,27 +136,6 @@
 			font-weight: 600;
 		}
 
-		/* Announcement */
-		.announce {
-			background: var(--dark);
-			color: #c9c9c9;
-			padding: 10px 48px;
-			text-align: center;
-			font-family: "JetBrains Mono", monospace;
-			font-size: 12px;
-		}
-
-		.announce .spark {
-			color: var(--accent);
-			margin-right: 4px;
-		}
-
-		.announce a {
-			text-decoration: underline;
-			color: #fff;
-			margin-left: 4px;
-		}
-
 		/* Nav */
 		.nav {
 			display: flex;
@@ -701,181 +680,6 @@
 			color: var(--line-3);
 		}
 
-		/* Callout */
-		.callout-wrap {
-			padding: 40px 48px 80px;
-		}
-
-		.callout {
-			max-width: 1100px;
-			margin: 0 auto;
-			background: var(--accent);
-			color: #fff;
-			border-radius: 16px;
-			overflow: hidden;
-		}
-
-		.callout .head {
-			padding: 48px 48px 20px;
-			text-align: center;
-		}
-
-		.callout h2 {
-			font-size: 34px;
-			font-weight: 700;
-			letter-spacing: -.5px;
-			line-height: 1.15;
-			max-width: 620px;
-			margin: 0 auto 12px;
-		}
-
-		.callout .sub {
-			font-size: 14px;
-			color: var(--accent-soft);
-			line-height: 1.6;
-			max-width: 520px;
-			margin: 0 auto 20px;
-		}
-
-		.callout .tabs {
-			display: inline-flex;
-			gap: 4px;
-			padding: 4px;
-			background: #00000020;
-			border-radius: 10px;
-			margin-bottom: 24px;
-		}
-
-		.callout .tab {
-			padding: 6px 14px;
-			border-radius: 7px;
-			color: var(--accent-soft);
-			font-size: 13px;
-			font-weight: 600;
-			cursor: pointer;
-			transition: background .12s ease, color .12s ease;
-		}
-
-		.callout .tab.active {
-			background: #fff;
-			color: var(--ink);
-		}
-
-		.callout .demo {
-			padding: 0 48px 20px;
-		}
-
-		.callout .demo-frame {
-			background: var(--ink);
-			border-radius: 12px 12px 0 0;
-			padding: 14px;
-			margin: 0 auto;
-			max-width: 900px;
-		}
-
-		.callout .demo-app {
-			background: #fff;
-			border-radius: 8px 8px 0 0;
-			padding: 14px;
-		}
-
-		.callout .demo-grid {
-			display: grid;
-			grid-template-columns: 200px 1fr;
-			gap: 10px;
-		}
-
-		.callout .demo-list {
-			display: grid;
-			gap: 4px;
-		}
-
-		.callout .demo-list-item {
-			padding: 8px 10px;
-			background: var(--paper);
-			color: var(--ink);
-			border-radius: 6px;
-			font-size: 11px;
-			font-weight: 600;
-			display: flex;
-			justify-content: space-between;
-		}
-
-		.callout .demo-list-item.active {
-			background: var(--accent);
-			color: #fff;
-		}
-
-		.callout .demo-list-item .arrow {
-			font-size: 9px;
-		}
-
-		.callout .demo-detail {
-			background: var(--paper);
-			border-radius: 6px;
-			padding: 14px;
-		}
-
-		.callout .demo-detail .title {
-			font-weight: 700;
-			font-size: 13px;
-			color: var(--ink);
-		}
-
-		.callout .demo-detail .title .bad {
-			color: var(--red);
-		}
-
-		.callout .demo-detail .meta {
-			font-size: 11px;
-			color: var(--muted);
-			font-family: "JetBrains Mono", monospace;
-			margin-top: 4px;
-		}
-
-		.callout .demo-detail .fix {
-			margin-top: 10px;
-			padding: 10px;
-			background: #fff;
-			border: 1px dashed var(--line-3);
-			border-radius: 4px;
-			font-size: 11px;
-			color: var(--ink-2);
-			line-height: 1.5;
-		}
-
-		.callout .demo-detail .fix b {
-			color: var(--accent);
-		}
-
-		.callout .demo-detail .fix code {
-			background: var(--paper);
-			padding: 1px 4px;
-			border-radius: 3px;
-			font-family: "JetBrains Mono", monospace;
-			font-size: 10px;
-		}
-
-		.callout .features {
-			padding: 24px 48px 40px;
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			gap: 20px;
-			color: var(--accent-soft);
-			font-size: 12px;
-		}
-
-		.callout .features .f-title {
-			font-weight: 700;
-			color: #fff;
-			font-size: 14px;
-		}
-
-		.callout .features .f-desc {
-			margin-top: 4px;
-			line-height: 1.5;
-		}
-
 		/* Testimonials */
 		.testimonials {
 			padding: 60px 48px;
@@ -1235,10 +1039,50 @@
 			font-weight: 500;
 		}
 
-		.p-card .feat {
+		.p-card .p-tagline {
 			font-size: 12px;
+			color: var(--muted);
+			margin-bottom: 16px;
+			line-height: 1.4;
+			min-height: 32px;
+		}
+
+		.p-card .price-annual {
+			font-size: 11px;
+			color: var(--muted);
+			margin-top: 2px;
+			font-family: "JetBrains Mono", monospace;
+		}
+
+		.p-card .p-features {
+			list-style: none;
+			padding: 0;
+			margin: 0 0 18px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.p-card .p-features li {
+			font-size: 12.5px;
 			color: var(--ink-2);
-			margin-bottom: 14px;
+			line-height: 1.4;
+			padding-left: 20px;
+			position: relative;
+		}
+
+		.p-card .p-features li::before {
+			content: "✓";
+			position: absolute;
+			left: 0;
+			top: 0;
+			color: var(--accent);
+			font-weight: 700;
+		}
+
+		.p-card .p-features .feat-strong {
+			color: var(--ink);
+			font-weight: 600;
 		}
 
 		.p-card .btn {
@@ -1352,22 +1196,13 @@
 </head>
 <body>
 
-	<div class="announce">
-		<span class="spark">✦ New</span> · Accessibility modules in early access →
-		<a href="#waitlist">Join waitlist</a>
-	</div>
-
 	<nav class="nav">
 		<div class="logo">
 			<span class="logo-mark">W</span>
 			<span>Webscan Robot</span>
 		</div>
 		<div class="links">
-			<a>Product ▾</a>
-			<a>Pricing</a>
-			<a>Customers</a>
-			<a>Docs</a>
-			<a>Blog</a>
+			<a href="#pricing">Pricing</a>
 		</div>
 		<div class="spacer"></div>
 		<div class="auth">
@@ -1424,9 +1259,9 @@
 				<p>One dashboard. Every audit type. Branded output your client understands without a glossary.</p>
 				<div class="bullets">
 					<div><span class="check">✓</span>Homepage + discovery scans</div>
-					<div><span class="check">✓</span>5 module domains per scan</div>
-					<div><span class="check">✓</span>AI exec summary per project</div>
-					<div><span class="check">✓</span>PDF export with your brand</div>
+					<div><span class="check">✓</span>52 modules across 14 categories</div>
+					<div><span class="check">✓</span>AI executive summary per scan</div>
+					<div><span class="check">✓</span>White-label PDF export (Agency)</div>
 				</div>
 				<a class="btn primary">Learn more →</a>
 			</div>
@@ -1471,7 +1306,7 @@
 		<div class="combined-head">
 			<h2 class="combined-h2">Built to find what other tools miss</h2>
 			<div class="modules-tagline">
-				<div class="eyebrow">52 modules · 11 categories</div>
+				<div class="eyebrow">52 modules · 14 categories</div>
 				<h3 class="modules-sub-h">One scan. Every issue surfaced.</h3>
 				<p>We check what your client's competitors are checking — and a lot they aren't. SEO, Core Web Vitals, security headers, broken schema, trust signals, local presence, tech stack, blacklists. If it's costing you traffic, we find it.</p>
 			</div>
@@ -1498,58 +1333,6 @@
 
 		<div class="modules-grid-wrap">
 			<div class="modules-grid" id="modules-grid"></div>
-		</div>
-	</section>
-
-	<section class="callout-wrap">
-		<div class="callout">
-			<div class="head">
-				<h2>Diagnose, fix, deliver —<br/>without leaving the dashboard.</h2>
-				<p class="sub">Most tools stop at SEO checklists. WebScan Robot finds the issues, ranks them by impact, and writes the fixes for you.</p>
-				<div class="tabs">
-					<span class="tab active">Audit</span>
-					<span class="tab">AI summary</span>
-					<span class="tab">White-label PDF</span>
-				</div>
-			</div>
-
-			<div class="demo">
-				<div class="demo-frame">
-					<div class="demo-app">
-						<div class="demo-grid">
-							<div class="demo-list">
-								<div class="demo-list-item">Viewport Tag<span class="arrow">▸</span></div>
-								<div class="demo-list-item active">Image Analysis<span class="arrow">▸</span></div>
-								<div class="demo-list-item">Performance<span class="arrow">▸</span></div>
-								<div class="demo-list-item">Compression<span class="arrow">▸</span></div>
-								<div class="demo-list-item">Accessibility<span class="arrow">▸</span></div>
-							</div>
-							<div class="demo-detail">
-								<div class="title">Image Analysis · <span class="bad">FAIL</span></div>
-								<div class="meta">78 images scanned · 7 missing alt · 3 empty alt</div>
-								<div class="fix">
-									<b>✦ AI fix:</b> Add descriptive <code>alt</code> attributes to all non-decorative images. Empty <code>alt=""</code> only for decorative.
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="features">
-				<div>
-					<div class="f-title">→ Diagnose</div>
-					<div class="f-desc">Multi-module checks in one pass</div>
-				</div>
-				<div>
-					<div class="f-title">↑ Prioritize</div>
-					<div class="f-desc">AI ranks by impact + effort</div>
-				</div>
-				<div>
-					<div class="f-title">◎ Deliver</div>
-					<div class="f-desc">Your brand on every PDF</div>
-				</div>
-			</div>
 		</div>
 	</section>
 
@@ -1707,7 +1490,7 @@
 		</div>
 	</section>
 
-	<section class="pricing">
+	<section class="pricing" id="pricing">
 		<div class="head">
 			<div class="kicker">Pricing</div>
 			<h2>Pricing that grows with your client roster.</h2>
@@ -1717,20 +1500,49 @@
 			<div class="p-card">
 				<div class="tier">Free</div>
 				<div class="price">$0<small>/mo</small></div>
-				<div class="feat">1 user · 3 projects · core scans</div>
+				<div class="p-tagline">Try every feature. No credit card required.</div>
+				<ul class="p-features">
+					<li><span class="feat-strong">1 project</span> · 1 user</li>
+					<li><span class="feat-strong">10 scans</span> per month</li>
+					<li>Up to 100 pages per scan</li>
+					<li>5 competitor benchmarks</li>
+					<li>AI insights (basic)</li>
+					<li>7-day scan history</li>
+					<li>Download unlimited PDFs</li>
+				</ul>
 				<a class="btn primary">Start free →</a>
 			</div>
 			<div class="p-card featured">
 				<span class="featured-pill">★ Popular</span>
 				<div class="tier">Pro</div>
 				<div class="price">$49<small>/mo</small></div>
-				<div class="feat">5 users · 25 projects · AI guidance · page discovery</div>
+				<div class="price-annual">$39/mo billed annually · save 20%</div>
+				<div class="p-tagline">For solo consultants and growing teams.</div>
+				<ul class="p-features">
+					<li><span class="feat-strong">5 projects</span> · up to 5 team members</li>
+					<li><span class="feat-strong">100 scans</span> per month</li>
+					<li>Up to 100 pages per scan</li>
+					<li>5 competitor benchmarks</li>
+					<li>AI insights (advanced)</li>
+					<li>90-day scan history</li>
+					<li>Download unlimited PDFs</li>
+				</ul>
 				<a class="btn accent">Upgrade →</a>
 			</div>
 			<div class="p-card">
 				<div class="tier">Agency</div>
 				<div class="price">$149<small>/mo</small></div>
-				<div class="feat">Unlimited · white-label PDFs · competitor tracking · priority support</div>
+				<div class="price-annual">$119/mo billed annually · save 20%</div>
+				<div class="p-tagline">White-label everything. Manage every client.</div>
+				<ul class="p-features">
+					<li><span class="feat-strong">25 projects</span> · up to 10 team members</li>
+					<li><span class="feat-strong">500 scans</span> per month</li>
+					<li>Up to 100 pages per scan</li>
+					<li>5 competitor benchmarks</li>
+					<li>AI insights (premium)</li>
+					<li><span class="feat-strong">Unlimited</span> scan history</li>
+					<li>Download unlimited <span class="feat-strong">white-label</span> PDFs</li>
+				</ul>
 				<a class="btn primary">Book demo →</a>
 			</div>
 		</div>
@@ -1754,28 +1566,15 @@
 		<div>
 			<h5>Product</h5>
 			<ul>
-				<li>Features</li>
-				<li>Pricing</li>
-				<li>Changelog</li>
-				<li>Roadmap</li>
+				<li><a href="#pricing">Pricing</a></li>
 			</ul>
 		</div>
 		<div>
-			<h5>Resources</h5>
+			<h5>Legal</h5>
 			<ul>
-				<li>Sample reports</li>
-				<li>Docs</li>
-				<li>Blog</li>
-				<li>Early access</li>
-			</ul>
-		</div>
-		<div>
-			<h5>Company</h5>
-			<ul>
-				<li>About</li>
-				<li>Contact</li>
-				<li>Privacy</li>
-				<li>Terms</li>
+				<li><a href="/privacy">Privacy</a></li>
+				<li><a href="/terms">Terms</a></li>
+				<li><a href="/acceptable-use">Acceptable use</a></li>
 			</ul>
 		</div>
 	</footer>
@@ -1928,12 +1727,6 @@
 					modulesSection.scrollIntoView({ behavior: "smooth", block: "start" });
 				});
 			});
-
-			const tabs = document.querySelectorAll(".callout .tab");
-			tabs.forEach(tab => tab.addEventListener("click", () => {
-				tabs.forEach(t => t.classList.remove("active"));
-				tab.classList.add("active");
-			}));
 
 			const testimonialGrid = document.querySelector(".t-grid");
 			const testimonialViewport = document.querySelector(".testimonials-track");
