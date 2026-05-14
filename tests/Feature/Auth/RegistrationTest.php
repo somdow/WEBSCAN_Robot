@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\Setting;
 use App\Models\User;
 use App\Notifications\WelcomeNotification;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -12,6 +13,16 @@ use Tests\TestCase;
 class RegistrationTest extends TestCase
 {
 	use RefreshDatabase;
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		/* EnsureRegistrationEnabled middleware redirects to /login when this
+		   setting is "0" (the seeded default). Tests must explicitly enable
+		   registration before posting to /register. */
+		Setting::setValue("registration_enabled", "1");
+	}
 
 	public function test_registration_screen_can_be_rendered(): void
 	{

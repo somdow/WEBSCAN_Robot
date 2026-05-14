@@ -1,49 +1,25 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>{{ config('app.name', 'Laravel') }}</title>
-		<link rel="preconnect" href="https://fonts.bunny.net">
-		<link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-		@vite(['resources/css/app.css', 'resources/js/app.js'])
-	</head>
-	<body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
-		<div class="flex items-center justify-center w-full lg:grow">
-			@auth
-				<a
-					href="{{ url('/dashboard') }}"
-					class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal"
-				>
-					Dashboard
-				</a>
-			@else
-				<div class="flex items-center gap-4">
-					<a
-						href="{{ route('login') }}"
-						class="inline-block px-6 py-2 bg-[#1b1b18] dark:bg-[#eeeeec] text-white dark:text-[#1C1C1A] rounded-sm text-sm font-medium leading-normal hover:bg-black dark:hover:bg-white transition"
-					>
-						Log in
-					</a>
-					@if (\App\Models\Setting::getValue("registration_enabled", "0") === "1")
-						<a
-							href="{{ route('register') }}"
-							class="inline-block px-6 py-2 border border-[#19140035] dark:border-[#3E3E3A] text-[#1b1b18] dark:text-[#EDEDEC] rounded-sm text-sm font-medium leading-normal hover:border-[#1915014a] dark:hover:border-[#62605b] transition"
-						>
-							Register
-						</a>
-					@endif
-				</div>
-			@endauth
-		</div>
-
-		<footer class="w-full lg:max-w-4xl max-w-[335px] text-center text-[13px] leading-[20px] text-[#706f6c] dark:text-[#A1A09A]">
-			<div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-				<a href="{{ route('legal.terms') }}" class="hover:text-[#1b1b18] dark:hover:text-[#EDEDEC] transition">Terms of Service</a>
-				<a href="{{ route('legal.privacy') }}" class="hover:text-[#1b1b18] dark:hover:text-[#EDEDEC] transition">Privacy Policy</a>
-				<a href="{{ route('legal.acceptable-use') }}" class="hover:text-[#1b1b18] dark:hover:text-[#EDEDEC] transition">Acceptable Use</a>
-			</div>
-			<p class="mt-2">&copy; {{ date('Y') }} {{ config('app.name', 'HELLO WEB_SCANS') }}</p>
-		</footer>
-	</body>
+<html lang="{{ str_replace("_", "-", app()->getLocale()) }}">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+	<title>{{ config("app.name") }} — Audit your site. Find what is costing you traffic.</title>
+	<meta name="description" content="Spot SEO gaps, security risks, and trust signals competitors miss. Get AI-guided fixes and client-ready reports — in minutes, not days.">
+	<link rel="preconnect" href="https://fonts.bunny.net">
+	<link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|jetbrains-mono:400,500|caveat:600,700&display=swap" rel="stylesheet">
+	@vite(["resources/css/landing.css", "resources/js/landing.js"])
+</head>
+<body>
+	@if(session("status"))
+		<div class="session-flash" role="status">{{ session("status") }}</div>
+	@endif
+	@include("landing.nav", ["registrationEnabled" => $registrationEnabled])
+	@include("landing.hero", ["registrationEnabled" => $registrationEnabled])
+	@include("landing.modules")
+	@include("landing.testimonials")
+	@include("landing.pricing", ["plans" => $plans, "registrationEnabled" => $registrationEnabled])
+	@include("landing.cta-final", ["registrationEnabled" => $registrationEnabled])
+	@include("landing.footer")
+</body>
 </html>

@@ -62,4 +62,25 @@ class UrlNormalizer
 
 		return "{$scheme}://{$host}{$port}{$path}";
 	}
+
+	/**
+	 * Auto-prepend "https://" to bare domains so visitors can submit
+	 * "example.com" via UI forms without the scheme. Trims whitespace
+	 * and returns the input unchanged when it already has an http:// or
+	 * https:// prefix, or when it is an empty string.
+	 */
+	public static function prependScheme(string $rawUrl): string
+	{
+		$trimmed = trim($rawUrl);
+
+		if ($trimmed === "") {
+			return $trimmed;
+		}
+
+		if (preg_match("#^https?://#i", $trimmed) === 1) {
+			return $trimmed;
+		}
+
+		return "https://" . $trimmed;
+	}
 }

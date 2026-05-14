@@ -24,6 +24,8 @@ v1/vendor/
 v1/error-logs.txt
 v1/debug_log.txt
 documentation/openaiKEY.txt
+zyte api.txt
+errors.txt
 *.bak
 *-old.*
 ~$*

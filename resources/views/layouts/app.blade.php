@@ -4,6 +4,8 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
+		<meta name="session-lifetime" content="{{ (int) config("session.lifetime") }}">
+		<meta name="session-expired-url" content="{{ route("home", array("session_expired" => 1)) }}">
 
 		<title>{{ config("app.name", "HELLO WEB_SCANS") }}</title>
 

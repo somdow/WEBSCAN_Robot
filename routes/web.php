@@ -7,6 +7,7 @@ use App\Http\Controllers\BrandingController;
 use App\Http\Controllers\CompetitorController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiscoveryController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\PricingController;
@@ -20,11 +21,14 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamInvitationController;
+use App\Http\Controllers\WaitlistController;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/", function () {
-	return view("welcome");
-});
+Route::get("/", LandingController::class)->name("home");
+
+Route::post("/waitlist", [WaitlistController::class, "store"])
+	->middleware("throttle:5,1")
+	->name("waitlist.store");
 
 Route::get("/pricing", PricingController::class)->name("pricing");
 

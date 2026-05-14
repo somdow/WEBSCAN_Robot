@@ -22,6 +22,7 @@ class Project extends Model
 		"scan_schedule",
 		"target_keywords",
 		"discovery_status",
+		"auto_scan_pending",
 	);
 
 	protected function casts(): array
@@ -29,6 +30,7 @@ class Project extends Model
 		return array(
 			"scan_schedule" => ScanSchedule::class,
 			"target_keywords" => "array",
+			"auto_scan_pending" => "boolean",
 		);
 	}
 
