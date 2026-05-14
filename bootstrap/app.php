@@ -23,11 +23,6 @@ return Application::configure(basePath: dirname(__DIR__))
 		$middleware->validateCsrfTokens(except: array(
 			"stripe/webhook",
 		));
-
-		/* When session is gone or user is unauthenticated, bounce ALL guarded
-		   routes to the landing page — not to /login. The landing page itself
-		   has a Log in CTA, so this gives a single consistent entry point. */
-		$middleware->redirectGuestsTo(fn () => route("home"));
 	})
 	->withExceptions(function (Exceptions $exceptions): void {
 		/**
