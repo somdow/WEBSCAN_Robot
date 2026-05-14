@@ -2,7 +2,6 @@
 
 namespace App\Listeners;
 
-use App\Notifications\WelcomeNotification;
 use App\Services\OrganizationProvisioningService;
 use Illuminate\Auth\Events\Registered;
 
@@ -26,7 +25,5 @@ class CreateOrganizationForNewUser
 		}
 
 		$this->organizationProvisioningService->ensureForUser($user);
-
-		$user->notify(new WelcomeNotification());
 	}
 }

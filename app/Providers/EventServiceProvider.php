@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Listeners\CreateOrganizationForNewUser;
+use App\Listeners\SendWelcomeNotification;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -19,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
 	protected $listen = array(
 		Registered::class => array(
 			CreateOrganizationForNewUser::class,
+		),
+		Verified::class => array(
+			SendWelcomeNotification::class,
 		),
 	);
 

@@ -1,4 +1,4 @@
-	<section class="testimonials">
+	<section class="testimonials" id="customers">
 		<div class="head">
 			<div class="kicker">Agency-approved</div>
 			<h2>But don't just take our word for it.</h2>

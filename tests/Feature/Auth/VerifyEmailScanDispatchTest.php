@@ -7,7 +7,9 @@ use App\Models\Organization;
 use App\Models\Plan;
 use App\Models\Project;
 use App\Models\User;
+use App\Notifications\WelcomeNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
@@ -86,6 +88,26 @@ class VerifyEmailScanDispatchTest extends TestCase
 		$this->actingAs($this->user)->get($this->buildVerificationUrl());
 
 		Queue::assertNotPushed(ProcessScanJob::class);
+	}
+
+	public function test_verification_sends_welcome_notification(): void
+	{
+		Notification::fake();
+
+		$this->actingAs($this->user)->get($this->buildVerificationUrl());
+
+		Notification::assertSentTo($this->user, WelcomeNotification::class);
+	}
+
+	public function test_already_verified_user_does_not_resend_welcome(): void
+	{
+		Notification::fake();
+
+		$this->user->forceFill(array("email_verified_at" => now()))->save();
+
+		$this->actingAs($this->user)->get($this->buildVerificationUrl());
+
+		Notification::assertNotSentTo($this->user, WelcomeNotification::class);
 	}
 
 	private function buildPendingProject(bool $autoScanPending): Project

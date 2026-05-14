@@ -1,7 +1,7 @@
 <footer class="foot">
 	<div>
-		<div class="brand-mark">W</div>
-		<div class="brand-tag">Diagnose what matters. Prioritize fixes. Deliver client-ready reports.</div>
+		<img class="brand-mark" src="{{ asset("images/webscanrobot-logo.webp") }}" alt="{{ config("app.name") }}">
+		<div class="brand-tag">a <strong>HELLOPIXELS</strong>INTERACTVE product</div>
 	</div>
 	<div>
 		<h5>Product</h5>

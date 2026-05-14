@@ -79,8 +79,20 @@ class UserResource extends Resource
 				TextColumn::make("status")
 					->label("Status")
 					->badge()
-					->state(fn (User $record): string => $record->isActive() ? "Active" : "Deactivated")
-					->color(fn (string $state): string => $state === "Active" ? "success" : "danger"),
+					->state(function (User $record): string {
+						if (!$record->isActive()) {
+							return "Deactivated";
+						}
+						if ($record->email_verified_at === null) {
+							return "Unverified";
+						}
+						return "Active";
+					})
+					->color(fn (string $state): string => match ($state) {
+						"Active" => "success",
+						"Unverified" => "warning",
+						default => "danger",
+					}),
 				TextColumn::make("organizations.name")
 					->label("Organization")
 					->url(fn (User $record): ?string => $record->organizations->first()

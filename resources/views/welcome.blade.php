@@ -7,7 +7,7 @@
 	<title>{{ config("app.name") }} — Audit your site. Find what is costing you traffic.</title>
 	<meta name="description" content="Spot SEO gaps, security risks, and trust signals competitors miss. Get AI-guided fixes and client-ready reports — in minutes, not days.">
 	<link rel="preconnect" href="https://fonts.bunny.net">
-	<link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|jetbrains-mono:400,500|caveat:600,700&display=swap" rel="stylesheet">
+	<link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|jetbrains-mono:400,500&display=swap" rel="stylesheet">
 	@vite(["resources/css/landing.css", "resources/js/landing.js"])
 </head>
 <body>

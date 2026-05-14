@@ -1,4 +1,4 @@
-<div class="product-card">
+<div class="product-card" id="how-it-works">
 	<div>
 		<div class="eyebrow">★ Featured module</div>
 		<h3>Agency-grade scans for every client.</h3>

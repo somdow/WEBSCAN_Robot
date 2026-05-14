@@ -1,4 +1,4 @@
-<section class="modules">
+<section class="modules" id="features">
 	<div class="combined-head">
 		<h2 class="combined-h2">Built to find what other tools miss</h2>
 		<div class="modules-tagline">

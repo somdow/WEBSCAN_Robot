@@ -61,7 +61,7 @@ class RegistrationTest extends TestCase
 		));
 	}
 
-	public function test_registration_sends_welcome_notification(): void
+	public function test_registration_does_not_send_welcome_notification(): void
 	{
 		Notification::fake();
 
@@ -72,8 +72,12 @@ class RegistrationTest extends TestCase
 			"password_confirmation" => "password",
 		));
 
-		$user = \App\Models\User::where("email", "welcome@example.com")->first();
-		Notification::assertSentTo($user, WelcomeNotification::class);
+		/* Welcome email should only arrive AFTER the user verifies their address
+		   so the verification email lands alone in the inbox first. */
+		Notification::assertNotSentTo(
+			\App\Models\User::where("email", "welcome@example.com")->first(),
+			WelcomeNotification::class,
+		);
 	}
 
 	public function test_registration_sends_email_verification_notification(): void
