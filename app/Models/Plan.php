@@ -56,9 +56,18 @@ class Plan extends Model
 		return $query->where("is_public", true);
 	}
 
+	/**
+	 * Order plans by monthly price ascending — cheapest first — so the landing
+	 * page, /pricing page, billing screen, and admin pickers all present plans
+	 * in a natural ascending order regardless of what someone set in sort_order.
+	 * sort_order is kept as a tiebreaker for plans that share a price (e.g. Free
+	 * and Preview both at $0).
+	 */
 	public function scopeOrdered(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
 	{
-		return $query->orderBy("sort_order");
+		return $query
+			->orderBy("price_monthly")
+			->orderBy("sort_order");
 	}
 
 	/* ── Helpers ── */
